@@ -5,24 +5,39 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
     TextView textView;
-    private EditText passwordEditText;
+    private EditText emailEditText,passwordEditText;
     private boolean isPasswordVisible = false;
-    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    Button signInBtn;
+    FirebaseAuth fAuth;
+    FirebaseFirestore fStore;
+    //String userID;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // Initialization
         TextView textView = findViewById(R.id.textView4);
+        emailEditText = findViewById(R.id.editTextTextEmailAddress);
+        passwordEditText = findViewById(R.id.editTextTextPasswordLogin);
+        signInBtn = findViewById(R.id.buttonLogin);
+
+
+        fAuth = FirebaseAuth.getInstance();
+        //fStore = FirebaseFirestore.getInstance();
 
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -33,8 +48,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Initialize the password EditText
-        passwordEditText = findViewById(R.id.editTextTextPassword2);
+
 
         // Set an OnTouchListener on the password EditText to toggle visibility
         passwordEditText.setOnTouchListener(new View.OnTouchListener() {
@@ -68,5 +82,20 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    public void signin(View view) {
+        String email = emailEditText.getText().toString().trim();
+        String password = passwordEditText.getText().toString().trim();
+
+        if(TextUtils.isEmpty(email)) {
+            emailEditText.setError("Email is Required!");
+            return;
+        }
+        if(TextUtils.isEmpty(password)) {
+            passwordEditText.setError("Password is Required!");
+            return;
+        }
+
     }
 }

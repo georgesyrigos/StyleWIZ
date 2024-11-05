@@ -47,16 +47,17 @@
         app:layout_constraintVertical_bias="0.205" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/buttonLogin"
         android:layout_width="150dp"
         android:layout_height="50dp"
         android:layout_marginTop="516dp"
         android:fontFamily="@font/roboto"
+        android:onClick="signin"
         android:text="Login"
         android:textSize="18sp"
         app:cornerRadius="8dp"
-        app:layout_constraintEnd_toEndOf="@+id/editTextTextPassword2"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextPassword2"
+        app:layout_constraintEnd_toEndOf="@+id/editTextTextPasswordLogin"
+        app:layout_constraintStart_toStartOf="@+id/editTextTextPasswordLogin"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
@@ -79,7 +80,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editTextTextPassword2"
+        android:id="@+id/editTextTextPasswordLogin"
         android:layout_width="285dp"
         android:layout_height="55dp"
         android:layout_marginTop="424dp"
@@ -105,9 +106,9 @@
         android:layout_marginTop="572dp"
         android:gravity="center"
         android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="@+id/button"
+        app:layout_constraintEnd_toEndOf="@+id/buttonLogin"
         app:layout_constraintHorizontal_bias="0.494"
-        app:layout_constraintStart_toStartOf="@+id/button"
+        app:layout_constraintStart_toStartOf="@+id/buttonLogin"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView

@@ -59,6 +59,7 @@
         android:hint="Username"
         android:inputType="text"
         android:paddingLeft="15sp"
+        android:paddingRight="15sp"
         app:layout_constraintEnd_toEndOf="@+id/textView7"
         app:layout_constraintHorizontal_bias="0.486"
         app:layout_constraintStart_toStartOf="@+id/textView7"
@@ -78,13 +79,14 @@
         android:hint="Email"
         android:inputType="textEmailAddress"
         android:paddingLeft="15sp"
+        android:paddingRight="15sp"
         app:layout_constraintEnd_toEndOf="@+id/editTextText"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/editTextText"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editTextTextPassword2"
+        android:id="@+id/editTextTextPasswordSignUp"
         android:layout_width="285dp"
         android:layout_height="55dp"
         android:layout_marginTop="516dp"
@@ -105,17 +107,18 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/buttonSignUp"
         android:layout_width="150dp"
         android:layout_height="50dp"
         android:layout_marginTop="612dp"
         android:fontFamily="@font/roboto"
+        android:onClick="signup"
         android:text="Sign Up"
         android:textSize="18sp"
         app:cornerRadius="8dp"
-        app:layout_constraintEnd_toEndOf="@+id/editTextTextPassword2"
+        app:layout_constraintEnd_toEndOf="@+id/editTextTextPasswordSignUp"
         app:layout_constraintHorizontal_bias="0.481"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextPassword2"
+        app:layout_constraintStart_toStartOf="@+id/editTextTextPasswordSignUp"
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
@@ -124,8 +127,8 @@
         android:layout_marginTop="668dp"
         android:gravity="center"
         android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="@+id/button2"
-        app:layout_constraintStart_toStartOf="@+id/button2"
+        app:layout_constraintEnd_toEndOf="@+id/buttonSignUp"
+        app:layout_constraintStart_toStartOf="@+id/buttonSignUp"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView

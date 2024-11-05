@@ -4,22 +4,48 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.text.InputType;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity {
     TextView textView;
-    private EditText passwordEditText;
+    private EditText userEditText,emailEditText,passwordEditText;
+
     private boolean isPasswordVisible = false;
+    Button signUpBtn;
+    FirebaseAuth fAuth;
+    FirebaseFirestore fStore;
+    String userID;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+        // Initialization
         TextView textView = findViewById(R.id.textView8);
+        userEditText = findViewById(R.id.editTextText);
+        emailEditText = findViewById(R.id.editTextTextEmailAddress2);
+        passwordEditText = findViewById(R.id.editTextTextPasswordSignUp);
+        signUpBtn = findViewById(R.id.buttonSignUp);
+
 
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -30,8 +56,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
-        // Initialize the password EditText
-        passwordEditText = findViewById(R.id.editTextTextPassword2);
+
 
         // Set an OnTouchListener on the password EditText to toggle visibility
         passwordEditText.setOnTouchListener(new View.OnTouchListener() {
@@ -65,5 +90,52 @@ public class SignUpActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+    }
+
+    public void signup(View view) {
+        String username = userEditText.getText().toString().trim();
+        String password = passwordEditText.getText().toString().trim();
+        String email = emailEditText.getText().toString().trim();
+
+        if(TextUtils.isEmpty(username)) {
+            userEditText.setError("Username is Required!");
+            return;
+        }
+        if(TextUtils.isEmpty(email)) {
+            emailEditText.setError("Email is Required!");
+            return;
+        }
+        if(TextUtils.isEmpty(password)) {
+            passwordEditText.setError("Password is Required!");
+            return;
+        }
+        //authenticate user
+        fAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener((task) -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(SignUpActivity.this, "User Created", Toast.LENGTH_SHORT).show();
+                userID = fAuth.getCurrentUser().getUid();
+                DocumentReference documentReference = fStore.collection("users").document(userID);
+                Map<String, Object> user = new HashMap<>();
+                user.put("username", username);
+                user.put("email", email);
+
+                documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Intent intent = new Intent(SignUpActivity.this, UserActivity.class); // Change to your desired activity
+                        intent.putExtra("username", username);
+                        startActivity(intent);
+                        finish(); // Finish the SignUpActivity so user cannot go back to it
+                    }
+                });
+            }
+
+
+        });
+
+
+
+
     }
 }
