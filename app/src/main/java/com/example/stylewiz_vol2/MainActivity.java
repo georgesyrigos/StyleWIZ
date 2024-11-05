@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
     Button signInBtn;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
-    //String userID;
+    String userID;
 
 
     @Override
@@ -35,9 +35,8 @@ public class MainActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.editTextTextPasswordLogin);
         signInBtn = findViewById(R.id.buttonLogin);
 
-
         fAuth = FirebaseAuth.getInstance();
-        //fStore = FirebaseFirestore.getInstance();
+        fStore = FirebaseFirestore.getInstance();
 
         textView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -46,6 +46,9 @@ public class SignUpActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.editTextTextPasswordSignUp);
         signUpBtn = findViewById(R.id.buttonSignUp);
 
+        fAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
+
 
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,7 +127,7 @@ public class SignUpActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void unused) {
                         Intent intent = new Intent(SignUpActivity.this, UserActivity.class); // Change to your desired activity
-                        intent.putExtra("username", username);
+                        //intent.putExtra("username", username);
                         startActivity(intent);
                         finish(); // Finish the SignUpActivity so user cannot go back to it
                     }
