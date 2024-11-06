@@ -1,5 +1,6 @@
 package com.example.stylewiz_vol2;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -11,8 +12,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
@@ -95,6 +104,50 @@ public class MainActivity extends AppCompatActivity {
             passwordEditText.setError("Password is Required!");
             return;
         }
+
+        fAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(MainActivity.this, "Logged in Successfully", Toast.LENGTH_SHORT).show();
+
+                    // Retrieve username from Firestore
+                    userID = fAuth.getCurrentUser().getUid();
+                    DocumentReference documentReference = fStore.collection("users").document(userID);
+                    documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            if (documentSnapshot.exists()) {
+                                String username = documentSnapshot.getString("username");
+
+                                // Navigate to Activity1
+                                Intent intent = new Intent(MainActivity.this, UserActivity.class);
+                                intent.putExtra("username", username);
+                                startActivity(intent);
+                                finish();
+                            }
+                            else {
+                                Toast.makeText(MainActivity.this, "Document does not exist", Toast.LENGTH_SHORT).show();
+                            }
+
+
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(MainActivity.this, "Failed to retrieve username: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+
+
+                } else {
+                    Toast.makeText(MainActivity.this, "There is no user with this info!", Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+        });
 
     }
 }

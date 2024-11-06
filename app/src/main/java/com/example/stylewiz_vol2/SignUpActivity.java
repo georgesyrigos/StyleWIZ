@@ -116,7 +116,7 @@ public class SignUpActivity extends AppCompatActivity {
         //authenticate user
         fAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener((task) -> {
             if (task.isSuccessful()) {
-                Toast.makeText(SignUpActivity.this, "User Created", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignUpActivity.this, "User Created!", Toast.LENGTH_SHORT).show();
                 userID = fAuth.getCurrentUser().getUid();
                 DocumentReference documentReference = fStore.collection("users").document(userID);
                 Map<String, Object> user = new HashMap<>();
@@ -127,11 +127,13 @@ public class SignUpActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void unused) {
                         Intent intent = new Intent(SignUpActivity.this, UserActivity.class); // Change to your desired activity
-                        //intent.putExtra("username", username);
+                        intent.putExtra("username", username);
                         startActivity(intent);
                         finish(); // Finish the SignUpActivity so user cannot go back to it
                     }
                 });
+            } else {
+                Toast.makeText(SignUpActivity.this, "User already exists!", Toast.LENGTH_SHORT).show();
             }
 
 
