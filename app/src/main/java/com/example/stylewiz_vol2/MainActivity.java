@@ -143,6 +143,8 @@ public class MainActivity extends AppCompatActivity {
 
                 } else {
                     Toast.makeText(MainActivity.this, "There is no user with this info!", Toast.LENGTH_SHORT).show();
+                    emailEditText.setText("");
+                    passwordEditText.setText("");
                 }
 
 
