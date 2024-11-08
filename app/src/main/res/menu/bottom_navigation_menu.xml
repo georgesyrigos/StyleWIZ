@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/bottom_home"
+        android:title="Home"
+        android:icon="@drawable/round_home_24"/>
+
+    <item
+        android:id="@+id/bottom_checkroom"
+        android:title="Outfits"
+        android:icon="@drawable/round_checkroom_24"/>
+
+    <item
+        android:title=""
+        android:enabled="true"/>
+
+    <item
+        android:id="@+id/bottom_suggest"
+        android:title="Suggestions"
+        android:icon="@drawable/round_lightbulb_24"/>
+
+    <item
+        android:id="@+id/bottom_settings"
+        android:title="Settings"
+        android:icon="@drawable/round_settings_24"/>
+
+</menu>
