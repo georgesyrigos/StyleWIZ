@@ -21,7 +21,7 @@ import java.util.Map;
 
 public class UserActivity extends AppCompatActivity {
 
-    //private FirestoreHelper firestoreHelper;
+    private FirestoreHelper firestoreHelper;
     private String user; // Store username as a class-level variable
     TextView textView;
     Button addBtn;
@@ -39,6 +39,9 @@ public class UserActivity extends AppCompatActivity {
 
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
+
+        // Initialize FirestoreHelper here
+        firestoreHelper = new FirestoreHelper();
 
         // Retrieve the username from the intent
         Intent intent = getIntent();
@@ -68,7 +71,7 @@ public class UserActivity extends AppCompatActivity {
 
                     // Call Firestore helper function to add wardrobe item using the username
 
-                    //firestoreHelper.addWardrobeItemByUsername(user, name, size, color, material);
+                    firestoreHelper.addWardrobeItemByUsername(user, name, size, color, material);
                 } else {
                     System.out.println("Username not available.");
                 }
