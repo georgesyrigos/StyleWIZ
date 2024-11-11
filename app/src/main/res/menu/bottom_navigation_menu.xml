@@ -12,8 +12,10 @@
         android:icon="@drawable/round_checkroom_24"/>
 
     <item
-        android:title=""
-        android:enabled="true"/>
+        android:id="@+id/bottom_add"
+        android:title="New Item"
+        android:icon="@drawable/round_add_24"/>
+
 
     <item
         android:id="@+id/bottom_suggest"
