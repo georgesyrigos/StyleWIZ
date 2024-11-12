@@ -29,7 +29,6 @@ public class UserActivity extends AppCompatActivity{
     private FirestoreHelper firestoreHelper;
     private String user; // Store username as a class-level variable
     TextView textView;
-    Button addBtn;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     String userID;
@@ -39,11 +38,14 @@ public class UserActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
 
+        //create and initialize the fragments for each category
         HomeFragment homeFragment = new HomeFragment();
         OutfitsFragment outfitsFragment = new OutfitsFragment();
         NewItemFragment newItemFragment = new NewItemFragment();
         SuggestionsFragment suggestionsFragment = new SuggestionsFragment();
+        ProfileFragment profileFragment = new ProfileFragment();
 
+        //navbar selections
         frameLayout = findViewById(R.id.frameLayout);
         bottomNavigationView = findViewById(R.id.bottomNavView);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -85,7 +87,7 @@ public class UserActivity extends AppCompatActivity{
                 else {
                     getSupportFragmentManager()
                             .beginTransaction()
-                            .replace(R.id.frameLayout,newItemFragment)
+                            .replace(R.id.frameLayout,profileFragment)
                             .commit();
 
                     return true;
@@ -95,11 +97,13 @@ public class UserActivity extends AppCompatActivity{
 
             }
         });
+        //first fragment
         bottomNavigationView.setSelectedItemId(R.id.bottom_home);
 
+
+        //logout textview
         TextView logout = findViewById(R.id.textView11);
 
-        addBtn = findViewById(R.id.buttonAdd);
 
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
@@ -120,29 +124,10 @@ public class UserActivity extends AppCompatActivity{
         }
 
 
-        // Set up the button to add a wardrobe item with default values
-        Button addButton = findViewById(R.id.buttonAdd);
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Use the class-level username variable here
-                if (user != null) {
-                    // Define default values for the wardrobe item
-                    String name = "T-Shirt";
-                    String size = "S";
-                    String color = "Black";
-                    String material = "Cotton";
-
-                    // Call Firestore helper function to add wardrobe item using the username
-
-                    firestoreHelper.addWardrobeItemByUsername(user, name, size, color, material);
-                } else {
-                    System.out.println("Username not available.");
-                }
-            }
-        });
 
 
+
+        //logout user
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
