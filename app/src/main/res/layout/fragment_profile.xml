@@ -8,16 +8,143 @@
     tools:context=".ProfileFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
+    <!-- Back Arrow Icon -->
+
+
+    <!-- Profile Image -->
+
+    <!-- Name Section -->
+
+    <TextView
+        android:id="@+id/fragment_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto"
+        android:text="Profile Fragment"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.513"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.458" />
+
+    <ImageView
+        android:id="@+id/profile_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="140dp"
+        android:background="#D1CDE0"
+        android:src="@drawable/outline_person_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto"
+        android:text="Username:"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/fragment_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto"
+        android:text="p001"
+        android:textColor="#7E57C2"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Email Section -->
+    <TextView
+        android:id="@+id/user_email_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto"
+        android:text="Email ID:"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/user_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/user_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto"
+        android:text="p001@unipi.gr"
+        android:textColor="#7E57C2"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@+id/user_email_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Items Section -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:textStyle="bold"
+        android:id="@+id/items"
         android:fontFamily="@font/roboto"
-        android:textSize="20sp"
-        android:text="Profile Fragment" />
+        android:text="Items:"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/user_email"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/user_coins"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto"
+        android:text="4"
+        android:textColor="#7E57C2"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@+id/items"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Edit Button -->
+    <Button
+        android:id="@+id/rewards_button"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_margin="16dp"
+        android:fontFamily="@font/roboto"
+        android:backgroundTint="#FFA726"
+        android:text="Edit Profile"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/user_coins"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Logout Button -->
+    <Button
+        android:id="@+id/logout_button"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_margin="16dp"
+        android:backgroundTint="#7E57C2"
+        android:fontFamily="@font/roboto"
+        android:text="Log Out"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/rewards_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

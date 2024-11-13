@@ -45,7 +45,7 @@ public class UserActivity extends AppCompatActivity{
         SuggestionsFragment suggestionsFragment = new SuggestionsFragment();
         ProfileFragment profileFragment = new ProfileFragment();
 
-        //navbar selections
+        //navbar selections to fragments
         frameLayout = findViewById(R.id.frameLayout);
         bottomNavigationView = findViewById(R.id.bottomNavView);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -97,7 +97,7 @@ public class UserActivity extends AppCompatActivity{
 
             }
         });
-        //first fragment
+        //home page fragment
         bottomNavigationView.setSelectedItemId(R.id.bottom_home);
 
 
