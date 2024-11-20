@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".NewItemFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -29,25 +28,27 @@
         android:id="@+id/buttonNew"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="592dp"
+        android:layout_marginTop="20dp"
         android:text="Add"
-        app:layout_constraintEnd_toEndOf="@+id/textView9"
-        app:layout_constraintStart_toStartOf="@+id/textView9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.012"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="70dp"
+        android:layout_marginEnd="30dp"
         android:gravity="center"
         android:orientation="vertical"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/selectImage"
             android:layout_width="100sp"
             android:layout_height="100sp"
             app:cardCornerRadius="10sp"
@@ -60,8 +61,9 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:id="@+id/itemImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:src="@drawable/outline_photo_camera_24" />
             </LinearLayout>
 
@@ -69,6 +71,29 @@
         </com.google.android.material.card.MaterialCardView>
 
         <EditText
+            android:id="@+id/textCategory"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/edittextshape"
+            android:fontFamily="@font/roboto"
+            android:hint="Enter category"
+            android:paddingStart="20dp"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/textStyleTag"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/edittextshape"
+            android:fontFamily="@font/roboto"
+            android:hint="Enter style tag"
+            android:paddingStart="20dp"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/textMaterial"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginTop="20dp"
@@ -79,6 +104,7 @@
             android:singleLine="true" />
 
         <EditText
+            android:id="@+id/textColor"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginTop="20dp"
@@ -89,34 +115,27 @@
             android:singleLine="true" />
 
         <EditText
+            android:id="@+id/textSeasonality"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/edittextshape"
             android:fontFamily="@font/roboto"
-            android:hint="Enter material"
+            android:hint="Enter seasonality"
             android:paddingStart="20dp"
             android:singleLine="true" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/AddItemBtn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/edittextshape"
+            android:backgroundTint="@color/blue"
+            android:text="ADD ITEM"
+            android:textColor="@color/white"
+            android:fontFamily="@font/roboto"
+            android:textStyle="bold"
+            android:layout_margin="20dp"/>
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/edittextshape"
-            android:fontFamily="@font/roboto"
-            android:hint="Enter material"
-            android:paddingStart="20dp"
-            android:singleLine="true" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/edittextshape"
-            android:fontFamily="@font/roboto"
-            android:hint="Enter material"
-            android:paddingStart="20dp"
-            android:singleLine="true" />
 
     </LinearLayout>
 
