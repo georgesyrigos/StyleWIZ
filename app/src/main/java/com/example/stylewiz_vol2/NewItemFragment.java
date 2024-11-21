@@ -22,6 +22,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -46,6 +49,11 @@ public class NewItemFragment extends Fragment {
     private Uri ImageUri;
     private Bitmap bitmap;
 
+    String[] styleTag = {"Sport", "Casual", "Formal"};
+    String[] material = {"Silk", "Cotton", "Fabric"};
+    AutoCompleteTextView autoCompleteTextView;
+    ArrayAdapter<String> adapterItems;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -56,6 +64,22 @@ public class NewItemFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
+        //dropdown select style Tag
+        autoCompleteTextView = view.findViewById(R.id.styleTag_txt);
+        adapterItems = new ArrayAdapter<String>(getActivity(),R.layout.list_item, styleTag);
+
+        autoCompleteTextView.setAdapter(adapterItems);
+
+        autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String item_StyleTag = adapterView.getItemAtPosition(i).toString();
+            }
+        });
+
+
+
+
         //Add image on click
         selectPhoto = view.findViewById(R.id.selectImage);
         ItemImageView = view.findViewById(R.id.itemImage);

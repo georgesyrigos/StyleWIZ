@@ -101,8 +101,7 @@ public class UserActivity extends AppCompatActivity{
         bottomNavigationView.setSelectedItemId(R.id.bottom_home);
 
 
-        //logout textview
-        TextView logout = findViewById(R.id.textView11);
+
 
 
         fAuth = FirebaseAuth.getInstance();
@@ -124,18 +123,6 @@ public class UserActivity extends AppCompatActivity{
         }
 
 
-
-
-
-        //logout user
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut(); // Sign out the user
-                startActivity(new Intent(UserActivity.this, MainActivity.class)); // Redirect to LoginActivity
-                finish(); // Close current activity
-            }
-        });
 
 
     }

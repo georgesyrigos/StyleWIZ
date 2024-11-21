@@ -81,16 +81,29 @@
             android:paddingStart="20dp"
             android:singleLine="true" />
 
-        <EditText
-            android:id="@+id/textStyleTag"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
+            android:hint="Select style tag"
             android:layout_marginTop="20dp"
-            android:background="@drawable/edittextshape"
-            android:fontFamily="@font/roboto"
-            android:hint="Enter style tag"
-            android:paddingStart="20dp"
-            android:singleLine="true" />
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+
+            <AutoCompleteTextView
+                android:id="@+id/styleTag_txt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edittextshape"
+                android:inputType="none"/>
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+
+
+
 
         <EditText
             android:id="@+id/textMaterial"
