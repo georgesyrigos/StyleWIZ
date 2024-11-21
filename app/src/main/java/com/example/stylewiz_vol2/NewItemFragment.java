@@ -18,12 +18,14 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -62,8 +64,6 @@ public class NewItemFragment extends Fragment {
             public void onClick(View v) {
                 //check permission
                 CheckStoragePermission();
-
-                PickFromGallery();
 
             }
         });
@@ -113,12 +113,14 @@ public class NewItemFragment extends Fragment {
 
     }
 
+
+
     private void CheckStoragePermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             if (ContextCompat.checkSelfPermission(getActivity(),
-                    Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+                    Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED){
                 ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},1);
+                        new String[]{Manifest.permission.READ_MEDIA_IMAGES},1);
             }else {
                 //method to pick image from gallery
                 PickFromGallery();
