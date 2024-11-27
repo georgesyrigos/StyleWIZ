@@ -16,11 +16,13 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +31,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,7 +48,9 @@ public class NewItemFragment extends Fragment {
     private FirestoreHelper firestoreHelper;
     private String user; // Store username as a class-level variable
     TextView textView;
-    Button newItem;
+    EditText mDes, mCol;
+    String item_Category, item_StyleTag, item_Seasonality;
+    AppCompatButton addItem;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     private ActivityResultLauncher<Intent> launcher;
@@ -54,7 +59,7 @@ public class NewItemFragment extends Fragment {
     private Uri ImageUri;
     private Bitmap bitmap;
 
-    String[] category = {"Top", "Bottom", "Outwear"};
+    String[] category = {"Top", "Bottom", "Outwear", "Shoes", "Hats"};
     String[] styleTag = {"Sport", "Casual", "Formal"};
     String[] seasonality = {"Autumn/Fall", "Spring/Summer", "All season"};
     AutoCompleteTextView autoCompleteTextView;
@@ -100,7 +105,7 @@ public class NewItemFragment extends Fragment {
         autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
-                String item_Category = adapterView.getItemAtPosition(i).toString();
+                item_Category = adapterView.getItemAtPosition(i).toString();
 
             }
         });
@@ -115,7 +120,7 @@ public class NewItemFragment extends Fragment {
         autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String item_StyleTag = adapterView.getItemAtPosition(i).toString();
+                item_StyleTag = adapterView.getItemAtPosition(i).toString();
             }
         });
 
@@ -129,7 +134,7 @@ public class NewItemFragment extends Fragment {
         autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
-                String item_Seasonality = adapterView.getItemAtPosition(i).toString();
+                item_Seasonality = adapterView.getItemAtPosition(i).toString();
 
             }
         });
@@ -181,36 +186,44 @@ public class NewItemFragment extends Fragment {
         if (intent != null && intent.hasExtra("username")) {
             user = intent.getStringExtra("username");
 
-            // Display the username in a TextView
-            TextView textViewUsername = view.findViewById(R.id.textView10);
-            if (textViewUsername != null) {
-                textViewUsername.setText("Welcome " + user + "!");
-            }
         }
 
 
 
-        // Set up the button to add a wardrobe item with default values
-        newItem = view.findViewById(R.id.buttonNew);
-        newItem.setOnClickListener(new View.OnClickListener() {
+        //add item button app compat
+        addItem = view.findViewById(R.id.AddItemBtn);
+        mDes = view.findViewById(R.id.textDescription);
+        mCol = view.findViewById(R.id.textColor);
+
+        addItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Fetch the text inside the onClick method
+                String cat = item_Category;
+                String tag = item_StyleTag;
+                String des = mDes.getText().toString().trim();
+                String col = mCol.getText().toString().trim();
+                String sea = item_Seasonality;
+
+
                 // Use the class-level username variable here
                 if (user != null) {
                     // Define default values for the wardrobe item
-                    String name = "Sweatshirt";
-                    String size = "M";
-                    String color = "Blue";
-                    String material = "Cotton";
+                    String category = cat;
+                    String styleTag = tag;
+                    String description = des;
+                    String color = col;
+                    String season = sea;
 
-                    // Call Firestore helper function to add wardrobe item using the username
-
-                    firestoreHelper.addWardrobeItemByUsername(user, name, size, color, material);
+                    //call function that inserts data to firestore based on the username
+                    firestoreHelper.addWardrobeItemByUsername(user, category, styleTag, description, color, season);
                 } else {
                     System.out.println("Username not available.");
                 }
+
             }
         });
+
 
     }
 
@@ -218,12 +231,13 @@ public class NewItemFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        // Save ImageUri to restore later
+        // Save ImageUri to restore later after fragment change
         if (ImageUri != null) {
             outState.putString("ImageUri", ImageUri.toString());
         }
     }
 
+    //Check the permission to pick images from the gallery
     private void CheckStoragePermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             if (ContextCompat.checkSelfPermission(getActivity(),
@@ -240,6 +254,7 @@ public class NewItemFragment extends Fragment {
         }
     }
 
+    //function to pick image that calls the launcher
     private void PickFromGallery() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -249,6 +264,7 @@ public class NewItemFragment extends Fragment {
     }
 
 
+    //makes the correct orientation forr the chosen image
     private Bitmap handleImageOrientation(Uri uri) throws IOException {
         InputStream inputStream = requireActivity().getContentResolver().openInputStream(uri);
         Bitmap originalBitmap = BitmapFactory.decodeStream(inputStream);
@@ -280,6 +296,7 @@ public class NewItemFragment extends Fragment {
     }
 
 
+    //makes the appropriate scale for the chosen image
     private Bitmap scaleBitmapToFitImageView(Bitmap bitmap, ImageView imageView) {
         int imageViewWidth = imageView.getWidth();
         int imageViewHeight = imageView.getHeight();
@@ -296,6 +313,7 @@ public class NewItemFragment extends Fragment {
     }
 
 
+    //for every image selected calls the above functions and displays it
     private void handleNewImage(Uri imageUri) {
         try {
             // Handle orientation
@@ -313,6 +331,7 @@ public class NewItemFragment extends Fragment {
             e.printStackTrace();
         }
     }
+
 
     //upload image into Firebase storage in store Image Url into Firebase firestore
 

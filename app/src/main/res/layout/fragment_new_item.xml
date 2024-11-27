@@ -24,17 +24,6 @@
         app:layout_constraintVertical_bias="0.042" />
 
 
-    <Button
-        android:id="@+id/buttonNew"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Add"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.012"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -106,14 +95,15 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <EditText
-            android:id="@+id/textMaterial"
+            android:id="@+id/textDescription"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/edittextshape"
             android:fontFamily="@font/roboto"
-            android:hint="Enter material"
+            android:hint="Enter description"
             android:paddingStart="20dp"
+            android:paddingEnd="15dp"
             android:singleLine="true" />
 
         <EditText
@@ -125,6 +115,7 @@
             android:fontFamily="@font/roboto"
             android:hint="Enter color"
             android:paddingStart="20dp"
+            android:paddingEnd="15dp"
             android:singleLine="true" />
 
         <com.google.android.material.textfield.TextInputLayout

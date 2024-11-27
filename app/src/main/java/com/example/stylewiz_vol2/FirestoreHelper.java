@@ -15,7 +15,7 @@ public class FirestoreHelper {
         db = FirebaseFirestore.getInstance();
     }
     // Method to get userId by username and add a wardrobe item
-    public void addWardrobeItemByUsername(String username, String name, String size, String color, String material) {
+    public void addWardrobeItemByUsername(String username, String category, String styleTag, String description, String color, String season) {
         // Query Firestore to find the userId by username
         db.collection("users")
                 .whereEqualTo("username", username)
@@ -29,7 +29,7 @@ public class FirestoreHelper {
                             System.out.println("Found userId: " + userId);
 
                             // Call the method to add the wardrobe item with default values
-                            addWardrobeItem(userId, name, size, color, material);
+                            addWardrobeItem(userId, category, styleTag, description,  color, season);
                         } else {
                             System.out.println("No user found with username: " + username);
                         }
@@ -41,16 +41,17 @@ public class FirestoreHelper {
     }
 
     // Method to add a wardrobe item to a specific user
-    private void addWardrobeItem(String userId, String name, String size, String color, String material) {
+    private void addWardrobeItem(String userId, String category, String styleTag, String description, String color, String season) {
         // Reference to the user's wardrobe sub-collection
         CollectionReference wardrobeRef = db.collection("users").document(userId).collection("wardrobe");
 
         // Create a map for the wardrobe item fields
         Map<String, Object> wardrobeItem = new HashMap<>();
-        wardrobeItem.put("name", name);
-        wardrobeItem.put("size", size);
+        wardrobeItem.put("category", category);
+        wardrobeItem.put("styleTag", styleTag);
+        wardrobeItem.put("description", description);
         wardrobeItem.put("color", color);
-        wardrobeItem.put("material", material);
+        wardrobeItem.put("season", season);
 
         // Add the wardrobe item to the wardrobe sub-collection
         wardrobeRef.add(wardrobeItem)

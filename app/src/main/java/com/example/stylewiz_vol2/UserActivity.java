@@ -115,11 +115,7 @@ public class UserActivity extends AppCompatActivity{
         if (intent != null && intent.hasExtra("username")) {
             user = intent.getStringExtra("username");
 
-            // Display the username in a TextView
-            TextView textViewUsername = findViewById(R.id.textView10);
-            if (textViewUsername != null) {
-                textViewUsername.setText("Welcome " + user+"!");
-            }
+
         }
 
 
