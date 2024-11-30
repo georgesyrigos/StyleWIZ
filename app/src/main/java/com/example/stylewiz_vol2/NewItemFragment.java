@@ -62,8 +62,8 @@ public class NewItemFragment extends Fragment {
     String[] category = {"Top", "Bottom", "Outwear", "Shoes", "Hats"};
     String[] styleTag = {"Sport", "Casual", "Formal"};
     String[] seasonality = {"Autumn/Fall", "Spring/Summer", "All season"};
-    AutoCompleteTextView autoCompleteTextView;
-    ArrayAdapter<String> adapterItems;
+    AutoCompleteTextView categoryDropdown, styleTagDropdown, seasonalityDropdown;
+
 
 
     @Override
@@ -84,7 +84,13 @@ public class NewItemFragment extends Fragment {
                     }
                 }
         );
+
+
+
     }
+
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -96,13 +102,15 @@ public class NewItemFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
-        //dropdown select category
-        autoCompleteTextView = view.findViewById(R.id.textCategory);
-        adapterItems = new ArrayAdapter<String>(getActivity(),R.layout.list_item, category);
 
-        autoCompleteTextView.setAdapter(adapterItems);
-
-        autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        // Dropdown for category
+        categoryDropdown = view.findViewById(R.id.textCategory);
+        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(getActivity(), R.layout.list_item, category);
+        categoryDropdown.setAdapter(categoryAdapter);
+        if (!TextUtils.isEmpty(item_Category)) {
+            categoryDropdown.setText(item_Category, false);
+        }
+        categoryDropdown.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
                 item_Category = adapterView.getItemAtPosition(i).toString();
@@ -112,12 +120,10 @@ public class NewItemFragment extends Fragment {
 
 
         //dropdown select style Tag
-        autoCompleteTextView = view.findViewById(R.id.textStyleTag);
-        adapterItems = new ArrayAdapter<String>(getActivity(),R.layout.list_item, styleTag);
-
-        autoCompleteTextView.setAdapter(adapterItems);
-
-        autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        styleTagDropdown = view.findViewById(R.id.textStyleTag);
+        ArrayAdapter<String> styleTagAdapter = new ArrayAdapter<>(getActivity(), R.layout.list_item, styleTag);
+        styleTagDropdown.setAdapter(styleTagAdapter);
+        styleTagDropdown.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 item_StyleTag = adapterView.getItemAtPosition(i).toString();
@@ -126,20 +132,16 @@ public class NewItemFragment extends Fragment {
 
 
         //dropdown select seasonality
-        autoCompleteTextView = view.findViewById(R.id.textSeasonality);
-        adapterItems = new ArrayAdapter<String>(getActivity(),R.layout.list_item, seasonality);
-
-        autoCompleteTextView.setAdapter(adapterItems);
-
-        autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        seasonalityDropdown= view.findViewById(R.id.textSeasonality);
+        ArrayAdapter<String> seasonalityAdapter = new ArrayAdapter<>(getActivity(), R.layout.list_item, seasonality);
+        seasonalityDropdown.setAdapter(seasonalityAdapter);
+        seasonalityDropdown.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
                 item_Seasonality = adapterView.getItemAtPosition(i).toString();
 
             }
         });
-
-
 
 
         //Add image on click
@@ -206,19 +208,32 @@ public class NewItemFragment extends Fragment {
                 String sea = item_Seasonality;
 
 
-                // Use the class-level username variable here
-                if (user != null) {
-                    // Define default values for the wardrobe item
-                    String category = cat;
-                    String styleTag = tag;
-                    String description = des;
-                    String color = col;
-                    String season = sea;
-
-                    //call function that inserts data to firestore based on the username
-                    firestoreHelper.addWardrobeItemByUsername(user, category, styleTag, description, color, season);
+                // Check if any required field is empty
+                if (cat == null || cat.isEmpty() || tag == null || tag.isEmpty() || des.isEmpty() || col.isEmpty() || sea == null || sea.isEmpty()) {
+                    // Show a Toast message if any field is empty
+                    Toast.makeText(getActivity(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                }else if (ImageUri == null) {
+                    // Check if the image is selected
+                    Toast.makeText(getActivity(), "Please select an image", Toast.LENGTH_SHORT).show();
                 } else {
-                    System.out.println("Username not available.");
+                    // Use the class-level username variable here
+                    if (user != null) {
+                        // Define default values for the wardrobe item
+                        String category = cat;
+                        String styleTag = tag;
+                        String description = des;
+                        String color = col;
+                        String season = sea;
+
+                        // Call function that inserts data to Firestore based on the username
+                        firestoreHelper.addWardrobeItemByUsername(user, category, styleTag, description, color, season);
+                        Toast.makeText(getActivity(), "The item has been added to your collection", Toast.LENGTH_SHORT).show();
+                        // Reset all fields after submission
+                        resetFields();
+
+                    } else {
+                        System.out.println("Username not available");
+                    }
                 }
 
             }
@@ -228,14 +243,7 @@ public class NewItemFragment extends Fragment {
     }
 
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        // Save ImageUri to restore later after fragment change
-        if (ImageUri != null) {
-            outState.putString("ImageUri", ImageUri.toString());
-        }
-    }
+
 
     //Check the permission to pick images from the gallery
     private void CheckStoragePermission() {
@@ -298,6 +306,7 @@ public class NewItemFragment extends Fragment {
 
     //makes the appropriate scale for the chosen image
     private Bitmap scaleBitmapToFitImageView(Bitmap bitmap, ImageView imageView) {
+        /*  this is to maintain the aspect ratio of the image
         int imageViewWidth = imageView.getWidth();
         int imageViewHeight = imageView.getHeight();
 
@@ -308,6 +317,15 @@ public class NewItemFragment extends Fragment {
 
         int scaledWidth = Math.round(bitmap.getWidth() * scale);
         int scaledHeight = Math.round(bitmap.getHeight() * scale);
+
+        return Bitmap.createScaledBitmap(bitmap, scaledWidth, scaledHeight, true);*/
+        //fill the image view with the selected image
+        int imageViewWidth = imageView.getWidth();
+        int imageViewHeight = imageView.getHeight();
+
+        // Scale the bitmap to exactly match the ImageView dimensions (stretch it)
+        int scaledWidth = imageViewWidth;
+        int scaledHeight = imageViewHeight;
 
         return Bitmap.createScaledBitmap(bitmap, scaledWidth, scaledHeight, true);
     }
@@ -330,6 +348,32 @@ public class NewItemFragment extends Fragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    // Method to reset fields
+    private void resetFields() {
+        // Reset the input fields
+        mDes.setText("");  // Clear description
+        mCol.setText("");  // Clear color
+
+        // Clear the AutoCompleteTextViews
+        categoryDropdown.setText("");  // Clear the selected category
+        styleTagDropdown.setText("");  // Clear the selected style tag
+        seasonalityDropdown.setText("");  // Clear the selected seasonality
+
+
+        // Clear the corresponding variables
+        item_Category = "";  // Clear the category variable
+        item_StyleTag = "";  // Clear the style tag variable
+        item_Seasonality = "";  // Clear the seasonality variable
+
+
+
+        // Clear the image URI and reset the ImageView
+        ImageUri = null;  // Clear the selected image URI
+        ItemImageView.setImageResource(R.drawable.round_image_search_24); // Set the default drawable
+
+
     }
 
 
