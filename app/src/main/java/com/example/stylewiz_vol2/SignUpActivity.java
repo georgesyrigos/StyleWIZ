@@ -131,6 +131,8 @@ public class SignUpActivity extends AppCompatActivity {
                     public void onSuccess(Void unused) {
                         Intent intent = new Intent(SignUpActivity.this, UserActivity.class); // Change to your desired activity
                         intent.putExtra("username", username);
+                        intent.putExtra("email", email);
+                        intent.putExtra("password", password);
                         startActivity(intent);
                         finish(); // Finish the SignUpActivity so user cannot go back to it
                     }

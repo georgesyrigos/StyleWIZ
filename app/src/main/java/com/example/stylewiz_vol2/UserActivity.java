@@ -29,7 +29,6 @@ public class UserActivity extends AppCompatActivity{
 
     private FirestoreHelper firestoreHelper;
     private String user; // Store username as a class-level variable
-    TextView textView;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     String userID;
@@ -38,6 +37,10 @@ public class UserActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
+
+
+
+
 
         frameLayout = findViewById(R.id.frameLayout);
         bottomNavigationView = findViewById(R.id.bottomNavView);
@@ -104,5 +107,7 @@ public class UserActivity extends AppCompatActivity{
 
 
     }
+
+
 
 }

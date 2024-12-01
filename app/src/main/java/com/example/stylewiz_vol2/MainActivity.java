@@ -119,10 +119,16 @@ public class MainActivity extends AppCompatActivity {
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
                             if (documentSnapshot.exists()) {
                                 String username = documentSnapshot.getString("username");
+                                String email = documentSnapshot.getString("email");
+                                String password = documentSnapshot.getString("password");
+
+
 
                                 // Navigate to Activity1
                                 Intent intent = new Intent(MainActivity.this, UserActivity.class);
                                 intent.putExtra("username", username);
+                                intent.putExtra("email", email);
+                                intent.putExtra("password", password);
                                 startActivity(intent);
                                 finish();
                             }
