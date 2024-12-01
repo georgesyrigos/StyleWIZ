@@ -227,7 +227,7 @@ public class NewItemFragment extends Fragment {
 
                         // Call function that inserts data to Firestore based on the username
                         firestoreHelper.addWardrobeItemByUsername(user, category, styleTag, description, color, season);
-                        Toast.makeText(getActivity(), "The item has been added to your collection", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "New item added to your collection", Toast.LENGTH_SHORT).show();
                         // Reset all fields after submission
                         resetFields();
 

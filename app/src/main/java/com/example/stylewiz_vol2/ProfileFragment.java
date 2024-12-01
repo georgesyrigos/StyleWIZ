@@ -5,6 +5,8 @@ import static android.content.Intent.getIntent;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -20,7 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class ProfileFragment extends Fragment {
 Button logoutBtn;
 TextView profileUsername, profileEmail, profilePassword;
-TextView itemsNumberTextView;
+TextView itemsNumberTextView, outfitsNumberTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -32,6 +34,7 @@ TextView itemsNumberTextView;
         profileEmail = view.findViewById(R.id.profileEmail);
         profilePassword = view.findViewById(R.id.profilePassword);
         itemsNumberTextView = view.findViewById(R.id.itemsNumber);
+        outfitsNumberTextView = view.findViewById(R.id.outfitsNumber);
         showUserData();
 
 
@@ -55,6 +58,13 @@ TextView itemsNumberTextView;
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        showUserData(); // Refresh data when the fragment becomes visible
+    }
+
+
     private void showUserData() {
 
         Intent intent = getActivity().getIntent();
@@ -66,10 +76,14 @@ TextView itemsNumberTextView;
         //profileUsername.setText(usernameUser);
         if (usernameUser != null && !usernameUser.isEmpty()) {
             profileUsername.setText(usernameUser);
-            getWardrobeItemCount(usernameUser, itemsNumberTextView);
+            listenToWardrobeItemCount(usernameUser, itemsNumberTextView);
+            listenToOutfitsItemCount(usernameUser, outfitsNumberTextView);
+
         } else {
             profileUsername.setText("Unknown User");
             itemsNumberTextView.setText("0");
+            outfitsNumberTextView.setText("0");
+
         }
 
         profileEmail.setText(emailUser);
@@ -77,10 +91,9 @@ TextView itemsNumberTextView;
 
     }
 
-    private void getWardrobeItemCount(String username, TextView itemsNumberTextView) {
+    private void listenToWardrobeItemCount(String username, TextView itemsNumberTextView) {
         FirebaseFirestore database = FirebaseFirestore.getInstance();
 
-        // Query the "users" collection to find the document with the given username
         database.collection("users")
                 .whereEqualTo("username", username)
                 .get()
@@ -89,22 +102,58 @@ TextView itemsNumberTextView;
                         // Get the first document matching the query
                         String userId = task.getResult().getDocuments().get(0).getId();
 
-                        // Access the "wardrobe" subcollection of the user
+                        // Set up a real-time listener on the "wardrobe" subcollection
                         database.collection("users")
                                 .document(userId)
                                 .collection("wardrobe")
-                                .get()
-                                .addOnCompleteListener(wardrobeTask -> {
-                                    if (wardrobeTask.isSuccessful() && wardrobeTask.getResult() != null) {
-                                        int itemCount = wardrobeTask.getResult().size();
+                                .addSnapshotListener((snapshot, error) -> {
+                                    if (error != null) {
+                                        itemsNumberTextView.setText("0");
+                                        return;
+                                    }
+                                    if (snapshot != null) {
+                                        int itemCount = snapshot.size();
                                         itemsNumberTextView.setText(String.valueOf(itemCount));
                                     } else {
                                         itemsNumberTextView.setText("0");
                                     }
                                 });
                     } else {
-                        // No user found with the given username
                         itemsNumberTextView.setText("0");
+                    }
+                });
+    }
+
+
+    private void listenToOutfitsItemCount(String username, TextView itemsNumberTextView) {
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+
+        database.collection("users")
+                .whereEqualTo("username", username)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null && !task.getResult().isEmpty()) {
+                        // Get the first document matching the query
+                        String userId = task.getResult().getDocuments().get(0).getId();
+
+                        // Set up a real-time listener on the "outfits" subcollection
+                        database.collection("users")
+                                .document(userId)
+                                .collection("outfits")
+                                .addSnapshotListener((snapshot, error) -> {
+                                    if (error != null) {
+                                        itemsNumberTextView.setText("0");
+                                        return;
+                                    }
+                                    if (snapshot != null) {
+                                        int itemCount = snapshot.size();
+                                        itemsNumberTextView.setText(String.valueOf(itemCount));
+                                    } else {
+                                        itemsNumberTextView.setText("0");
+                                    }
+                                });
+                    } else {
+                        outfitsNumberTextView.setText("0");
                     }
                 });
     }

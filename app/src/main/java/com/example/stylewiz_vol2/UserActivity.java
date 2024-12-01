@@ -38,10 +38,6 @@ public class UserActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
 
-
-
-
-
         frameLayout = findViewById(R.id.frameLayout);
         bottomNavigationView = findViewById(R.id.bottomNavView);
         // Initialize fragments only once
