@@ -2,6 +2,8 @@ package com.example.stylewiz_vol2;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
@@ -46,6 +48,8 @@ public class UserActivity extends AppCompatActivity{
         NewItemFragment newItemFragment = new NewItemFragment();
         SuggestionsFragment suggestionsFragment = new SuggestionsFragment();
         ProfileFragment profileFragment = new ProfileFragment();
+        EditProfileFragment editProfileFragment = new EditProfileFragment();
+
 
         // Add all fragments upfront and hide them
         getSupportFragmentManager().beginTransaction()
@@ -54,27 +58,39 @@ public class UserActivity extends AppCompatActivity{
                 .add(R.id.frameLayout, newItemFragment, "NEW_ITEM").hide(newItemFragment)
                 .add(R.id.frameLayout, suggestionsFragment, "SUGGESTIONS").hide(suggestionsFragment)
                 .add(R.id.frameLayout, profileFragment, "PROFILE").hide(profileFragment)
+                .add(R.id.frameLayout, editProfileFragment, "EDIT_PROFILE").hide(editProfileFragment)
                 .commit();
 
 
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+            // Clear back stack (removes fragments added with addToBackStack)
+            getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+
+            // Hide all other fragments first
+            transaction.hide(homeFragment)
+                    .hide(outfitsFragment)
+                    .hide(newItemFragment)
+                    .hide(suggestionsFragment)
+                    .hide(profileFragment)
+                    .hide(editProfileFragment); // Explicitly hide EditProfileFragment
+
+
+            // Show the selected fragment based on the item clicked
             if (item.getItemId() == R.id.bottom_checkroom) {
-                transaction.hide(homeFragment).hide(newItemFragment).hide(suggestionsFragment).hide(profileFragment);
                 transaction.show(outfitsFragment);
             } else if (item.getItemId() == R.id.bottom_home) {
-                transaction.hide(outfitsFragment).hide(newItemFragment).hide(suggestionsFragment).hide(profileFragment);
                 transaction.show(homeFragment);
             } else if (item.getItemId() == R.id.bottom_add) {
-                transaction.hide(homeFragment).hide(outfitsFragment).hide(suggestionsFragment).hide(profileFragment);
                 transaction.show(newItemFragment);
             } else if (item.getItemId() == R.id.bottom_suggest) {
-                transaction.hide(homeFragment).hide(outfitsFragment).hide(newItemFragment).hide(profileFragment);
                 transaction.show(suggestionsFragment);
             } else {
-                transaction.hide(homeFragment).hide(outfitsFragment).hide(newItemFragment).hide(suggestionsFragment);
-                transaction.show(profileFragment);
+                transaction.show(profileFragment); // Default to profileFragment
             }
+
             transaction.commit();
             return true;
         });

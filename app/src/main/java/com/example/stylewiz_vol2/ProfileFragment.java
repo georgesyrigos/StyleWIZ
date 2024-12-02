@@ -21,6 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ProfileFragment extends Fragment {
 Button logoutBtn;
+Button editProfileBtn;
 TextView profileUsername, profileEmail, profilePassword;
 TextView itemsNumberTextView, outfitsNumberTextView;
 
@@ -29,6 +30,9 @@ TextView itemsNumberTextView, outfitsNumberTextView;
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        // Initialize edit profile fragment
+        EditProfileFragment editProfileFragment = new EditProfileFragment();
+
 
         profileUsername = view.findViewById(R.id.profileUsername);
         profileEmail = view.findViewById(R.id.profileEmail);
@@ -52,6 +56,41 @@ TextView itemsNumberTextView, outfitsNumberTextView;
 
                 // Close current activity
                 requireActivity().finish();
+            }
+        });
+
+        editProfileBtn = view.findViewById(R.id.editProfile_button);
+
+        editProfileBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditProfileFragment editProfileFragment = new EditProfileFragment();
+
+                // Check if EditProfileFragment already exists
+                Fragment existingFragment = requireActivity().getSupportFragmentManager().findFragmentByTag("EDIT_PROFILE");
+                if (existingFragment == null) {
+                    // Add the EditProfileFragment if it doesn't exist
+                    requireActivity().getSupportFragmentManager().beginTransaction()
+                            .hide(ProfileFragment.this) // Hide the current fragment
+                            .add(R.id.frameLayout, editProfileFragment, "EDIT_PROFILE") // Add the new fragment
+                            .addToBackStack(null) // Add this transaction to the back stack
+                            .commit();
+                } else {
+                    // If it exists, just show it
+                    requireActivity().getSupportFragmentManager().beginTransaction()
+                            .hide(ProfileFragment.this)
+                            .show(existingFragment)
+                            .commit();
+                }
+
+
+                // Replace the current fragment with EditProfileFragment
+                /*requireActivity().getSupportFragmentManager().beginTransaction()
+                        .hide(ProfileFragment.this) // Hide the current fragment
+                        .add(R.id.frameLayout, editProfileFragment, "EDIT_PROFILE") // Add the new fragment
+                        .addToBackStack(null) // Add this transaction to the back stack
+                        .commit();*/
+
             }
         });
 
