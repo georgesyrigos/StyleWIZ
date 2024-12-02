@@ -28,12 +28,13 @@ public class EditProfileFragment extends Fragment {
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Navigate back to the ProfileFragment by popping the back stack
-                //requireActivity().getSupportFragmentManager().popBackStack();
+                // Pop the back stack to return to the ProfileFragment
+                requireActivity().getSupportFragmentManager().popBackStack();
 
+                // Optionally, you can also hide EditProfileFragment manually if needed
                 requireActivity().getSupportFragmentManager().beginTransaction()
-                        .remove(EditProfileFragment.this) // Remove the current fragment
-                        .show(requireActivity().getSupportFragmentManager().findFragmentByTag("PROFILE")) // Show the previously hidden fragment
+                        .hide(EditProfileFragment.this) // Hide the current fragment
+                        .show(requireActivity().getSupportFragmentManager().findFragmentByTag("PROFILE")) // Show the ProfileFragment
                         .commit();
             }
         });

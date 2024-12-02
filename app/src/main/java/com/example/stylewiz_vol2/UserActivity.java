@@ -99,8 +99,6 @@ public class UserActivity extends AppCompatActivity{
         bottomNavigationView.setSelectedItemId(R.id.bottom_home);
 
 
-
-
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
 
@@ -118,6 +116,25 @@ public class UserActivity extends AppCompatActivity{
 
 
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        // Check if EditProfileFragment is visible
+        Fragment editProfileFragment = fragmentManager.findFragmentByTag("EDIT_PROFILE");
+        if (editProfileFragment != null && editProfileFragment.isVisible()) {
+            // Show ProfileFragment and hide EditProfileFragment
+            fragmentManager.beginTransaction()
+                    .hide(editProfileFragment)
+                    .show(fragmentManager.findFragmentByTag("PROFILE"))
+                    .commit();
+            return; // Stop further back button processing
+        }
+
+        // If no specific fragment handling is needed, use default behavior
+        super.onBackPressed();
     }
 
 

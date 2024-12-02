@@ -73,7 +73,7 @@ TextView itemsNumberTextView, outfitsNumberTextView;
                     requireActivity().getSupportFragmentManager().beginTransaction()
                             .hide(ProfileFragment.this) // Hide the current fragment
                             .add(R.id.frameLayout, editProfileFragment, "EDIT_PROFILE") // Add the new fragment
-                            .addToBackStack(null) // Add this transaction to the back stack
+                            .addToBackStack("EDIT_PROFILE") // Add this transaction to the back stack
                             .commit();
                 } else {
                     // If it exists, just show it
@@ -84,12 +84,6 @@ TextView itemsNumberTextView, outfitsNumberTextView;
                 }
 
 
-                // Replace the current fragment with EditProfileFragment
-                /*requireActivity().getSupportFragmentManager().beginTransaction()
-                        .hide(ProfileFragment.this) // Hide the current fragment
-                        .add(R.id.frameLayout, editProfileFragment, "EDIT_PROFILE") // Add the new fragment
-                        .addToBackStack(null) // Add this transaction to the back stack
-                        .commit();*/
 
             }
         });
