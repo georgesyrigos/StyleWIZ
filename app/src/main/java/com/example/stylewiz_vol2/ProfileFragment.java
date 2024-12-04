@@ -14,8 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -39,7 +41,7 @@ TextView itemsNumberTextView, outfitsNumberTextView;
         profilePassword = view.findViewById(R.id.profilePassword);
         itemsNumberTextView = view.findViewById(R.id.itemsNumber);
         outfitsNumberTextView = view.findViewById(R.id.outfitsNumber);
-        showUserData();
+        showUserData(view);
 
 
         logoutBtn = view.findViewById(R.id.logout_button);
@@ -94,19 +96,40 @@ TextView itemsNumberTextView, outfitsNumberTextView;
     @Override
     public void onResume() {
         super.onResume();
-        showUserData(); // Refresh data when the fragment becomes visible
+        //showUserData(); // Refresh data when the fragment becomes visible
+        // Refresh user data when the fragment resumes
+        View view = getView(); // Ensure you get the current view
+        if (view != null) {
+            showUserData(view);
+        }
     }
 
 
-    private void showUserData() {
+    private void showUserData(View view) {
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null) {
+            String email = user.getEmail();
+            profileEmail = view.findViewById(R.id.profileEmail);
+
+            if (email != null) {
+                profileEmail.setText(email);
+            } else {
+                profileEmail.setHint("No email found");
+            }
+        } else {
+            Toast.makeText(getActivity(), "User not authenticated", Toast.LENGTH_SHORT).show();
+        }
 
         Intent intent = getActivity().getIntent();
 
         String usernameUser = intent.getStringExtra("username");
-        String emailUser = intent.getStringExtra("email");
+        //String emailUser = intent.getStringExtra("email");
         String passwordUser = intent.getStringExtra("password");
 
-        //profileUsername.setText(usernameUser);
+
+        //show the username and listeners from the firebase collections called
         if (usernameUser != null && !usernameUser.isEmpty()) {
             profileUsername.setText(usernameUser);
             listenToWardrobeItemCount(usernameUser, itemsNumberTextView);
@@ -119,11 +142,13 @@ TextView itemsNumberTextView, outfitsNumberTextView;
 
         }
 
-        profileEmail.setText(emailUser);
-        profilePassword.setText(passwordUser);
+        //profileEmail.setText(emailUser);
+        profilePassword.setText("******");
 
     }
 
+
+    //listener for wardrobe collection
     private void listenToWardrobeItemCount(String username, TextView itemsNumberTextView) {
         FirebaseFirestore database = FirebaseFirestore.getInstance();
 
@@ -158,6 +183,8 @@ TextView itemsNumberTextView, outfitsNumberTextView;
     }
 
 
+
+    //listener for outfits collection
     private void listenToOutfitsItemCount(String username, TextView itemsNumberTextView) {
         FirebaseFirestore database = FirebaseFirestore.getInstance();
 
