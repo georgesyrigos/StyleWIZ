@@ -64,4 +64,28 @@ public class FirestoreHelper {
     }
 
 
+    public void getUsername(String email, UsernameCallback callback) {
+        // Query Firestore to find the user by email
+        db.collection("users")
+                .whereEqualTo("email", email)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                        // Get the username from the document
+                        String username = task.getResult().getDocuments().get(0).getString("username");
+                        callback.onSuccess(username); // Pass the username back through the callback
+                    } else {
+                        callback.onFailure("No user found with email: " + email);
+                    }
+                })
+                .addOnFailureListener(e -> callback.onFailure("Error getting user: " + e.getMessage()));
+    }
+
+    // Callback interface for getUsername
+    public interface UsernameCallback {
+        void onSuccess(String username); // Called when the username is retrieved successfully
+        void onFailure(String errorMessage); // Called when there's an error
+    }
+
+
 }

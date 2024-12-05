@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ProfileFragment extends Fragment {
@@ -107,14 +109,37 @@ TextView itemsNumberTextView, outfitsNumberTextView;
 
     private void showUserData(View view) {
 
+        //get from firebase auth the current user email
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirestoreHelper firestoreHelper = new FirestoreHelper();
 
+        //show email
         if (user != null) {
             String email = user.getEmail();
             profileEmail = view.findViewById(R.id.profileEmail);
 
             if (email != null) {
                 profileEmail.setText(email);
+
+                // Fetch the username using FirestoreHelper
+                firestoreHelper.getUsername(email, new FirestoreHelper.UsernameCallback() {
+                    @Override
+                    public void onSuccess(String username) {
+                        profileUsername.setText(username);
+                        // Use the username for other functionalities if needed
+                        listenToWardrobeItemCount(username, itemsNumberTextView);
+                        listenToOutfitsItemCount(username, outfitsNumberTextView);
+                    }
+
+                    @Override
+                    public void onFailure(String errorMessage) {
+                        profileUsername.setText("Unknown User");
+                        itemsNumberTextView.setText("0");
+                        outfitsNumberTextView.setText("0");
+                        Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
             } else {
                 profileEmail.setHint("No email found");
             }
@@ -122,27 +147,8 @@ TextView itemsNumberTextView, outfitsNumberTextView;
             Toast.makeText(getActivity(), "User not authenticated", Toast.LENGTH_SHORT).show();
         }
 
-        Intent intent = getActivity().getIntent();
-
-        String usernameUser = intent.getStringExtra("username");
-        //String emailUser = intent.getStringExtra("email");
-        String passwordUser = intent.getStringExtra("password");
 
 
-        //show the username and listeners from the firebase collections called
-        if (usernameUser != null && !usernameUser.isEmpty()) {
-            profileUsername.setText(usernameUser);
-            listenToWardrobeItemCount(usernameUser, itemsNumberTextView);
-            listenToOutfitsItemCount(usernameUser, outfitsNumberTextView);
-
-        } else {
-            profileUsername.setText("Unknown User");
-            itemsNumberTextView.setText("0");
-            outfitsNumberTextView.setText("0");
-
-        }
-
-        //profileEmail.setText(emailUser);
         profilePassword.setText("******");
 
     }

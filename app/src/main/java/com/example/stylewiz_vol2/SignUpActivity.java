@@ -124,15 +124,13 @@ public class SignUpActivity extends AppCompatActivity {
                 Map<String, Object> user = new HashMap<>();
                 user.put("username", username);
                 user.put("email", email);
-                user.put("password" , password);
 
                 documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Intent intent = new Intent(SignUpActivity.this, UserActivity.class); // Change to your desired activity
+                        Intent intent = new Intent(SignUpActivity.this, UserActivity.class); // Change to User Activity
                         intent.putExtra("username", username);
                         intent.putExtra("email", email);
-                        intent.putExtra("password", password);
                         startActivity(intent);
                         finish(); // Finish the SignUpActivity so user cannot go back to it
                     }
