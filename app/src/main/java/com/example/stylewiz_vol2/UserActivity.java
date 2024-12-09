@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -117,6 +118,12 @@ public class UserActivity extends AppCompatActivity{
 
 
     }
+    private void switchFragment(Fragment fragment, String tag) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.frameLayout, fragment, tag)
+                .addToBackStack(null)  // Add to back stack
+                .commit();
+    }
 
     @Override
     public void onBackPressed() {
@@ -125,7 +132,7 @@ public class UserActivity extends AppCompatActivity{
         // Check if EditProfileFragment is visible
         Fragment editProfileFragment = fragmentManager.findFragmentByTag("EDIT_PROFILE");
         if (editProfileFragment != null && editProfileFragment.isVisible()) {
-            // Show ProfileFragment and hide EditProfileFragment
+            // Remove EditProfileFragment and show ProfileFragment
             fragmentManager.beginTransaction()
                     .hide(editProfileFragment)
                     .show(fragmentManager.findFragmentByTag("PROFILE"))

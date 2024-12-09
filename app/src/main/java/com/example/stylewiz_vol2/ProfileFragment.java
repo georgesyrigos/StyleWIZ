@@ -98,7 +98,6 @@ TextView itemsNumberTextView, outfitsNumberTextView;
     @Override
     public void onResume() {
         super.onResume();
-        //showUserData(); // Refresh data when the fragment becomes visible
         // Refresh user data when the fragment resumes
         View view = getView(); // Ensure you get the current view
         if (view != null) {

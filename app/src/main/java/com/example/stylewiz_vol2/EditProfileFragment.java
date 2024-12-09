@@ -30,6 +30,10 @@ public class EditProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_edit_profile, container, false);
 
 
+        EditText currentPassEditProfile = view.findViewById(R.id.editTextPasswordEditProfile);
+        EditText newPassEditProfile = view.findViewById(R.id.editTextNewPasswordEditProfile);
+        //set text with the current values
+        showUserData(view);
 
 
         // Initialize the button
@@ -44,8 +48,9 @@ public class EditProfileFragment extends Fragment {
 
                 // Optionally, you can also hide EditProfileFragment manually if needed
                 requireActivity().getSupportFragmentManager().beginTransaction()
-                        .hide(EditProfileFragment.this) // Hide the current fragment
+                        //.hide(EditProfileFragment.this) // Hide the current fragment
                         .show(requireActivity().getSupportFragmentManager().findFragmentByTag("PROFILE")) // Show the ProfileFragment
+                        .remove(EditProfileFragment.this)
                         .commit();
             }
         });
@@ -54,9 +59,59 @@ public class EditProfileFragment extends Fragment {
         return view;
     }
 
-    // Method to handle changes
-    private void updateUserProfile(String currentPassword, String newEmail, String newPassword) {
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Refresh user data when the fragment resumes
+        View view = getView(); // Ensure you get the current view
+        if (view != null) {
+            showUserData(view);
+        }
+    }
+
+    private void showUserData(View view) {
+        EditText usernameEditProfile = view.findViewById(R.id.editTextUsernameEditProfile);
+        EditText emailEditProfile = view.findViewById(R.id.editTextEmailEditProfile);
+
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirestoreHelper firestoreHelper = new FirestoreHelper();
+
+
+        if (user != null) {
+            String email = user.getEmail();
+            if (email!=null){
+                emailEditProfile.setText(email);
+                firestoreHelper.getUsername(email, new FirestoreHelper.UsernameCallback() {
+                    @Override
+                    public void onSuccess(String username) {
+                        usernameEditProfile.setText(username);
+
+                    }
+
+                    @Override
+                    public void onFailure(String errorMessage) {
+                        usernameEditProfile.setText("Unknown User");
+                        Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
+
+
+            } else {
+                emailEditProfile.setHint("No email found");
+            }
+        } else {
+            Toast.makeText(getActivity(), "User not authenticated", Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+
+    // Method to handle changes
+    private void updateUserProfile(String currentPassword, String newEmail, String newUsername, String newPassword) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
 
         if (user == null) {
             Toast.makeText(getContext(), "User not authenticated.", Toast.LENGTH_SHORT).show();
@@ -65,6 +120,8 @@ public class EditProfileFragment extends Fragment {
 
         // Get credentials for re-authentication
         AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), currentPassword);
+
+
 
         // Re-authenticate user
         user.reauthenticate(credential).addOnCompleteListener(task -> {
