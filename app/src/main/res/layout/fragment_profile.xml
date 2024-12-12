@@ -27,7 +27,7 @@
         app:strokeColor="@color/black"
         app:strokeWidth="2dp"
         app:shapeAppearanceOverlay="@style/circular"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="50dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
@@ -253,7 +253,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/roboto"
         android:text="Profile Fragment"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
