@@ -74,6 +74,45 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="8dp"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Email"
+                android:textColorHint="@color/gray"
+                app:hintAnimationEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextEmailEditProfile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edittextshape"
+                    android:drawableLeft="@drawable/outline_mail_outline_24"
+                    android:drawablePadding="15sp"
+                    android:ems="10"
+                    android:fontFamily="@font/roboto"
+                    android:textSize="20dp"
+                    android:inputType="text"
+                    android:paddingLeft="15sp"
+                    android:paddingRight="15sp"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:enabled="false" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="5dp"
             android:layout_marginRight="8dp"
@@ -111,41 +150,7 @@
         </LinearLayout>
 
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginLeft="8dp"
-            android:orientation="horizontal"
-            android:padding="8dp">
 
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Email"
-                android:textColorHint="@color/gray"
-                app:hintAnimationEnabled="true">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editTextEmailEditProfile"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/edittextshape"
-                    android:drawableLeft="@drawable/outline_mail_outline_24"
-                    android:drawablePadding="15sp"
-                    android:ems="10"
-                    android:fontFamily="@font/roboto"
-                    android:textSize="20dp"
-                    android:inputType="text"
-                    android:paddingLeft="15sp"
-                    android:paddingRight="15sp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

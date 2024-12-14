@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 
 public class ProfileFragment extends Fragment {
 Button logoutBtn;
@@ -106,13 +107,13 @@ TextView itemsNumberTextView, outfitsNumberTextView;
     }
 
 
-    private void showUserData(View view) {
+    private ListenerRegistration usernameListener; // Firestore listener reference
 
-        //get from firebase auth the current user email
+    private void showUserData(View view) {
+        // Get current user
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         FirestoreHelper firestoreHelper = new FirestoreHelper();
 
-        //show email
         if (user != null) {
             String email = user.getEmail();
             profileEmail = view.findViewById(R.id.profileEmail);
@@ -120,24 +121,33 @@ TextView itemsNumberTextView, outfitsNumberTextView;
             if (email != null) {
                 profileEmail.setText(email);
 
-                // Fetch the username using FirestoreHelper
-                firestoreHelper.getUsername(email, new FirestoreHelper.UsernameCallback() {
-                    @Override
-                    public void onSuccess(String username) {
-                        profileUsername.setText(username);
-                        // Use the username for other functionalities if needed
-                        listenToWardrobeItemCount(username, itemsNumberTextView);
-                        listenToOutfitsItemCount(username, outfitsNumberTextView);
-                    }
+                // Set up a listener for username changes
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                usernameListener = db.collection("users")
+                        .document(user.getUid()) // Use UID for unique identification
+                        .addSnapshotListener((snapshot, error) -> {
+                            if (error != null) {
+                                Toast.makeText(getActivity(), "Failed to listen for username changes: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                                return;
+                            }
 
-                    @Override
-                    public void onFailure(String errorMessage) {
-                        profileUsername.setText("Unknown User");
-                        itemsNumberTextView.setText("0");
-                        outfitsNumberTextView.setText("0");
-                        Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
-                    }
-                });
+                            if (snapshot != null && snapshot.exists()) {
+                                String username = snapshot.getString("username");
+                                if (username != null) {
+                                    profileUsername.setText(username);
+
+                                    // Update wardrobe and outfit counts
+                                    listenToWardrobeItemCount(username, itemsNumberTextView);
+                                    listenToOutfitsItemCount(username, outfitsNumberTextView);
+                                } else {
+                                    profileUsername.setText("Unknown User");
+                                    itemsNumberTextView.setText("0");
+                                    outfitsNumberTextView.setText("0");
+                                }
+                            } else {
+                                profileUsername.setText("Unknown User");
+                            }
+                        });
 
             } else {
                 profileEmail.setHint("No email found");
@@ -146,10 +156,7 @@ TextView itemsNumberTextView, outfitsNumberTextView;
             Toast.makeText(getActivity(), "User not authenticated", Toast.LENGTH_SHORT).show();
         }
 
-
-
         profilePassword.setText("******");
-
     }
 
 

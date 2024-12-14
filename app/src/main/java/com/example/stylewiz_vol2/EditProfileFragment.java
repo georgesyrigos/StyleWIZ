@@ -1,5 +1,6 @@
 package com.example.stylewiz_vol2;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,6 +28,8 @@ public class EditProfileFragment extends Fragment {
     Button cancelBtn, saveBtn;
     private boolean isPasswordVisible = false;
     EditText usernameEditProfile, emailEditProfile, currentPassEditProfile, newPassEditProfile;
+    String currentUsername;
+
 
 
 
@@ -217,6 +220,7 @@ public class EditProfileFragment extends Fragment {
     private void updateUserProfile(String newEmail, String newUsername, String newPassword, String currentPassword) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirestoreHelper firestoreHelper = new FirestoreHelper();
 
 
         if (user == null) {
@@ -228,7 +232,22 @@ public class EditProfileFragment extends Fragment {
         if (userEmail == null || userEmail.isEmpty()) {
             Toast.makeText(getContext(), "Unable to retrieve user email for re-authentication.", Toast.LENGTH_SHORT).show();
             return;
+        } else {
+            firestoreHelper.getUsername(userEmail, new FirestoreHelper.UsernameCallback() {
+                @Override
+                public void onSuccess(String username) {
+                    currentUsername = username;
+
+                }
+
+                @Override
+                public void onFailure(String errorMessage) {
+                    Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
+
+                }
+            });
         }
+
 
 
         // Get credentials for re-authentication
@@ -239,36 +258,98 @@ public class EditProfileFragment extends Fragment {
         // Re-authenticate user
         user.reauthenticate(credential).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                // Update email if new email is provided
-                if (newEmail != null && !newEmail.isEmpty() && !newEmail.equals(user.getEmail())) {
-                    confirmEmailChange(user, newEmail, currentPassword);
-                }
 
-                // Update username in Firestore
-                if (!newUsername.isEmpty()) {
+                // Update username and password if both provided and changed at the same time
+                if (newPassword != null && !newPassword.isEmpty() && !newUsername.equals(currentUsername)) {
+                    user.updatePassword(newPassword).addOnCompleteListener(passwordTask -> {
+                        if (passwordTask.isSuccessful()) {
+                            // Now, update username if provided and different from current one
+                            if (newUsername != null && !newUsername.isEmpty() && !newUsername.equals(currentUsername)) {
+                                db.collection("users").document(user.getUid())
+                                        .update("username", newUsername)
+                                        .addOnCompleteListener(userTask -> {
+                                            if (userTask.isSuccessful()) {
+                                                // Successfully updated the username
+                                                // Sign out the user after both changes (password and username)
+                                                FirebaseAuth.getInstance().signOut();
+
+                                                // Safely navigate to MainActivity for login
+                                                Activity activity = getActivity();
+                                                if (activity != null) {
+                                                    Intent intent = new Intent(activity, MainActivity.class);
+                                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                    activity.startActivity(intent);
+                                                    activity.finish();
+                                                }
+                                            } else {
+                                                Toast.makeText(getContext(), "Failed to update username: " + userTask.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            } else {
+                                // No need to update username if not provided or the same as the current one
+                                FirebaseAuth.getInstance().signOut();
+                                Activity activity = getActivity();
+                                if (activity != null) {
+                                    Intent intent = new Intent(activity, MainActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    activity.startActivity(intent);
+                                    activity.finish();
+                                }
+                            }
+                        } else {
+                            Toast.makeText(getContext(), "Failed to update password: " + passwordTask.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else if (newPassword != null && !newPassword.isEmpty() && newUsername.equals(currentUsername)) {
+                    // Update password if new password is provided and username is the same
+
+                    user.updatePassword(newPassword).addOnCompleteListener(passwordTask -> {
+                        if (passwordTask.isSuccessful()) {
+                            //Toast.makeText(getContext(), "Password updated successfully.", Toast.LENGTH_SHORT).show();
+                            FirebaseAuth.getInstance().signOut(); // Sign out the user
+
+                            // Safely navigate to MainActivity for login
+                            Activity activity = getActivity();
+                            if (activity != null) {
+                                Intent intent = new Intent(activity, MainActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                activity.startActivity(intent);
+                                activity.finish();
+                            }
+                        } else {
+                            Toast.makeText(getContext(), "Failed to update password: " + passwordTask.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else if (!newUsername.isEmpty() && !newUsername.equals(currentUsername) && newPassword.isEmpty()) {
+                    // Update username if new username is provided and password is the same
+
                     db.collection("users").document(user.getUid())
                             .update("username", newUsername)
                             .addOnCompleteListener(userTask -> {
                                 if (task.isSuccessful()) {
-                                    Toast.makeText(getContext(), "Username updated.", Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(getContext(), "Username updated.", Toast.LENGTH_SHORT).show();
+                                    // Pop the back stack to return to the ProfileFragment
+                                    requireActivity().getSupportFragmentManager().popBackStack();
+
+                                    // Optionally, you can also hide EditProfileFragment manually if needed
+                                    requireActivity().getSupportFragmentManager().beginTransaction()
+                                            //.hide(EditProfileFragment.this) // Hide the current fragment
+                                            .show(requireActivity().getSupportFragmentManager().findFragmentByTag("PROFILE")) // Show the ProfileFragment
+                                            .remove(EditProfileFragment.this)
+                                            .commit();
 
                                 } else {
                                     Toast.makeText(getContext(), "Username update failed.", Toast.LENGTH_SHORT).show();
 
                                 }
                             });
+
+
                 }
 
-                // Update password if new password is provided
-                if (newPassword != null && !newPassword.isEmpty()) {
-                    user.updatePassword(newPassword).addOnCompleteListener(passwordTask -> {
-                        if (passwordTask.isSuccessful()) {
-                            Toast.makeText(getContext(), "Password updated successfully.", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getContext(), "Failed to update password: " + passwordTask.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
+
+
+
             } else {
                 Toast.makeText(getContext(), "Re-authentication failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
 
@@ -276,53 +357,8 @@ public class EditProfileFragment extends Fragment {
         });
     }
 
-    private void confirmEmailChange(FirebaseUser user, String newEmail, String currentPassword) {
-        if (newEmail == null || newEmail.isEmpty()) {
-            Toast.makeText(getContext(), "New email cannot be empty.", Toast.LENGTH_SHORT).show();
-            return;
-        }
 
-        // Show confirmation dialog
-        new AlertDialog.Builder(getContext())
-                .setTitle("Confirm Email Change")
-                .setMessage("Are you sure you want to change your email to " + newEmail + "?")
-                .setPositiveButton("Yes", (dialog, which) -> {
-                    // Proceed with email update
-                    updateEmailWithoutVerification(user, newEmail, currentPassword);
-                })
-                .setNegativeButton("No", (dialog, which) -> {
-                    // User canceled the action
-                    dialog.dismiss();
-                })
-                .show();
-    }
 
-    private void updateEmailWithoutVerification(FirebaseUser user, String newEmail, String currentPassword) {
-        AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), currentPassword);
 
-        // Re-authenticate user
-        user.reauthenticate(credential).addOnCompleteListener(authTask -> {
-            if (authTask.isSuccessful()) {
-                // Update email directly
-                user.updateEmail(newEmail).addOnCompleteListener(emailTask -> {
-                    if (emailTask.isSuccessful()) {
-                        Toast.makeText(getContext(), "Email updated successfully.", Toast.LENGTH_SHORT).show();
-                    } else {
-                        String errorMessage = emailTask.getException() != null
-                                ? emailTask.getException().getMessage()
-                                : "Failed to update email.";
-                        Log.e("DEBUG", "Email update error: " + errorMessage);
-                        Toast.makeText(getContext(), "Failed to update email: " + errorMessage, Toast.LENGTH_SHORT).show();
-                    }
-                });
-            } else {
-                String errorMessage = authTask.getException() != null
-                        ? authTask.getException().getMessage()
-                        : "Re-authentication failed.";
-                Log.e("DEBUG", "Re-authentication error: " + errorMessage);
-                Toast.makeText(getContext(), "Re-authentication failed: " + errorMessage, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
 }

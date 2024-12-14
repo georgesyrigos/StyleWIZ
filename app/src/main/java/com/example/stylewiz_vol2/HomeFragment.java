@@ -19,6 +19,8 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 
 public class HomeFragment extends Fragment {
     TextView textViewUsername;
@@ -43,7 +45,61 @@ public class HomeFragment extends Fragment {
 
     }
 
+
+
+    private ListenerRegistration usernameListener; // Firestore listener reference
+
     private void showUserData(View view) {
+        textViewUsername = view.findViewById(R.id.homeFragment);
+
+        // Get current user
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null) {
+            String email = user.getEmail();
+
+            if (email != null) {
+
+                // Set up a listener for username changes
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                usernameListener = db.collection("users")
+                        .document(user.getUid()) // Use UID for unique identification
+                        .addSnapshotListener((snapshot, error) -> {
+                            if (error != null) {
+                                Toast.makeText(getActivity(), "Failed to listen for username changes: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            if (snapshot != null && snapshot.exists()) {
+                                String username = snapshot.getString("username");
+                                if (username != null) {
+                                    textViewUsername.setText("Welcome "+ username + "!");
+
+                                } else {
+                                    textViewUsername.setText("Unknown User");
+
+                                }
+                            } else {
+                                textViewUsername.setText("Unknown User");
+                            }
+                        });
+
+            } else {
+                Toast.makeText(getActivity(), "No email found", Toast.LENGTH_SHORT).show();            }
+        } else {
+            Toast.makeText(getActivity(), "User not authenticated", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+
+
+
+
+
+
+
+    private void showUserDat(View view) {
         textViewUsername = view.findViewById(R.id.homeFragment);
 
 
