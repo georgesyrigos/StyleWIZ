@@ -2,12 +2,15 @@ package com.example.stylewiz_vol2;
 
 import static android.app.ProgressDialog.show;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,13 +22,20 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HomeFragment extends Fragment {
     TextView textViewUsername;
-    private String user; // Store username as a class-level variable
-
+    private ListenerRegistration usernameListener; // Firestore listener reference
+    RecyclerView recyclerView;
+    ItemsAdapter adapter;
+    List<DataClass> dataList;
+    FirebaseFirestore db;
 
 
     @Override
@@ -40,14 +50,32 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Initialize Firestore
+        db = FirebaseFirestore.getInstance();
+
+        // Initialize RecyclerView and GridLayoutManager
+        recyclerView = view.findViewById(R.id.recyclerView);
+
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 1);
+        recyclerView.setLayoutManager(gridLayoutManager);
+
+        // Initialize dataList and adapter
+        dataList = new ArrayList<>();
+        adapter = new ItemsAdapter(getContext(), dataList);
+        recyclerView.setAdapter(adapter);
+
+        //Load user data for username
         showUserData(view);
+
+        // Fetch data from Firestore
+        fetchDataFromFirestore();
+
 
 
     }
 
 
 
-    private ListenerRegistration usernameListener; // Firestore listener reference
 
     private void showUserData(View view) {
         textViewUsername = view.findViewById(R.id.homeFragment);
@@ -85,7 +113,8 @@ public class HomeFragment extends Fragment {
                         });
 
             } else {
-                Toast.makeText(getActivity(), "No email found", Toast.LENGTH_SHORT).show();            }
+                Toast.makeText(getActivity(), "No email found", Toast.LENGTH_SHORT).show();
+            }
         } else {
             Toast.makeText(getActivity(), "User not authenticated", Toast.LENGTH_SHORT).show();
         }
@@ -93,47 +122,36 @@ public class HomeFragment extends Fragment {
     }
 
 
-
-
-
-
-
-
-    private void showUserDat(View view) {
-        textViewUsername = view.findViewById(R.id.homeFragment);
-
-
+    private void fetchDataFromFirestore() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        FirestoreHelper firestoreHelper = new FirestoreHelper();
-
-
         if (user != null) {
-            String email = user.getEmail();
-            if (email!=null){
-                firestoreHelper.getUsername(email, new FirestoreHelper.UsernameCallback() {
-                    @Override
-                    public void onSuccess(String username) {
-                        textViewUsername.setText("Welcome "+ username + "!");
+            String userId = user.getUid();
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-                    }
+            db.collection("users")
+                    .document(userId)
+                    .collection("wardrobe") // Access the 'wardrobe' sub-collection
+                    .addSnapshotListener((querySnapshot, error) -> {
+                        if (error != null) {
+                            Toast.makeText(getActivity(), "Failed to fetch data: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
 
-                    @Override
-                    public void onFailure(String errorMessage) {
-                        textViewUsername.setText("Unknown User");
-                        Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-
-
-
-            } else {
-                Toast.makeText(getActivity(), "User not authenticated", Toast.LENGTH_SHORT).show();
-            }
+                        if (querySnapshot != null) {
+                            dataList.clear();
+                            for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                                DataClass data = document.toObject(DataClass.class);
+                                dataList.add(data);
+                            }
+                            adapter.notifyDataSetChanged(); // Update RecyclerView
+                        }
+                    });
         } else {
-            Toast.makeText(getActivity(), "No email found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "User not logged in", Toast.LENGTH_SHORT).show();
         }
-
-
     }
+
+
+
+
 }

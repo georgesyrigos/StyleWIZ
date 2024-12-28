@@ -43,7 +43,7 @@
 
             <TextView
                 android:textSize="18sp"
-                android:id="@+id/tvCategory"
+                android:id="@+id/recCategory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto"
@@ -52,7 +52,7 @@
 
             <TextView
                 android:textSize="18sp"
-                android:id="@+id/tvStyleTag"
+                android:id="@+id/recStyleTag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto"
@@ -61,7 +61,7 @@
 
             <TextView
                 android:textSize="18sp"
-                android:id="@+id/tvSeasonality"
+                android:id="@+id/recSeasonality"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto"
