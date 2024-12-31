@@ -2,6 +2,8 @@ package com.example.stylewiz_vol2;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -48,14 +54,37 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         holder.recCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, DetailsFragment.class);
-                intent.putExtra("Image", dataList.get(holder.getAdapterPosition()).getImage());
-                intent.putExtra("Category", dataList.get(holder.getAdapterPosition()).getCategory());
-                intent.putExtra("Style Tag", dataList.get(holder.getAdapterPosition()).getStyleTag());
-                intent.putExtra("Seasonality", dataList.get(holder.getAdapterPosition()).getSeason());
 
+                DetailsFragment detailsFragment = new DetailsFragment();
 
-                context.startActivity(intent);
+                Bundle bundle = new Bundle();
+                bundle.putString("Category", dataList.get(holder.getAdapterPosition()).getCategory());
+                bundle.putString("StyleTag", dataList.get(holder.getAdapterPosition()).getStyleTag());
+                bundle.putString("Color", dataList.get(holder.getAdapterPosition()).getColor());
+                bundle.putString("Season", dataList.get(holder.getAdapterPosition()).getSeason());
+                bundle.putString("Description", dataList.get(holder.getAdapterPosition()).getDescription());
+                bundle.putString("Image", dataList.get(holder.getAdapterPosition()).getImage());
+                detailsFragment.setArguments(bundle);
+
+                FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+                // Find the currently visible fragment and hide it
+                Fragment currentFragment = null;
+                for (Fragment fragment : fragmentManager.getFragments()) {
+                    if (fragment.isVisible()) {
+                        currentFragment = fragment;
+                        break;
+                    }
+                }
+                if (currentFragment != null) {
+                    transaction.hide(currentFragment);
+                }
+
+                // Add DetailsFragment or show if already added
+                transaction.add(R.id.frameLayout, detailsFragment, "DETAILS")
+                        .addToBackStack("DETAILS")
+                        .commit();
             }
         });
     }

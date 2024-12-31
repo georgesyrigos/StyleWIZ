@@ -50,6 +50,7 @@ public class UserActivity extends AppCompatActivity{
         SuggestionsFragment suggestionsFragment = new SuggestionsFragment();
         ProfileFragment profileFragment = new ProfileFragment();
         EditProfileFragment editProfileFragment = new EditProfileFragment();
+        DetailsFragment detailsFragment = new DetailsFragment();
 
 
         // Add all fragments upfront and hide them
@@ -60,6 +61,7 @@ public class UserActivity extends AppCompatActivity{
                 .add(R.id.frameLayout, suggestionsFragment, "SUGGESTIONS").hide(suggestionsFragment)
                 .add(R.id.frameLayout, profileFragment, "PROFILE").hide(profileFragment)
                 .add(R.id.frameLayout, editProfileFragment, "EDIT_PROFILE").hide(editProfileFragment)
+                .add(R.id.frameLayout, detailsFragment, "DETAILS").hide(detailsFragment)
                 .commit();
 
 
@@ -76,7 +78,8 @@ public class UserActivity extends AppCompatActivity{
                     .hide(newItemFragment)
                     .hide(suggestionsFragment)
                     .hide(profileFragment)
-                    .hide(editProfileFragment); // Explicitly hide EditProfileFragment
+                    .hide(editProfileFragment)
+                    .hide(detailsFragment);
 
 
             // Show the selected fragment based on the item clicked
@@ -125,24 +128,7 @@ public class UserActivity extends AppCompatActivity{
                 .commit();
     }
 
-    @Override
-    public void onBackPressed() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
 
-        // Check if EditProfileFragment is visible
-        Fragment editProfileFragment = fragmentManager.findFragmentByTag("EDIT_PROFILE");
-        if (editProfileFragment != null && editProfileFragment.isVisible()) {
-            // Remove EditProfileFragment and show ProfileFragment
-            fragmentManager.beginTransaction()
-                    .hide(editProfileFragment)
-                    .show(fragmentManager.findFragmentByTag("PROFILE"))
-                    .commit();
-            return; // Stop further back button processing
-        }
-
-        // If no specific fragment handling is needed, use default behavior
-        super.onBackPressed();
-    }
 
 
 

@@ -8,6 +8,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -72,7 +75,7 @@ TextView itemsNumberTextView, outfitsNumberTextView;
                 EditProfileFragment editProfileFragment = new EditProfileFragment();
 
                 // Check if EditProfileFragment already exists
-                Fragment existingFragment = requireActivity().getSupportFragmentManager().findFragmentByTag("EDIT_PROFILE");
+                /*Fragment existingFragment = requireActivity().getSupportFragmentManager().findFragmentByTag("EDIT_PROFILE");
                 if (existingFragment == null) {
                     // Add the EditProfileFragment if it doesn't exist
                     requireActivity().getSupportFragmentManager().beginTransaction()
@@ -86,7 +89,27 @@ TextView itemsNumberTextView, outfitsNumberTextView;
                             .hide(ProfileFragment.this)
                             .show(existingFragment)
                             .commit();
+                }*/
+
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+                // Find the currently visible fragment and hide it
+                Fragment currentFragment = null;
+                for (Fragment fragment : fragmentManager.getFragments()) {
+                    if (fragment.isVisible()) {
+                        currentFragment = fragment;
+                        break;
+                    }
                 }
+                if (currentFragment != null) {
+                    transaction.hide(currentFragment);
+                }
+
+                // Add DetailsFragment or show if already added
+                transaction.add(R.id.frameLayout, editProfileFragment, "EDIT_PROFILE")
+                        .addToBackStack("EDIT_PROFILE")
+                        .commit();
 
 
 

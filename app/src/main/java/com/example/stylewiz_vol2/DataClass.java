@@ -21,17 +21,17 @@ public class DataClass {
         return styleTag;
     }
 
-    /*public String getDataColor() {
-        return dataColor;
-    }*/
+    public String getColor() {
+        return color;
+    }
 
     public String getSeason() {
         return season;
     }
 
-    /*public String getDataDescription() {
-        return dataDescription;
-    }*/
+    public String getDescription() {
+        return description;
+    }
 
     public String getImage() {
         return image;
