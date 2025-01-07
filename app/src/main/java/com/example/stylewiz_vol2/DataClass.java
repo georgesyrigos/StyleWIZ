@@ -8,6 +8,8 @@ public class DataClass {
     private String season;
     private String description;
     private String image;
+    private String documentId;
+
 
     public DataClass() {
 
@@ -37,14 +39,19 @@ public class DataClass {
         return image;
     }
 
-    //public DataClass(String dataCategory, String dataStyleTag, String dataColor, String dataSeasonality, String dataDescription, String dataImage){
+    public String getDocumentId() {
+        return documentId;
+    }
+
+    public void setDocumentId(String documentId) {
+        this.documentId = documentId;
+    }
+
 
     public DataClass(String dataCategory, String dataStyleTag, String dataSeasonality, String dataImage){
         this.category = dataCategory;
         this.styleTag = dataStyleTag;
-        //this.dataColor = dataColor;
         this.season = dataSeasonality;
-        //this.dataDescription = dataDescription;
         this.image = dataImage;
     }
 

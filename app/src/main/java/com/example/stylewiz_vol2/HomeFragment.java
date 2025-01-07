@@ -10,8 +10,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +38,9 @@ public class HomeFragment extends Fragment {
     ItemsAdapter adapter;
     List<DataClass> dataList;
     FirebaseFirestore db;
+    private boolean isManualUpdate = false;
+
+
 
 
     @Override
@@ -61,8 +66,15 @@ public class HomeFragment extends Fragment {
 
         // Initialize dataList and adapter
         dataList = new ArrayList<>();
-        adapter = new ItemsAdapter(getContext(), dataList);
+        adapter = new ItemsAdapter(getContext(), dataList, documentId -> {
+            isManualUpdate = true; // Lock updates
+            deleteItemFromFirestore(documentId); // Delete from Firestore
+        });
         recyclerView.setAdapter(adapter);
+
+        // Attach SwipeToDeleteCallback to RecyclerView
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback(getContext(), adapter));
+        itemTouchHelper.attachToRecyclerView(recyclerView);
 
         //Load user data for username
         showUserData(view);
@@ -121,16 +133,34 @@ public class HomeFragment extends Fragment {
 
     }
 
+    private void deleteItemFromFirestore(String documentId) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            String userId = user.getUid();
+            db.collection("users")
+                    .document(userId)
+                    .collection("wardrobe")
+                    .document(documentId)
+                    .delete()
+                    .addOnSuccessListener(aVoid -> {
+                        Log.d("Firestore", "Document successfully deleted.");
+                        isManualUpdate = false; // Unlock updates
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("Firestore", "Error deleting document", e);
+                        isManualUpdate = false; // Unlock updates even on failure
+                    });
+        }
+    }
+
 
     private void fetchDataFromFirestore() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             String userId = user.getUid();
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-
             db.collection("users")
                     .document(userId)
-                    .collection("wardrobe") // Access the 'wardrobe' sub-collection
+                    .collection("wardrobe")
                     .addSnapshotListener((querySnapshot, error) -> {
                         if (error != null) {
                             Toast.makeText(getActivity(), "Failed to fetch data: " + error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -138,18 +168,30 @@ public class HomeFragment extends Fragment {
                         }
 
                         if (querySnapshot != null) {
-                            dataList.clear();
+                            // Skip updates if manual operation is in progress
+                            if (isManualUpdate) {
+                                Log.d("Firestore", "Manual update in progress, skipping snapshot update.");
+                                return;
+                            }
+
+                            List<DataClass> updatedList = new ArrayList<>();
                             for (DocumentSnapshot document : querySnapshot.getDocuments()) {
                                 DataClass data = document.toObject(DataClass.class);
-                                dataList.add(data);
+                                if (data != null) {
+                                    data.setDocumentId(document.getId());
+                                    updatedList.add(data);
+                                }
                             }
-                            adapter.notifyDataSetChanged(); // Update RecyclerView
+
+                            // Update dataList and RecyclerView
+                            dataList.clear();
+                            dataList.addAll(updatedList);
+                            adapter.notifyDataSetChanged();
                         }
                     });
-        } else {
-            Toast.makeText(getActivity(), "User not logged in", Toast.LENGTH_SHORT).show();
         }
     }
+
 
 
 

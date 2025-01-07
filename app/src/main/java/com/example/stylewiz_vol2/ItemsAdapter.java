@@ -26,9 +26,32 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
     private Context context;
     private List<DataClass> dataList;
 
-    public ItemsAdapter(Context context, List<DataClass> dataList) {
+
+    public interface OnItemDeleteListener {
+        void onItemDelete(String documentId);
+    }
+
+    private OnItemDeleteListener deleteListener;
+
+    // Constructor accepting the delete listener
+    public ItemsAdapter(Context context, List<DataClass> dataList, OnItemDeleteListener deleteListener) {
         this.context = context;
         this.dataList = dataList;
+        this.deleteListener = deleteListener;
+    }
+
+    public synchronized void deleteItemAtPosition(int position) {
+        if (position >= 0 && position < dataList.size()) {
+            DataClass itemToDelete = dataList.get(position); // Get the item being deleted
+            dataList.remove(position); // Remove it from the list
+            notifyItemRemoved(position); // Notify RecyclerView
+            notifyItemRangeChanged(position, dataList.size());
+
+            // Notify listener if item has a document ID
+            if (deleteListener != null && itemToDelete.getDocumentId() != null) {
+                deleteListener.onItemDelete(itemToDelete.getDocumentId());
+            }
+        }
     }
 
     @NonNull
@@ -43,9 +66,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         DataClass currentData = dataList.get(position);
 
         Glide.with(context).load(dataList.get(position).getImage()).into(holder.recImage);
-        //holder.recCategory.setText(dataList.get(position).getCategory());
-        //holder.recStyleTag.setText(dataList.get(position).getStyleTag());
-        //holder.recSeasonality.setText(dataList.get(position).getSeason());
 
         holder.recCategory.setText("Category: " + currentData.getCategory());
         holder.recStyleTag.setText("Style Tag: " + currentData.getStyleTag());
@@ -93,13 +113,33 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
     public int getItemCount() {
         return dataList.size();
     }
+
+    /* Add this method to handle item deletion
+    public void deleteItem(int position) {
+        if (position >= 0 && position < dataList.size()) {
+            Log.e("Adapter", "Deleting item at position: " + position);
+            dataList.remove(position); // Remove the item from the dataset
+            notifyItemRemoved(position); // Notify RecyclerView about the removal
+            Log.e("Adapter", "Remaining items count: " + dataList.size());
+        } else {
+            Log.e("Adapter", "Invalid delete position: " + position);
+        }
+    }
+*/
+
+    public List<DataClass> getDataList() {
+        return dataList;
+    }
+
+
 }
+
 
 
 class ItemViewHolder extends RecyclerView.ViewHolder{
 
     ImageView recImage;
-    TextView recCategory, recStyleTag, recColor, recSeasonality, recDescription;
+    TextView recCategory, recStyleTag, recSeasonality;
     CardView recCard;
 
     public ItemViewHolder(@NonNull View itemView) {
@@ -109,11 +149,8 @@ class ItemViewHolder extends RecyclerView.ViewHolder{
         recCard = itemView.findViewById(R.id.recCard);
         recCategory = itemView.findViewById(R.id.recCategory);
         recStyleTag = itemView.findViewById(R.id.recStyleTag);
-        //recColor = itemView.findViewById(R.id.recColor);
         recSeasonality = itemView.findViewById(R.id.recSeasonality);
-        //recDescription = itemView.findViewById(R.id.recDescription);
-
-
 
     }
+
 }
