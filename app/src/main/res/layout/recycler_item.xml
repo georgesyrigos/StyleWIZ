@@ -18,8 +18,8 @@
 
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:id="@+id/recImage"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
@@ -36,9 +36,9 @@
         <LinearLayout
             android:layout_gravity="center"
             android:orientation="vertical"
-            android:layout_marginLeft="10dp"
-
-            android:layout_width="match_parent"
+            android:layout_marginStart="5dp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
             android:layout_height="wrap_content">
 
             <TextView
@@ -69,6 +69,18 @@
                 android:textStyle="normal"/>
 
         </LinearLayout>
+
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:id="@+id/likeButton"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:src="@drawable/round_favorite_border_24"
+            app:tint="@color/blue"/>
+
+
+
 
     </LinearLayout>
 

@@ -1,7 +1,6 @@
 package com.example.stylewiz_vol2;
 
 public class DataClass {
-
     private String category;
     private String styleTag;
     private String color;
@@ -9,42 +8,60 @@ public class DataClass {
     private String description;
     private String image;
     private String documentId;
+    private boolean liked;
 
 
     public DataClass() {
 
     }
 
+
     public String getCategory() {
+
         return category;
     }
 
     public String getStyleTag() {
+
         return styleTag;
     }
 
     public String getColor() {
+
         return color;
     }
 
     public String getSeason() {
+
         return season;
     }
 
     public String getDescription() {
+
         return description;
     }
 
     public String getImage() {
+
         return image;
     }
 
+    //item id
     public String getDocumentId() {
+
         return documentId;
     }
 
     public void setDocumentId(String documentId) {
+
         this.documentId = documentId;
+    }
+    public boolean isLiked() {
+        return liked;
+    }
+
+    public void setLiked(boolean liked) {
+        this.liked = liked;
     }
 
 

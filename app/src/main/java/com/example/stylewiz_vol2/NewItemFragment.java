@@ -208,6 +208,8 @@ public class NewItemFragment extends Fragment {
                 String sea = item_Seasonality;
 
 
+
+
                 // Check if any required field is empty
                 if (cat == null || cat.isEmpty() || tag == null || tag.isEmpty() || des.isEmpty() || col.isEmpty() || sea == null || sea.isEmpty()) {
                     // Show a Toast message if any field is empty
@@ -224,9 +226,10 @@ public class NewItemFragment extends Fragment {
                         String description = des;
                         String color = col;
                         String season = sea;
+                        boolean liked = false;
 
                         // Call function that inserts data to Firestore based on the username
-                        firestoreHelper.addWardrobeItemByUsername(user, category, styleTag, description, color, season);
+                        firestoreHelper.addWardrobeItemByUsername(user, category, styleTag, description, color, season, liked);
                         Toast.makeText(getActivity(), "New item added!", Toast.LENGTH_SHORT).show();
                         // Reset all fields after submission
                         resetFields();
@@ -267,7 +270,7 @@ public class NewItemFragment extends Fragment {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        //call launcer
+        //call launcher
         launcher.launch(intent);
     }
 
@@ -306,19 +309,6 @@ public class NewItemFragment extends Fragment {
 
     //makes the appropriate scale for the chosen image
     private Bitmap scaleBitmapToFitImageView(Bitmap bitmap, ImageView imageView) {
-        /*  this is to maintain the aspect ratio of the image
-        int imageViewWidth = imageView.getWidth();
-        int imageViewHeight = imageView.getHeight();
-
-        // Scale the bitmap while maintaining aspect ratio
-        float widthRatio = (float) imageViewWidth / bitmap.getWidth();
-        float heightRatio = (float) imageViewHeight / bitmap.getHeight();
-        float scale = Math.min(widthRatio, heightRatio);
-
-        int scaledWidth = Math.round(bitmap.getWidth() * scale);
-        int scaledHeight = Math.round(bitmap.getHeight() * scale);
-
-        return Bitmap.createScaledBitmap(bitmap, scaledWidth, scaledHeight, true);*/
         //fill the image view with the selected image
         int imageViewWidth = imageView.getWidth();
         int imageViewHeight = imageView.getHeight();

@@ -15,7 +15,7 @@ public class FirestoreHelper {
         db = FirebaseFirestore.getInstance();
     }
     // Method to get userId by username and add a wardrobe item
-    public void addWardrobeItemByUsername(String username, String category, String styleTag, String description, String color, String season) {
+    public void addWardrobeItemByUsername(String username, String category, String styleTag, String description, String color, String season, boolean liked) {
         // Query Firestore to find the userId by username
         db.collection("users")
                 .whereEqualTo("username", username)
@@ -29,7 +29,7 @@ public class FirestoreHelper {
                             System.out.println("Found userId: " + userId);
 
                             // Call the method to add the wardrobe item with default values
-                            addWardrobeItem(userId, category, styleTag, description,  color, season);
+                            addWardrobeItem(userId, category, styleTag, description,  color, season, liked);
                         } else {
                             System.out.println("No user found with username: " + username);
                         }
@@ -41,7 +41,7 @@ public class FirestoreHelper {
     }
 
     // Method to add a wardrobe item to a specific user
-    private void addWardrobeItem(String userId, String category, String styleTag, String description, String color, String season) {
+    private void addWardrobeItem(String userId, String category, String styleTag, String description, String color, String season, boolean liked) {
         // Reference to the user's wardrobe sub-collection
         CollectionReference wardrobeRef = db.collection("users").document(userId).collection("wardrobe");
 
@@ -52,6 +52,8 @@ public class FirestoreHelper {
         wardrobeItem.put("description", description);
         wardrobeItem.put("color", color);
         wardrobeItem.put("season", season);
+        wardrobeItem.put("liked", liked);
+
 
         // Add the wardrobe item to the wardrobe sub-collection
         wardrobeRef.add(wardrobeItem)
@@ -79,6 +81,28 @@ public class FirestoreHelper {
                     }
                 })
                 .addOnFailureListener(e -> callback.onFailure("Error getting user: " + e.getMessage()));
+    }
+
+    // Update the 'liked' field of a specific item in the user's wardrobe
+    public void updateLikedField(String userId, String documentId, boolean liked, FirestoreCallback callback) {
+        // Reference to the specific wardrobe item document
+        db.collection("users")
+                .document(userId)
+                .collection("wardrobe")
+                .document(documentId)
+                .update("liked", liked)
+                .addOnSuccessListener(aVoid -> {
+                    if (callback != null) callback.onSuccess();
+                })
+                .addOnFailureListener(e -> {
+                    if (callback != null) callback.onFailure(e);
+                });
+    }
+
+    // Callback interface for handling success/failure of Firestore operations
+    public interface FirestoreCallback {
+        void onSuccess();
+        void onFailure(Exception e);
     }
 
     // Callback interface for getUsername

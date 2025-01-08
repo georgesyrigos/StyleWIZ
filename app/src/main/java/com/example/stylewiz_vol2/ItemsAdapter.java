@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -19,6 +20,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
@@ -67,9 +69,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
 
         Glide.with(context).load(dataList.get(position).getImage()).into(holder.recImage);
 
-        holder.recCategory.setText("Category: " + currentData.getCategory());
-        holder.recStyleTag.setText("Style Tag: " + currentData.getStyleTag());
-        holder.recSeasonality.setText("Seasonality: " + currentData.getSeason());
+        holder.recCategory.setText(currentData.getCategory());
+        holder.recStyleTag.setText(currentData.getStyleTag());
+        holder.recSeasonality.setText(currentData.getSeason());
 
         holder.recCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,6 +109,52 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
                         .commit();
             }
         });
+
+        // Set the initial state of the like button based on the 'liked' field
+        if (currentData.isLiked()) {
+            holder.likeButton.setImageResource(R.drawable.round_favorite_24); // Filled heart
+            holder.likeButton.setColorFilter(ContextCompat.getColor(context, R.color.blue));
+        } else {
+            holder.likeButton.setImageResource(R.drawable.round_favorite_border_24); // Empty heart
+            holder.likeButton.setColorFilter(ContextCompat.getColor(context, R.color.blue));
+        }
+
+        // Get the userId from authentication and itemId from data class as document id
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String itemId = currentData.getDocumentId();
+
+
+        // Handle like button click
+        holder.likeButton.setOnClickListener(v -> {
+            boolean newLikedState = !currentData.isLiked(); // Toggle the like state
+
+            // Update the UI based on the new state
+            if (newLikedState) {
+                holder.likeButton.setImageResource(R.drawable.round_favorite_24); // Filled heart
+                holder.likeButton.setColorFilter(ContextCompat.getColor(context, R.color.blue));
+            } else {
+                holder.likeButton.setImageResource(R.drawable.round_favorite_border_24); // Empty heart
+                holder.likeButton.setColorFilter(ContextCompat.getColor(context, R.color.blue));
+            }
+
+            // Update local data
+            currentData.setLiked(newLikedState);
+
+
+            // Call FirestoreHelper to update the liked field in Firestore
+            FirestoreHelper firestoreHelper = new FirestoreHelper();
+            firestoreHelper.updateLikedField(userId, itemId, newLikedState, new FirestoreHelper.FirestoreCallback() {
+                @Override
+                public void onSuccess() {
+                    Log.d("Firestore", "Liked field updated successfully.");
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    Log.e("Firestore", "Error updating liked field.", e);
+                }
+            });
+        });
     }
 
     @Override
@@ -114,18 +162,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         return dataList.size();
     }
 
-    /* Add this method to handle item deletion
-    public void deleteItem(int position) {
-        if (position >= 0 && position < dataList.size()) {
-            Log.e("Adapter", "Deleting item at position: " + position);
-            dataList.remove(position); // Remove the item from the dataset
-            notifyItemRemoved(position); // Notify RecyclerView about the removal
-            Log.e("Adapter", "Remaining items count: " + dataList.size());
-        } else {
-            Log.e("Adapter", "Invalid delete position: " + position);
-        }
-    }
-*/
+
 
     public List<DataClass> getDataList() {
         return dataList;
@@ -138,7 +175,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
 
 class ItemViewHolder extends RecyclerView.ViewHolder{
 
-    ImageView recImage;
+    ImageView recImage, likeButton;
     TextView recCategory, recStyleTag, recSeasonality;
     CardView recCard;
 
@@ -146,6 +183,7 @@ class ItemViewHolder extends RecyclerView.ViewHolder{
         super(itemView);
 
         recImage = itemView.findViewById(R.id.recImage);
+        likeButton = itemView.findViewById(R.id.likeButton);
         recCard = itemView.findViewById(R.id.recCard);
         recCategory = itemView.findViewById(R.id.recCategory);
         recStyleTag = itemView.findViewById(R.id.recStyleTag);
