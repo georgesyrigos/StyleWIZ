@@ -13,12 +13,15 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +42,7 @@ public class HomeFragment extends Fragment {
     List<DataClass> dataList;
     FirebaseFirestore db;
     private boolean isManualUpdate = false;
+    EditText searchView;
 
 
 
@@ -47,9 +51,52 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        searchView = view.findViewById(R.id.searchView);
+        ImageView clearIcon = view.findViewById(R.id.clearIcon);
+
+        searchView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() > 0) {
+                    clearIcon.setVisibility(View.VISIBLE);
+                } else {
+                    clearIcon.setVisibility(View.GONE);
+                }
+
+                // Trigger search functionality here
+                performSearch(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        clearIcon.setOnClickListener(v -> {
+            searchView.setText("");
+            clearIcon.setVisibility(View.GONE);
+        });
+
+        return view;
     }
+
+    private void performSearch(String query) {
+        // Add logic to filter the RecyclerView based on the query
+        //Toast.makeText(getContext(), "Searching for: " + query, Toast.LENGTH_SHORT).show();
+        ArrayList<DataClass> searchList = new ArrayList<>();
+        for (DataClass dataClass: dataList){
+            if(dataClass.getCategory().toLowerCase().contains(query.toLowerCase())){
+                searchList.add(dataClass);
+            }
+        }
+        adapter.searchDataList(searchList);
+    }
+
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -77,7 +124,8 @@ public class HomeFragment extends Fragment {
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
         //Load user data for username
-        showUserData(view);
+        //showUserData(view);
+        //text size for username 0dp if needed to show
 
         // Fetch data from Firestore
         fetchDataFromFirestore();

@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
@@ -166,6 +167,11 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
 
     public List<DataClass> getDataList() {
         return dataList;
+    }
+
+    public void searchDataList(ArrayList<DataClass> searchList){
+        dataList = searchList;
+        notifyDataSetChanged();
     }
 
 
