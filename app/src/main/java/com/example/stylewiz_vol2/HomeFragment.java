@@ -2,6 +2,8 @@ package com.example.stylewiz_vol2;
 
 import static android.app.ProgressDialog.show;
 
+import static com.google.firebase.firestore.DocumentChange.Type.REMOVED;
+
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,6 +29,7 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
@@ -53,6 +56,8 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+
+        //search bar initialization and getting the char sequence(s)
         searchView = view.findViewById(R.id.searchView);
         ImageView clearIcon = view.findViewById(R.id.clearIcon);
 
@@ -84,9 +89,9 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
+    //the new list that has only the searched items
     private void performSearch(String query) {
         // Add logic to filter the RecyclerView based on the query
-        //Toast.makeText(getContext(), "Searching for: " + query, Toast.LENGTH_SHORT).show();
         ArrayList<DataClass> searchList = new ArrayList<>();
         for (DataClass dataClass: dataList){
             if(dataClass.getCategory().toLowerCase().contains(query.toLowerCase())){
@@ -95,7 +100,6 @@ public class HomeFragment extends Fragment {
         }
         adapter.searchDataList(searchList);
     }
-
 
 
     @Override
@@ -202,6 +206,7 @@ public class HomeFragment extends Fragment {
     }
 
 
+    //listener of firestore for the data
     private void fetchDataFromFirestore() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
@@ -216,27 +221,46 @@ public class HomeFragment extends Fragment {
                         }
 
                         if (querySnapshot != null) {
-                            // Skip updates if manual operation is in progress
-                            if (isManualUpdate) {
-                                Log.d("Firestore", "Manual update in progress, skipping snapshot update.");
-                                return;
-                            }
-
-                            List<DataClass> updatedList = new ArrayList<>();
-                            for (DocumentSnapshot document : querySnapshot.getDocuments()) {
-                                DataClass data = document.toObject(DataClass.class);
-                                if (data != null) {
-                                    data.setDocumentId(document.getId());
-                                    updatedList.add(data);
+                            // Incremental updates based on document changes
+                            for (DocumentChange dc : querySnapshot.getDocumentChanges()) {
+                                DataClass data = dc.getDocument().toObject(DataClass.class);
+                                data.setDocumentId(dc.getDocument().getId());
+                                //Identifies the type of change for each document applied to the dataList and adapte
+                                switch (dc.getType()) {
+                                    case ADDED:
+                                        dataList.add(data);
+                                        adapter.notifyItemInserted(dataList.size() - 1);
+                                        break;
+                                    case MODIFIED:
+                                        updateItemInList(data);
+                                        break;
+                                    case REMOVED:
+                                        removeItemFromList(data.getDocumentId());
+                                        break;
                                 }
                             }
-
-                            // Update dataList and RecyclerView
-                            dataList.clear();
-                            dataList.addAll(updatedList);
-                            adapter.notifyDataSetChanged();
                         }
                     });
+        }
+    }
+
+    private void updateItemInList(DataClass updatedItem) {
+        for (int i = 0; i < dataList.size(); i++) {
+            if (dataList.get(i).getDocumentId().equals(updatedItem.getDocumentId())) {
+                dataList.set(i, updatedItem);
+                adapter.notifyItemChanged(i);
+                break;
+            }
+        }
+    }
+
+    private void removeItemFromList(String documentId) {
+        for (int i = 0; i < dataList.size(); i++) {
+            if (dataList.get(i).getDocumentId().equals(documentId)) {
+                dataList.remove(i);
+                adapter.notifyItemRemoved(i);
+                break;
+            }
         }
     }
 
