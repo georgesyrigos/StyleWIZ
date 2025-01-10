@@ -68,6 +68,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         DataClass currentData = dataList.get(position);
 
+        //showing the cardview for recyclerview
         Glide.with(context).load(dataList.get(position).getImage()).into(holder.recImage);
 
         holder.recCategory.setText(currentData.getCategory());
@@ -78,6 +79,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
             @Override
             public void onClick(View v) {
 
+                //pass the details from firebase
                 DetailsFragment detailsFragment = new DetailsFragment();
 
                 Bundle bundle = new Bundle();
@@ -87,6 +89,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
                 bundle.putString("Season", dataList.get(holder.getAdapterPosition()).getSeason());
                 bundle.putString("Description", dataList.get(holder.getAdapterPosition()).getDescription());
                 bundle.putString("Image", dataList.get(holder.getAdapterPosition()).getImage());
+                // Add the documentId to the bundle
+                bundle.putString("DocumentId", currentData.getDocumentId());
+
                 detailsFragment.setArguments(bundle);
 
                 FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();

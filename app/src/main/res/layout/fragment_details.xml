@@ -8,6 +8,58 @@
     android:orientation="vertical"
     tools:context=".DetailsFragment">
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/back"
+            android:layout_margin="10dp"
+            android:padding="5dp"
+            android:elevation="5dp"
+            android:layout_gravity="center"
+            android:background="@drawable/circle_shape"
+            android:src="@drawable/round_arrow_back_24"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/edit"
+            android:layout_margin="10dp"
+            android:padding="5dp"
+            android:elevation="5dp"
+            android:layout_gravity="center"
+            android:background="@drawable/circle_shape"
+            android:src="@drawable/round_edit_24"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/like"
+            android:layout_margin="10dp"
+            android:padding="5dp"
+            android:elevation="5dp"
+            android:layout_gravity="center"
+            android:background="@drawable/circle_shape"
+            android:src="@drawable/round_favorite_border_24"
+            app:tint="@color/blue"/>
+
+
+    </LinearLayout>
+
+
+
+
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

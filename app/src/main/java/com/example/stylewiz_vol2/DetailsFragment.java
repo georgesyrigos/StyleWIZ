@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -14,17 +15,60 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 
 public class DetailsFragment extends Fragment {
 
     private TextView tvTitle, detailCat, detailStyleTag, detailColor, detailSeason, detailDesc;
-    private ImageView detailImage;
+    private ImageView detailImage, backButton, likeButton;
+
+    private boolean isLiked; // Local state for like button
+    private String userId;  // Firebase User ID
+    private String documentId;  // Document ID
+    private FirebaseFirestore db; // Firestore instance
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_details, container, false);
+
+        // Initialize Firebase Firestore
+        db = FirebaseFirestore.getInstance();
+
+        // Initialize the buttons
+        backButton = view.findViewById(R.id.back);
+        likeButton = view.findViewById(R.id.like);
+        //Initialize the values
+        detailCat = view.findViewById(R.id.detailCat);
+        detailStyleTag = view.findViewById(R.id.detailStyleTag);
+        detailColor = view.findViewById(R.id.detailColor);
+        detailSeason = view.findViewById(R.id.detailSeason);
+        detailDesc = view.findViewById(R.id.detailDesc);
+
+
+        // Get user ID from FirebaseAuth
+        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        // Set up the click listener for back
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Pop the back stack to return to the ProfileFragment
+                requireActivity().getSupportFragmentManager().popBackStack();
+
+                // Optionally, you can also hide EditProfileFragment manually if needed
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        //.hide(EditProfileFragment.this) // Hide the current fragment
+                        .show(requireActivity().getSupportFragmentManager().findFragmentByTag("HOME")) // Show the ProfileFragment
+                        .remove(DetailsFragment.this)
+                        .commit();
+            }
+        });
+
 
         //get the details from the adapter
         Bundle bundle = getArguments();
@@ -35,24 +79,90 @@ public class DetailsFragment extends Fragment {
             String color = bundle.getString("Color");
             String season = bundle.getString("Season");
             String description = bundle.getString("Description");
+            documentId = bundle.getString("DocumentId");
 
-            detailCat = view.findViewById(R.id.detailCat);
+
             detailCat.setText("Category: " + category);
-
-            detailStyleTag = view.findViewById(R.id.detailStyleTag);
             detailStyleTag.setText("Style Tag: " + styleTag);
-
-            detailColor = view.findViewById(R.id.detailColor);
             detailColor.setText("Color: " + color);
-
-            detailSeason = view.findViewById(R.id.detailSeason);
             detailSeason.setText("Seasonality: " + season);
-
-            detailDesc = view.findViewById(R.id.detailDesc);
             detailDesc.setText("Description: " + description);
+
+            // Load image using Glide
+            //Glide.with(requireContext()).load(image).into(detailImage);
+            Log.e("DetailsFragment", userId + "," + documentId);
+
+
+
         }
 
+        // Fetch current like state from Firestore
+        fetchLikeStateFromFirestore();
+
+
+        // Handle like button click
+        likeButton.setOnClickListener(v -> toggleLike());
+
         return view;
+    }
+
+    private void fetchLikeStateFromFirestore() {
+        if (documentId == null || documentId.isEmpty()) {
+            Log.e("DetailsFragment", "Cannot fetch like state: DocumentId is null or empty");
+            return;
+        }
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users")
+                .document(userId)
+                .collection("wardrobe")
+                .document(documentId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists() && documentSnapshot.contains("liked")) {
+                        isLiked = documentSnapshot.getBoolean("liked"); // Get current liked state
+                        updateLikeButtonUI(); // Update the button UI
+                    } else {
+                        Log.w("DetailsFragment", "Document does not exist or 'liked' field not found.");
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("DetailsFragment", "Error fetching like state", e));
+    }
+
+    private void toggleLike() {
+        // Toggle the like state
+        isLiked = !isLiked;
+
+        // Update Firestore
+        FirestoreHelper firestoreHelper = new FirestoreHelper();
+        firestoreHelper.updateLikedField(userId, documentId, isLiked, new FirestoreHelper.FirestoreCallback() {
+            @Override
+            public void onSuccess() {
+                Log.d("DetailsFragment", "Liked state updated successfully in Firestore.");
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Log.e("DetailsFragment", "Failed to update liked state in Firestore.", e);
+            }
+        });
+
+        // Update the like button UI
+        updateLikeButtonUI();
+    }
+
+    private void updateLikeButtonUI() {
+        if (isLiked) {
+            likeButton.setImageResource(R.drawable.round_favorite_24); // Filled heart
+            likeButton.setColorFilter(ContextCompat.getColor(requireContext(), R.color.blue));
+            Log.e("DetailsFragment", "Liked state updated successfully in Firestore.");
+
+        } else {
+            likeButton.setImageResource(R.drawable.round_favorite_border_24); // Empty heart
+            likeButton.setColorFilter(ContextCompat.getColor(requireContext(), R.color.blue));
+            Log.e("DetailsFragment", "Liked state not updated successfully in Firestore.");
+
+        }
     }
 
 
