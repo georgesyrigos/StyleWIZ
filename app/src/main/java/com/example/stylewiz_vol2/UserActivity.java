@@ -51,6 +51,9 @@ public class UserActivity extends AppCompatActivity{
         ProfileFragment profileFragment = new ProfileFragment();
         EditProfileFragment editProfileFragment = new EditProfileFragment();
         DetailsFragment detailsFragment = new DetailsFragment();
+        EditDetailsFragment editDetailsFragment = new EditDetailsFragment();
+
+
 
 
         // Add all fragments upfront and hide them
@@ -62,6 +65,7 @@ public class UserActivity extends AppCompatActivity{
                 .add(R.id.frameLayout, profileFragment, "PROFILE").hide(profileFragment)
                 .add(R.id.frameLayout, editProfileFragment, "EDIT_PROFILE").hide(editProfileFragment)
                 .add(R.id.frameLayout, detailsFragment, "DETAILS").hide(detailsFragment)
+                .add(R.id.frameLayout, editDetailsFragment, "EDIT_DETAILS").hide(editDetailsFragment)
                 .commit();
 
 
@@ -79,7 +83,8 @@ public class UserActivity extends AppCompatActivity{
                     .hide(suggestionsFragment)
                     .hide(profileFragment)
                     .hide(editProfileFragment)
-                    .hide(detailsFragment);
+                    .hide(detailsFragment)
+                    .hide(editDetailsFragment);
 
 
             // Show the selected fragment based on the item clicked

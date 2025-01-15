@@ -75,6 +75,39 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         holder.recStyleTag.setText(currentData.getStyleTag());
         holder.recSeasonality.setText(currentData.getSeason());
 
+
+
+        // Long press functionality to open an edit fragment
+        holder.itemView.setOnLongClickListener(v -> {
+            //EditDetailsFragment editDetailsFragment = EditDetailsFragment.newInstance(currentData);
+            EditDetailsFragment editDetailsFragment = new EditDetailsFragment();
+
+            FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+            // Find the currently visible fragment and hide it
+            Fragment currentFragment = null;
+            for (Fragment fragment : fragmentManager.getFragments()) {
+                if (fragment.isVisible()) {
+                    currentFragment = fragment;
+                    break;
+                }
+            }
+            if (currentFragment != null) {
+                transaction.hide(currentFragment);
+            }
+
+            // Add or show the EditDetailsFragment
+            transaction.add(R.id.frameLayout, editDetailsFragment, "EDIT_DETAILS")
+                    .addToBackStack("EDIT_DETAILS")
+                    .commit();
+
+            return true; // Indicate that the long press event was handled
+        });
+
+
+
+
         holder.recCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -74,9 +74,16 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
             View itemView = viewHolder.itemView;
 
             if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-                // Draw red background
-                c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
-                        (float) itemView.getRight(), (float) itemView.getBottom(), backgroundPaint);
+                // Define corner radius for rounded corners
+                float cornerRadius = 50f; // Adjust this value for more or less rounded corners
+
+                // Draw rounded background
+                float left = (float) itemView.getRight() + dX;
+                float top = (float) itemView.getTop();
+                float right = (float) itemView.getRight();
+                float bottom = (float) itemView.getBottom();
+
+                c.drawRoundRect(left, top, right, bottom, cornerRadius, cornerRadius, backgroundPaint);
 
                 // Draw delete icon
                 int iconMargin = (itemView.getHeight() - deleteIcon.getIntrinsicHeight()) / 2;
