@@ -74,22 +74,6 @@ TextView itemsNumberTextView, outfitsNumberTextView;
             public void onClick(View v) {
                 EditProfileFragment editProfileFragment = new EditProfileFragment();
 
-                // Check if EditProfileFragment already exists
-                /*Fragment existingFragment = requireActivity().getSupportFragmentManager().findFragmentByTag("EDIT_PROFILE");
-                if (existingFragment == null) {
-                    // Add the EditProfileFragment if it doesn't exist
-                    requireActivity().getSupportFragmentManager().beginTransaction()
-                            .hide(ProfileFragment.this) // Hide the current fragment
-                            .add(R.id.frameLayout, editProfileFragment, "EDIT_PROFILE") // Add the new fragment
-                            .addToBackStack("EDIT_PROFILE") // Add this transaction to the back stack
-                            .commit();
-                } else {
-                    // If it exists, just show it
-                    requireActivity().getSupportFragmentManager().beginTransaction()
-                            .hide(ProfileFragment.this)
-                            .show(existingFragment)
-                            .commit();
-                }*/
 
                 FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();

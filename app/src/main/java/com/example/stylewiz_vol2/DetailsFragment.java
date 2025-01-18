@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,7 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class DetailsFragment extends Fragment {
 
     private TextView tvTitle, detailCat, detailStyleTag, detailColor, detailSeason, detailDesc;
-    private ImageView detailImage, backButton, likeButton;
+    private ImageView detailImage, backButton, editButton, likeButton;
 
     private boolean isLiked; // Local state for like button
     private String userId;  // Firebase User ID
@@ -41,6 +43,7 @@ public class DetailsFragment extends Fragment {
 
         // Initialize the buttons
         backButton = view.findViewById(R.id.back);
+        editButton = view.findViewById(R.id.edit);
         likeButton = view.findViewById(R.id.like);
         //Initialize the values
         detailCat = view.findViewById(R.id.detailCat);
@@ -57,15 +60,44 @@ public class DetailsFragment extends Fragment {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Pop the back stack to return to the ProfileFragment
+                // Pop the back stack to return to the HomeFragment
                 requireActivity().getSupportFragmentManager().popBackStack();
 
-                // Optionally, you can also hide EditProfileFragment manually if needed
                 requireActivity().getSupportFragmentManager().beginTransaction()
-                        //.hide(EditProfileFragment.this) // Hide the current fragment
                         .show(requireActivity().getSupportFragmentManager().findFragmentByTag("HOME")) // Show the ProfileFragment
                         .remove(DetailsFragment.this)
                         .commit();
+            }
+        });
+
+        // Set up the click listener for edit
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                EditDetailsFragment editDetailsFragment = new EditDetailsFragment();
+
+
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+                // Find the currently visible fragment and hide it
+                Fragment currentFragment = null;
+                for (Fragment fragment : fragmentManager.getFragments()) {
+                    if (fragment.isVisible()) {
+                        currentFragment = fragment;
+                        break;
+                    }
+                }
+                if (currentFragment != null) {
+                    transaction.hide(currentFragment);
+                }
+
+                // Add DetailsFragment or show if already added
+                transaction.add(R.id.frameLayout, editDetailsFragment, "EDIT_DETAILS")
+                        .addToBackStack("EDIT_DETAILS")
+                        .commit();
+
             }
         });
 
