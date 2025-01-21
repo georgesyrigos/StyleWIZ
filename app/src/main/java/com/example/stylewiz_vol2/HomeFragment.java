@@ -24,9 +24,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;
@@ -40,6 +42,7 @@ import java.util.List;
 public class HomeFragment extends Fragment {
     TextView textViewUsername;
     private ListenerRegistration usernameListener; // Firestore listener reference
+    private LinearLayout emptyStateLayout;
     RecyclerView recyclerView;
     ItemsAdapter adapter;
     List<DataClass> dataList;
@@ -110,6 +113,7 @@ public class HomeFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
 
         // Initialize RecyclerView and GridLayoutManager
+        emptyStateLayout = view.findViewById(R.id.emptyStateLayout);
         recyclerView = view.findViewById(R.id.recyclerView);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 1);
@@ -225,7 +229,7 @@ public class HomeFragment extends Fragment {
                             for (DocumentChange dc : querySnapshot.getDocumentChanges()) {
                                 DataClass data = dc.getDocument().toObject(DataClass.class);
                                 data.setDocumentId(dc.getDocument().getId());
-                                //Identifies the type of change for each document applied to the dataList and adapte
+                                //Identifies the type of change for each document applied to the dataList and adapter
                                 switch (dc.getType()) {
                                     case ADDED:
                                         dataList.add(data);
@@ -240,7 +244,38 @@ public class HomeFragment extends Fragment {
                                 }
                             }
                         }
+                        toggleAddOptionVisibility(); // Check and toggle "add" visibility
                     });
+        }
+    }
+
+
+    private void toggleAddOptionVisibility() {
+        if (dataList.isEmpty()) {
+            emptyStateLayout.setVisibility(View.VISIBLE); // Show empty state layout (e.g., "add" button or message)
+            recyclerView.setVisibility(View.GONE); // Hide RecyclerView
+
+            emptyStateLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Update the bottom navigation to reflect the new fragment
+                    BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottomNavView);
+                    if (bottomNavigationView != null) {
+                        bottomNavigationView.setSelectedItemId(R.id.bottom_add); //Bottom menu to add new item
+                    }
+
+                    // Pop the back stack to return to the HomeFragment
+                    requireActivity().getSupportFragmentManager().popBackStack();
+
+                    requireActivity().getSupportFragmentManager().beginTransaction()
+                            .show(requireActivity().getSupportFragmentManager().findFragmentByTag("NEW_ITEM")) // Go to add new item
+                            .hide(HomeFragment.this)
+                            .commit();
+                }
+            });
+        } else {
+            emptyStateLayout.setVisibility(View.GONE); // Hide empty state layout
+            recyclerView.setVisibility(View.VISIBLE); // Show RecyclerView
         }
     }
 

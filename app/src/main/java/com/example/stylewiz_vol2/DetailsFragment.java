@@ -114,11 +114,11 @@ public class DetailsFragment extends Fragment {
             documentId = bundle.getString("DocumentId");
 
 
-            detailCat.setText("Category: " + category);
-            detailStyleTag.setText("Style Tag: " + styleTag);
-            detailColor.setText("Color: " + color);
-            detailSeason.setText("Seasonality: " + season);
-            detailDesc.setText("Description: " + description);
+            detailCat.setText(category);
+            detailStyleTag.setText(styleTag);
+            detailColor.setText(color);
+            detailSeason.setText(season);
+            detailDesc.setText(description);
 
             // Load image using Glide
             //Glide.with(requireContext()).load(image).into(detailImage);

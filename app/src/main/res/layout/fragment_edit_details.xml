@@ -37,14 +37,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:padding="16dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:scrollbars="none">
+        android:padding="5dp"
+        android:scrollbars="none"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:clipToPadding="false"
             android:orientation="vertical"
             android:padding="10dp">
@@ -59,134 +59,253 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/outline_photo_camera_24" />
 
-            <!-- Title -->
-            <TextView
-                android:id="@+id/tvTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="16dp"
-                android:fontFamily="@font/roboto"
 
-                android:text="Edit Item Details"
-                android:textColor="@color/black"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-
-            <!-- Details in Cards -->
-            <com.google.android.material.card.MaterialCardView
+            <LinearLayout
+                android:id="@+id/linearLayoutEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="2dp">
+                android:background="@drawable/white_background"
+                android:orientation="vertical"
+                android:padding="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/profileImg">
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="8dp"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
 
 
-                    <EditText
-                        android:id="@+id/detailCategory"
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/title"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/edittextshape"
+                        android:layout_weight="1"
                         android:fontFamily="@font/roboto"
-                        android:hint="Category: Tops"
-                        android:padding="10dp"
+                        android:text="Item Details"
+                        android:drawableLeft="@drawable/outline_info_24"
+                        android:drawablePadding="10sp"
+                        android:textSize="25dp"
+                        android:textStyle="bold" />
+
+
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
+
+
+                    <TextView
+                        android:id="@+id/email"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:fontFamily="@font/roboto"
+                        android:text="Category"
+                        android:textColor="@color/blue"
+                        android:textSize="18dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/detailCat"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight="3"
+                        android:text="category"
+                        android:textAlignment="viewStart"
                         android:textColor="@color/black"
-                        android:textSize="16sp" />
+                        android:textSize="18sp" />
 
 
-                    <EditText
+                </LinearLayout>
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:alpha="0.5"
+                    android:background="@color/gray" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
+
+
+                    <TextView
+                        android:id="@+id/username"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:fontFamily="@font/roboto"
+                        android:text="Style Tag"
+                        android:textColor="@color/blue"
+                        android:textSize="18dp"
+                        android:textStyle="bold" />
+
+                    <TextView
                         android:id="@+id/detailStyleTag"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/edittextshape"
-                        android:fontFamily="@font/roboto"
-                        android:hint="Style Tag: Casual"
-                        android:padding="10dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight="3"
+                        android:text="style tag"
+                        android:textAlignment="viewStart"
                         android:textColor="@color/black"
-                        android:textSize="16sp" />
+                        android:textSize="18sp" />
+
 
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
 
-            <!-- Additional Details -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="2dp">
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:alpha="0.5"
+                    android:background="@color/gray" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
 
-                    <EditText
-                        android:layout_width="match_parent"
+
+                    <TextView
+                        android:id="@+id/password"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/edittextshape"
+                        android:layout_weight="2"
                         android:fontFamily="@font/roboto"
-                        android:hint="Color: Blue"
-                        android:padding="10dp"
-                        android:textColor="@color/black"
-                        android:textSize="16sp" />
+                        android:text="Color"
+                        android:textColor="@color/blue"
+                        android:textSize="18dp"
+                        android:textStyle="bold" />
 
-                    <EditText
+                    <TextView
+                        android:id="@+id/detailColor"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight="3"
+                        android:text="color"
+                        android:textAlignment="viewStart"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
+
+
+                </LinearLayout>
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:alpha="0.5"
+                    android:background="@color/gray" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
+
+
+                    <TextView
+                        android:id="@+id/season"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:fontFamily="@font/roboto"
+                        android:text="Seasonality"
+                        android:textColor="@color/blue"
+                        android:textSize="18dp"
+                        android:textStyle="bold" />
+
+                    <TextView
                         android:id="@+id/detailSeason"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/edittextshape"
-                        android:fontFamily="@font/roboto"
-                        android:hint="Seasonality: Summer"
-                        android:padding="10dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight="3"
+                        android:text="seasonality"
+                        android:textAlignment="viewStart"
                         android:textColor="@color/black"
-                        android:textSize="16sp" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                        android:textSize="18sp" />
 
-            <!-- Description -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="2dp">
+
+                </LinearLayout>
+
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:alpha="0.5"
+                    android:background="@color/gray" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
+
+
+                    <TextView
+                        android:id="@+id/description"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:fontFamily="@font/roboto"
+                        android:text="Description"
+                        android:textColor="@color/blue"
+                        android:textSize="18dp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/detailDesc"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/edittextshape"
-                        android:fontFamily="@font/roboto"
-                        android:hint="Description: T-shirt"
-                        android:padding="10dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight="3"
+                        android:text="description"
+                        android:textAlignment="viewStart"
                         android:textColor="@color/black"
-                        android:textSize="16sp" />
+                        android:textSize="18sp" />
+
 
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
                 android:layout_marginTop="5dp"
-                android:gravity="center_horizontal">
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
 
 
                 <Button
@@ -201,7 +320,6 @@
                     android:textSize="16sp" />
 
 
-
                 <Button
                     android:id="@+id/save_button"
                     android:layout_width="110dp"
@@ -212,7 +330,6 @@
                     android:text="Save"
                     android:textColor="#FFFFFF"
                     android:textSize="16sp" />
-
 
 
             </LinearLayout>

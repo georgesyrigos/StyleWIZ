@@ -69,7 +69,42 @@
         android:layout_height="match_parent"
         android:layout_marginTop="60dp"
         android:id="@+id/recyclerView"
-        android:scrollbars="vertical"
-        />
+        android:scrollbars="vertical" />
+
+
+    <LinearLayout
+        android:id="@+id/emptyStateLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/customSearchBar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/addIcon"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:elevation="5dp"
+            android:src="@drawable/round_add_24"
+            android:contentDescription="Add Icon"
+            android:background="@drawable/circle_shape"
+            app:tint="@color/blue" />
+
+        <TextView
+            android:id="@+id/addItemsMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto"
+            android:text="Add items to your wardrobe"
+            android:textSize="20sp"
+            android:layout_marginTop="8dp"
+            android:textColor="@android:color/darker_gray" />
+    </LinearLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
