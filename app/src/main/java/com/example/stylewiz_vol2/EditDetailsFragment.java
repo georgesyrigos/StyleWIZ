@@ -7,11 +7,13 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 
 
 public class EditDetailsFragment extends Fragment {
 
+    Button cancelBtn, saveBtn;
     private ImageView detailImage, backButton, likeButton;
 
 
@@ -36,6 +38,26 @@ public class EditDetailsFragment extends Fragment {
                 requireActivity().getSupportFragmentManager().beginTransaction()
                         //.hide(EditProfileFragment.this) // Hide the current fragment
                         .show(requireActivity().getSupportFragmentManager().findFragmentByTag("EDIT_DETAILS")) // Show the ProfileFragment
+                        .remove(EditDetailsFragment.this)
+                        .commit();
+            }
+        });
+
+
+        // Initialize the button
+        cancelBtn = view.findViewById(R.id.cancel_button_details);
+
+        // Set up the click listener
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Pop the back stack to return to the DetailsFragment
+                //requireActivity().getSupportFragmentManager().popBackStack();
+
+                // Optionally, you can also hide EditProfileFragment manually if needed
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        //.hide(EditProfileFragment.this) // Hide the current fragment
+                        .show(requireActivity().getSupportFragmentManager().findFragmentByTag("DETAILS")) // Show the ProfileFragment
                         .remove(EditDetailsFragment.this)
                         .commit();
             }

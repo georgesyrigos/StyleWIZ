@@ -88,8 +88,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:fontFamily="@font/roboto"
-                        android:text="Item Details"
-                        android:drawableLeft="@drawable/outline_info_24"
+                        android:text="Edit Details"
+                        android:drawableLeft="@drawable/round_edit_24"
                         android:drawablePadding="10sp"
                         android:textSize="25dp"
                         android:textStyle="bold" />
@@ -107,27 +107,25 @@
                     android:padding="8dp">
 
 
-                    <TextView
-                        android:id="@+id/email"
-                        android:layout_width="0dp"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:fontFamily="@font/roboto"
-                        android:text="Category"
-                        android:textColor="@color/blue"
-                        android:textSize="18dp"
-                        android:textStyle="bold" />
+                        android:hint="Category"
+                        android:textColorHint="@color/gray"
+                        app:hintAnimationEnabled="true">
 
-                    <TextView
-                        android:id="@+id/detailCat"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_weight="3"
-                        android:text="category"
-                        android:textAlignment="viewStart"
-                        android:textColor="@color/black"
-                        android:textSize="18sp" />
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editCategoryDetails"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/edittextshape"
+                            android:ems="10"
+                            android:fontFamily="@font/roboto"
+                            android:textSize="20dp"
+                            android:inputType="text"
+                            android:paddingLeft="15sp"
+                            android:paddingRight="15sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
 
                 </LinearLayout>
@@ -148,27 +146,25 @@
                     android:padding="8dp">
 
 
-                    <TextView
-                        android:id="@+id/username"
-                        android:layout_width="0dp"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:fontFamily="@font/roboto"
-                        android:text="Style Tag"
-                        android:textColor="@color/blue"
-                        android:textSize="18dp"
-                        android:textStyle="bold" />
+                        android:hint="Style Tag"
+                        android:textColorHint="@color/gray"
+                        app:hintAnimationEnabled="true">
 
-                    <TextView
-                        android:id="@+id/detailStyleTag"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_weight="3"
-                        android:text="style tag"
-                        android:textAlignment="viewStart"
-                        android:textColor="@color/black"
-                        android:textSize="18sp" />
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editStyleTagDetails"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/edittextshape"
+                            android:ems="10"
+                            android:fontFamily="@font/roboto"
+                            android:textSize="20dp"
+                            android:inputType="text"
+                            android:paddingLeft="15sp"
+                            android:paddingRight="15sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
 
                 </LinearLayout>
@@ -189,27 +185,25 @@
                     android:padding="8dp">
 
 
-                    <TextView
-                        android:id="@+id/password"
-                        android:layout_width="0dp"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:fontFamily="@font/roboto"
-                        android:text="Color"
-                        android:textColor="@color/blue"
-                        android:textSize="18dp"
-                        android:textStyle="bold" />
+                        android:hint="Color"
+                        android:textColorHint="@color/gray"
+                        app:hintAnimationEnabled="true">
 
-                    <TextView
-                        android:id="@+id/detailColor"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_weight="3"
-                        android:text="color"
-                        android:textAlignment="viewStart"
-                        android:textColor="@color/black"
-                        android:textSize="18sp" />
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editColorDetails"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/edittextshape"
+                            android:ems="10"
+                            android:fontFamily="@font/roboto"
+                            android:textSize="20dp"
+                            android:inputType="text"
+                            android:paddingLeft="15sp"
+                            android:paddingRight="15sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
 
                 </LinearLayout>
@@ -230,27 +224,25 @@
                     android:padding="8dp">
 
 
-                    <TextView
-                        android:id="@+id/season"
-                        android:layout_width="0dp"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:fontFamily="@font/roboto"
-                        android:text="Seasonality"
-                        android:textColor="@color/blue"
-                        android:textSize="18dp"
-                        android:textStyle="bold" />
+                        android:hint="Seasonality"
+                        android:textColorHint="@color/gray"
+                        app:hintAnimationEnabled="true">
 
-                    <TextView
-                        android:id="@+id/detailSeason"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_weight="3"
-                        android:text="seasonality"
-                        android:textAlignment="viewStart"
-                        android:textColor="@color/black"
-                        android:textSize="18sp" />
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editSeasonalityDetails"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/edittextshape"
+                            android:ems="10"
+                            android:fontFamily="@font/roboto"
+                            android:textSize="20dp"
+                            android:inputType="text"
+                            android:paddingLeft="15sp"
+                            android:paddingRight="15sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
 
                 </LinearLayout>
@@ -272,27 +264,59 @@
                     android:padding="8dp">
 
 
-                    <TextView
-                        android:id="@+id/description"
-                        android:layout_width="0dp"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:fontFamily="@font/roboto"
-                        android:text="Description"
-                        android:textColor="@color/blue"
-                        android:textSize="18dp"
-                        android:textStyle="bold" />
+                        android:hint="Description"
+                        android:textColorHint="@color/gray"
+                        app:hintAnimationEnabled="true">
 
-                    <TextView
-                        android:id="@+id/detailDesc"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_weight="3"
-                        android:text="description"
-                        android:textAlignment="viewStart"
-                        android:textColor="@color/black"
-                        android:textSize="18sp" />
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editDescriptionDetails"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/edittextshape"
+                            android:ems="10"
+                            android:fontFamily="@font/roboto"
+                            android:textSize="20dp"
+                            android:inputType="text"
+                            android:paddingLeft="15sp"
+                            android:paddingRight="15sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+
+                    <Button
+                        android:id="@+id/cancel_button_details"
+                        android:layout_width="110dp"
+                        android:layout_height="55dp"
+                        android:layout_margin="10dp"
+                        android:backgroundTint="@color/gray"
+                        android:fontFamily="@font/roboto"
+                        android:text="Cancel"
+                        android:textColor="#FFFFFF"
+                        android:textSize="16sp" />
+
+
+                    <Button
+                        android:id="@+id/save_button_details"
+                        android:layout_width="110dp"
+                        android:layout_height="55dp"
+                        android:layout_margin="10dp"
+                        android:backgroundTint="@color/blue"
+                        android:fontFamily="@font/roboto"
+                        android:text="Save"
+                        android:textColor="#FFFFFF"
+                        android:textSize="16sp" />
 
 
                 </LinearLayout>
@@ -300,39 +324,6 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="5dp"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal">
-
-
-                <Button
-                    android:id="@+id/cancel_button"
-                    android:layout_width="110dp"
-                    android:layout_height="55dp"
-                    android:layout_margin="10dp"
-                    android:backgroundTint="@color/gray"
-                    android:fontFamily="@font/roboto"
-                    android:text="Cancel"
-                    android:textColor="#FFFFFF"
-                    android:textSize="16sp" />
-
-
-                <Button
-                    android:id="@+id/save_button"
-                    android:layout_width="110dp"
-                    android:layout_height="55dp"
-                    android:layout_margin="10dp"
-                    android:backgroundTint="@color/blue"
-                    android:fontFamily="@font/roboto"
-                    android:text="Save"
-                    android:textColor="#FFFFFF"
-                    android:textSize="16sp" />
-
-
-            </LinearLayout>
 
         </LinearLayout>
 
