@@ -79,8 +79,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
 
         // Long press functionality to open an edit fragment
         holder.itemView.setOnLongClickListener(v -> {
-            //EditDetailsFragment editDetailsFragment = EditDetailsFragment.newInstance(currentData);
-            EditDetailsFragment editDetailsFragment = new EditDetailsFragment();
 
             FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -97,7 +95,14 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
                 transaction.hide(currentFragment);
             }
 
-            // Add or show the EditDetailsFragment
+            // Check if EditDetailsFragment is already added
+            Fragment existingEditFragment = fragmentManager.findFragmentByTag("EDIT_DETAILS");
+            if (existingEditFragment != null) {
+                transaction.remove(existingEditFragment); // Remove the old instance
+            }
+
+            // Create a new instance of EditDetailsFragment
+            EditDetailsFragment editDetailsFragment = new EditDetailsFragment();
             transaction.add(R.id.frameLayout, editDetailsFragment, "EDIT_DETAILS")
                     .addToBackStack("EDIT_DETAILS")
                     .commit();

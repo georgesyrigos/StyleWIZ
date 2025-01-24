@@ -3,7 +3,10 @@ package com.example.stylewiz_vol2;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +17,7 @@ import android.widget.ImageView;
 public class EditDetailsFragment extends Fragment {
 
     Button cancelBtn, saveBtn;
-    private ImageView detailImage, backButton, likeButton;
+    private ImageView detailImage, backButton;
 
 
 
@@ -31,13 +34,11 @@ public class EditDetailsFragment extends Fragment {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Pop the back stack to return to the ProfileFragment
+                // Pop the back stack to return to the previous Fragment
                 requireActivity().getSupportFragmentManager().popBackStack();
 
                 // Optionally, you can also hide EditProfileFragment manually if needed
                 requireActivity().getSupportFragmentManager().beginTransaction()
-                        //.hide(EditProfileFragment.this) // Hide the current fragment
-                        .show(requireActivity().getSupportFragmentManager().findFragmentByTag("EDIT_DETAILS")) // Show the ProfileFragment
                         .remove(EditDetailsFragment.this)
                         .commit();
             }
@@ -51,15 +52,22 @@ public class EditDetailsFragment extends Fragment {
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Pop the back stack to return to the DetailsFragment
-                //requireActivity().getSupportFragmentManager().popBackStack();
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
 
-                // Optionally, you can also hide EditProfileFragment manually if needed
-                requireActivity().getSupportFragmentManager().beginTransaction()
-                        //.hide(EditProfileFragment.this) // Hide the current fragment
-                        .show(requireActivity().getSupportFragmentManager().findFragmentByTag("DETAILS")) // Show the ProfileFragment
-                        .remove(EditDetailsFragment.this)
-                        .commit();
+                // Find the DETAILS fragment
+                Fragment detailsFragment = fragmentManager.findFragmentByTag("DETAILS");
+                if (detailsFragment == null) {
+                    // Add the DetailsFragment if it doesn't exist
+                    detailsFragment = new DetailsFragment();
+                    transaction.add(R.id.frameLayout, detailsFragment, "DETAILS");
+                } else {
+                    transaction.show(detailsFragment);
+                }
+
+                // Remove the EditDetailsFragment
+                transaction.remove(EditDetailsFragment.this).commit();
+
             }
         });
         return view;

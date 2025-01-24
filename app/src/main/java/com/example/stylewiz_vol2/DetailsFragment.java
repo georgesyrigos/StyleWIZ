@@ -60,13 +60,25 @@ public class DetailsFragment extends Fragment {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Pop the back stack to return to the HomeFragment
-                requireActivity().getSupportFragmentManager().popBackStack();
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
 
-                requireActivity().getSupportFragmentManager().beginTransaction()
-                        .show(requireActivity().getSupportFragmentManager().findFragmentByTag("HOME")) // Show the ProfileFragment
-                        .remove(DetailsFragment.this)
-                        .commit();
+                // Pop the back stack to return to the HomeFragment
+                fragmentManager.popBackStack();
+
+                // Ensure only the HomeFragment is visible
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                Fragment homeFragment = fragmentManager.findFragmentByTag("HOME");
+                if (homeFragment == null) {
+                    // Add the HomeFragment if it doesn't exist
+                    homeFragment = new HomeFragment();
+                    transaction.add(R.id.frameLayout, homeFragment, "HOME");
+                } else {
+                    // Show the HomeFragment if it exists
+                    transaction.show(homeFragment);
+                }
+
+                // Remove DetailsFragment explicitly to avoid stacking
+                transaction.remove(DetailsFragment.this).commit();
             }
         });
 
