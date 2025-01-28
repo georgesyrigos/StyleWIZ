@@ -1,5 +1,7 @@
 package com.example.stylewiz_vol2;
 
+
+import android.nfc.Tag;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -55,15 +57,8 @@ public class EditDetailsFragment extends Fragment {
                 FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
 
-                // Find the DETAILS fragment
-                Fragment detailsFragment = fragmentManager.findFragmentByTag("DETAILS");
-                if (detailsFragment == null) {
-                    // Add the DetailsFragment if it doesn't exist
-                    detailsFragment = new DetailsFragment();
-                    transaction.add(R.id.frameLayout, detailsFragment, "DETAILS");
-                } else {
-                    transaction.show(detailsFragment);
-                }
+                // Navigate back to the previous fragment using the back stack
+                requireActivity().getSupportFragmentManager().popBackStack();
 
                 // Remove the EditDetailsFragment
                 transaction.remove(EditDetailsFragment.this).commit();

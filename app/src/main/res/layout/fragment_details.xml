@@ -12,6 +12,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/navigation_top"
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
@@ -69,12 +70,18 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:clipToPadding="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/white_background"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:elevation="3dp"
+            android:padding="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/detailImage">
 
             <!-- Image -->
             <ImageView
@@ -84,27 +91,28 @@
                 android:layout_marginBottom="16dp"
                 android:contentDescription="Detail Image"
                 android:scaleType="fitCenter"
-                android:src="@drawable/outline_photo_camera_24"/>
+                android:src="@drawable/outline_photo_camera_24"
+                android:background="@drawable/rounded_corners"/>
 
 
             <LinearLayout
                 android:id="@+id/linearLayoutEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/white_background"
                 android:orientation="vertical"
+                android:elevation="3dp"
                 android:padding="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/profileImg">
+                app:layout_constraintTop_toBottomOf="@id/detailImage">
 
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="8dp"
+                    android:layout_marginLeft="6dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginRight="8dp"
+                    android:layout_marginRight="6dp"
                     android:orientation="horizontal"
                     android:padding="8dp">
 
@@ -118,18 +126,27 @@
                         android:text="Item Details"
                         android:drawableLeft="@drawable/outline_info_24"
                         android:drawablePadding="10sp"
-                        android:textSize="25dp"
+                        android:textSize="25sp"
                         android:textStyle="bold" />
 
 
 
                 </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="8dp"
+                android:layout_margin="6dp"
+                android:elevation="4dp"
+                android:outlineProvider="background"
+                android:background="@drawable/rounded_corners">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="8dp"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal"
                     android:padding="8dp">
 
@@ -141,9 +158,9 @@
                         android:layout_weight="2"
                         android:fontFamily="@font/roboto"
                         android:text="Category"
-                        android:textColor="@color/gray"
-                        android:textSize="18dp"
-                        android:textStyle="bold" />
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:textStyle="" />
 
                     <TextView
                         android:id="@+id/detailCat"
@@ -152,25 +169,18 @@
                         android:layout_marginStart="25dp"
                         android:layout_weight="3"
                         android:text="category"
-                        android:textAlignment="viewStart"
+                        android:textAlignment="viewEnd"
                         android:textColor="@color/black"
                         android:textSize="18sp" />
 
 
                 </LinearLayout>
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:alpha="0.5"
-                    android:background="@color/gray" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="8dp"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal"
                     android:padding="8dp">
 
@@ -182,9 +192,8 @@
                         android:layout_weight="2"
                         android:fontFamily="@font/roboto"
                         android:text="Style Tag"
-                        android:textColor="@color/gray"
-                        android:textSize="18dp"
-                        android:textStyle="bold" />
+                        android:textColor="@color/black"
+                        android:textSize="18sp"/>
 
                     <TextView
                         android:id="@+id/detailStyleTag"
@@ -193,25 +202,18 @@
                         android:layout_marginStart="25dp"
                         android:layout_weight="3"
                         android:text="style tag"
-                        android:textAlignment="viewStart"
+                        android:textAlignment="viewEnd"
                         android:textColor="@color/black"
                         android:textSize="18sp" />
 
 
                 </LinearLayout>
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:alpha="0.5"
-                    android:background="@color/gray" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="8dp"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal"
                     android:padding="8dp">
 
@@ -223,9 +225,8 @@
                         android:layout_weight="2"
                         android:fontFamily="@font/roboto"
                         android:text="Color"
-                        android:textColor="@color/gray"
-                        android:textSize="18dp"
-                        android:textStyle="bold" />
+                        android:textColor="@color/black"
+                        android:textSize="18sp"/>
 
                     <TextView
                         android:id="@+id/detailColor"
@@ -234,25 +235,18 @@
                         android:layout_marginStart="25dp"
                         android:layout_weight="3"
                         android:text="color"
-                        android:textAlignment="viewStart"
+                        android:textAlignment="viewEnd"
                         android:textColor="@color/black"
                         android:textSize="18sp" />
 
 
                 </LinearLayout>
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:alpha="0.5"
-                    android:background="@color/gray" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="8dp"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal"
                     android:padding="8dp">
 
@@ -264,9 +258,8 @@
                         android:layout_weight="2"
                         android:fontFamily="@font/roboto"
                         android:text="Seasonality"
-                        android:textColor="@color/gray"
-                        android:textSize="18dp"
-                        android:textStyle="bold" />
+                        android:textColor="@color/black"
+                        android:textSize="18sp"/>
 
                     <TextView
                         android:id="@+id/detailSeason"
@@ -275,26 +268,16 @@
                         android:layout_marginStart="25dp"
                         android:layout_weight="3"
                         android:text="seasonality"
-                        android:textAlignment="viewStart"
+                        android:textAlignment="viewEnd"
                         android:textColor="@color/black"
                         android:textSize="18sp" />
 
-
                 </LinearLayout>
-
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:alpha="0.5"
-                    android:background="@color/gray" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="8dp"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal"
                     android:padding="8dp">
 
@@ -306,9 +289,8 @@
                         android:layout_weight="2"
                         android:fontFamily="@font/roboto"
                         android:text="Description"
-                        android:textColor="@color/gray"
-                        android:textSize="18dp"
-                        android:textStyle="bold" />
+                        android:textColor="@color/black"
+                        android:textSize="18sp"/>
 
                     <TextView
                         android:id="@+id/detailDesc"
@@ -317,12 +299,14 @@
                         android:layout_marginStart="25dp"
                         android:layout_weight="3"
                         android:text="description"
-                        android:textAlignment="viewStart"
+                        android:textAlignment="viewEnd"
                         android:textColor="@color/black"
                         android:textSize="18sp" />
-
-
                 </LinearLayout>
+
+
+            </LinearLayout>
+                
 
 
             </LinearLayout>

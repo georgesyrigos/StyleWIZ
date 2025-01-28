@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "110004915134",
+    "project_id": "stylewiz-vol2",
+    "storage_bucket": "stylewiz-vol2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:110004915134:android:eec8f89c192bf3ce08c7ef",
+        "android_client_info": {
+          "package_name": "com.example.stylewiz_vol2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLTqp5zUGR3NL-p7UmDCg4J7ddLcga3ng"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

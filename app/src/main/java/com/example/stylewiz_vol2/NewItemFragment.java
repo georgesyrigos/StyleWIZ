@@ -35,6 +35,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.graphics.Color;
+
 
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -335,6 +337,9 @@ public class NewItemFragment extends Fragment {
 
             // Save the image URI for future use (if necessary, e.g., for saving or restoring)
             ImageUri = imageUri;
+
+            // Identify the dominant color
+            //identifyDominantColor(scaledBitmap);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -365,6 +370,42 @@ public class NewItemFragment extends Fragment {
 
 
     }
+
+
+    /*private void identifyDominantColor(Bitmap bitmap) {
+        if (bitmap == null) return;
+
+        // Scale down the image to improve performance
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 50, 50, false);
+
+        int[] colorArray = new int[scaledBitmap.getWidth() * scaledBitmap.getHeight()];
+        scaledBitmap.getPixels(colorArray, 0, scaledBitmap.getWidth(), 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight());
+
+        int r = 0, g = 0, b = 0;
+        int totalPixels = colorArray.length;
+
+        // Loop through all pixels to calculate average color
+        for (int color : colorArray) {
+            r += Color.red(color);
+            g += Color.green(color);
+            b += Color.blue(color);
+        }
+
+        // Calculate the average RGB values
+        r /= totalPixels;
+        g /= totalPixels;
+        b /= totalPixels;
+
+        // Create a color string in HEX format
+        String hexColor = String.format("#%02x%02x%02x", r, g, b);
+
+        // Set the identified color to the EditText (or use elsewhere)
+        mCol.setText(hexColor);
+
+        // Optionally, set the background color of the color field for preview
+        mCol.setBackgroundColor(Color.rgb(r, g, b));
+    }*/
+
 
 
     //upload image into Firebase storage in store Image Url into Firebase firestore
