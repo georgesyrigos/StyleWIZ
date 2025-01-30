@@ -36,13 +36,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.graphics.Color;
+import java.io.IOException;
 
-
+import com.canhub.cropper.CropImage;
+import com.canhub.cropper.CropImageView;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 public class NewItemFragment extends Fragment {
@@ -87,10 +88,7 @@ public class NewItemFragment extends Fragment {
                 }
         );
 
-
-
     }
-
 
 
 
@@ -174,6 +172,7 @@ public class NewItemFragment extends Fragment {
             public void onClick(View v) {
                 //check permission
                 CheckStoragePermission();
+                //startCropImageActivity();
 
             }
         });
@@ -250,6 +249,14 @@ public class NewItemFragment extends Fragment {
 
 
 
+
+
+
+
+
+
+
+
     //Check the permission to pick images from the gallery
     private void CheckStoragePermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
@@ -311,14 +318,30 @@ public class NewItemFragment extends Fragment {
 
     //makes the appropriate scale for the chosen image
     private Bitmap scaleBitmapToFitImageView(Bitmap bitmap, ImageView imageView) {
-        //fill the image view with the selected image
+
         int imageViewWidth = imageView.getWidth();
         int imageViewHeight = imageView.getHeight();
 
-        // Scale the bitmap to exactly match the ImageView dimensions (stretch it)
-        int scaledWidth = imageViewWidth;
-        int scaledHeight = imageViewHeight;
+        // Get original bitmap dimensions
+        int bitmapWidth = bitmap.getWidth();
+        int bitmapHeight = bitmap.getHeight();
 
+        // Calculate the aspect ratio
+        float aspectRatio = (float) bitmapWidth / (float) bitmapHeight;
+
+        int scaledWidth, scaledHeight;
+
+        if (bitmapWidth > bitmapHeight) {
+            // Landscape image
+            scaledWidth = imageViewWidth;
+            scaledHeight = Math.round(imageViewWidth / aspectRatio);
+        } else {
+            // Portrait or square image
+            scaledHeight = imageViewHeight;
+            scaledWidth = Math.round(imageViewHeight * aspectRatio);
+        }
+
+        // Scale bitmap while maintaining aspect ratio
         return Bitmap.createScaledBitmap(bitmap, scaledWidth, scaledHeight, true);
     }
 
