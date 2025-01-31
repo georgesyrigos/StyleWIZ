@@ -39,6 +39,9 @@ import android.graphics.Color;
 import java.io.IOException;
 
 import com.canhub.cropper.CropImage;
+import com.canhub.cropper.CropImageContract;
+import com.canhub.cropper.CropImageContractOptions;
+import com.canhub.cropper.CropImageOptions;
 import com.canhub.cropper.CropImageView;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -56,6 +59,7 @@ public class NewItemFragment extends Fragment {
     AppCompatButton addItem;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
+    private Button submitButton;
     private ActivityResultLauncher<Intent> launcher;
     private MaterialCardView selectPhoto;
     private ImageView ItemImageView;
@@ -99,6 +103,11 @@ public class NewItemFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_new_item, container, false);
 
     }
+
+
+
+
+
 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
@@ -172,7 +181,6 @@ public class NewItemFragment extends Fragment {
             public void onClick(View v) {
                 //check permission
                 CheckStoragePermission();
-                //startCropImageActivity();
 
             }
         });
