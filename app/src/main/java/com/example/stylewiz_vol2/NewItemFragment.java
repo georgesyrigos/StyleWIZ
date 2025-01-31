@@ -53,13 +53,11 @@ public class NewItemFragment extends Fragment {
 
     private FirestoreHelper firestoreHelper;
     private String user; // Store username as a class-level variable
-    TextView textView;
     EditText mDes, mCol;
     String item_Category, item_StyleTag, item_Seasonality;
     AppCompatButton addItem;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
-    private Button submitButton;
     private ActivityResultLauncher<Intent> launcher;
     private MaterialCardView selectPhoto;
     private ImageView ItemImageView;

@@ -17,26 +17,22 @@
         android:layout_height="wrap_content">
 
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+        <ImageView
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:id="@+id/recImage"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:padding="8dp"
             android:scaleType="centerCrop"
-            android:background="@color/gray"
-            android:src="@drawable/round_person_24"
-            app:cardCornerRadius="40dp"
-            app:strokeColor="@color/black"
-            app:strokeWidth="2dp"
-            app:shapeAppearanceOverlay="@style/roundedImageViewRounded"/>
+            android:background="@drawable/rounded_corners"
+            android:src="@drawable/round_person_24"/>
 
         <LinearLayout
             android:layout_gravity="center"
             android:orientation="vertical"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="10dp"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content">
