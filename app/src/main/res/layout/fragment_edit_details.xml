@@ -30,6 +30,19 @@
             android:layout_weight="1"/>
 
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/like"
+            android:layout_margin="10dp"
+            android:padding="5dp"
+            android:elevation="5dp"
+            android:layout_gravity="center"
+            android:background="@drawable/circle_shape"
+            android:src="@drawable/baseline_delete_24"
+            app:tint="@color/red"/>
+
+
     </LinearLayout>
 
 
@@ -108,23 +121,29 @@
 
 
                     <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/editCategoryDetails"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Category"
-                        android:textColorHint="@color/gray"
-                        app:hintAnimationEnabled="true">
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        app:boxBackgroundMode="outline"
+                        app:boxStrokeWidth="2dp"
+                        app:boxStrokeColor="@color/black"
+                        app:boxCornerRadiusTopStart="30dp"
+                        app:boxCornerRadiusTopEnd="30dp"
+                        app:boxCornerRadiusBottomStart="30dp"
+                        app:boxCornerRadiusBottomEnd="30dp"
+                        app:hintTextColor="@color/blue"
+                        app:hintTextAppearance="@style/FloatingHintStyle">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editCategoryDetails"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/edittextshape"
-                            android:ems="10"
-                            android:fontFamily="@font/roboto"
-                            android:inputType="text"
-                            android:paddingLeft="15sp"
-                            android:paddingRight="15sp"
-                            android:textSize="20dp" />
+                            android:textColor="@color/black"
+                            android:paddingStart="20dp"
+                            android:drawableLeft="@drawable/outline_info_24"
+                            android:drawablePadding="10dp"
+                            android:gravity="start"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
 
