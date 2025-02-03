@@ -13,7 +13,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 public class EditDetailsFragment extends Fragment {
@@ -65,6 +72,60 @@ public class EditDetailsFragment extends Fragment {
 
             }
         });
+
+
+        Bundle bundle = new Bundle();
+        //show the details
+        if (bundle != null) {
+            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            String documentId = bundle.getString("DocumentId");
+            //showItemData(view,userId, documentId);
+            Log.e("DetailsFragment", userId + "," + documentId);
+
+
+        }
+        else {
+            Log.e("DetailsFragment", "Not found");
+
+        }
+
+
         return view;
     }
+
+
+
+    private void showItemData(View view, String userId, String documentId) {
+        TextInputLayout categoryInputLayout = view.findViewById(R.id.editCategoryDetails);
+        TextInputLayout styleTagInputLayout = view.findViewById(R.id.editStyleTagDetails);
+        TextInputLayout colorInputLayout = view.findViewById(R.id.editColorDetails);
+        TextInputLayout seasonalityInputLayout = view.findViewById(R.id.editSeasonalityDetails);
+        TextInputLayout descriptionInputLayout = view.findViewById(R.id.editDescriptionDetails);
+
+        // Access the TextInputEditTexts inside the TextInputLayouts
+        TextInputEditText categoryEditDetails = (TextInputEditText) categoryInputLayout.getEditText();
+        TextInputEditText styleTagEditDetails = (TextInputEditText) styleTagInputLayout.getEditText();
+        TextInputEditText colorEditDetails = (TextInputEditText) colorInputLayout.getEditText();
+        TextInputEditText seasonalityEditDetails = (TextInputEditText) seasonalityInputLayout.getEditText();
+        TextInputEditText descriptionEditDetails = (TextInputEditText) descriptionInputLayout.getEditText();
+
+        FirestoreHelper firestoreHelper = new FirestoreHelper();
+
+        firestoreHelper.getItemData(userId, documentId, new FirestoreHelper.ItemDataCallback() {
+            @Override
+            public void onSuccess(String category, String styleTag, String description, String color, String season) {
+                if (categoryEditDetails != null) categoryEditDetails.setText(category);
+                if (styleTagEditDetails != null) styleTagEditDetails.setText(styleTag);
+                if (colorEditDetails != null) colorEditDetails.setText(color);
+                if (seasonalityEditDetails != null) seasonalityEditDetails.setText(season);
+                if (descriptionEditDetails != null) descriptionEditDetails.setText(description);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                System.err.println("Error fetching item data: " + e.getMessage());
+            }
+        });
+    }
+
 }

@@ -99,6 +99,40 @@ public class FirestoreHelper {
                 });
     }
 
+
+    public void getItemData(String userId, String documentId, ItemDataCallback callback) {
+        db.collection("users")
+                .document(userId)
+                .collection("wardrobe")
+                .document(documentId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult().exists()) {
+                        // Extract fields from Firestore
+                        String category = task.getResult().getString("category");
+                        String styleTag = task.getResult().getString("styleTag");
+                        String description = task.getResult().getString("description");
+                        String color = task.getResult().getString("color");
+                        String season = task.getResult().getString("season");
+
+                        // Pass data through callback
+                        callback.onSuccess(category, styleTag, description, color, season);
+                    } else {
+                        callback.onFailure(new Exception("No item found with documentId: " + documentId));
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    if (callback != null) callback.onFailure(e);
+                });
+    }
+
+    public interface ItemDataCallback {
+        void onSuccess(String category, String styleTag, String description, String color, String season);
+        void onFailure(Exception e);
+    }
+
+
+
     // Callback interface for handling success/failure of Firestore operations
     public interface FirestoreCallback {
         void onSuccess();

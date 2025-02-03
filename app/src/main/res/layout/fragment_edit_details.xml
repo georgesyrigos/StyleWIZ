@@ -30,6 +30,7 @@
             android:layout_weight="1"/>
 
 
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -78,9 +79,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/white_background"
+                android:background="@drawable/edittextshape"
                 android:orientation="vertical"
                 android:padding="10dp"
+                android:elevation="2dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/profileImg">
@@ -115,7 +117,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
                     android:orientation="horizontal"
                     android:padding="8dp">
 
@@ -149,158 +152,159 @@
 
                 </LinearLayout>
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:alpha="0.5"
-                    android:background="@color/gray" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
                     android:orientation="horizontal"
                     android:padding="8dp">
 
 
                     <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/editStyleTagDetails"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Style Tag"
-                        android:textColorHint="@color/gray"
-                        app:hintAnimationEnabled="true">
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        app:boxBackgroundMode="outline"
+                        app:boxStrokeWidth="2dp"
+                        app:boxStrokeColor="@color/black"
+                        app:boxCornerRadiusTopStart="30dp"
+                        app:boxCornerRadiusTopEnd="30dp"
+                        app:boxCornerRadiusBottomStart="30dp"
+                        app:boxCornerRadiusBottomEnd="30dp"
+                        app:hintTextColor="@color/blue"
+                        app:hintTextAppearance="@style/FloatingHintStyle">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editStyleTagDetails"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/edittextshape"
-                            android:ems="10"
-                            android:fontFamily="@font/roboto"
-                            android:inputType="text"
-                            android:paddingLeft="15sp"
-                            android:paddingRight="15sp"
-                            android:textSize="20dp" />
+                            android:textColor="@color/black"
+                            android:paddingStart="20dp"
+                            android:drawableLeft="@drawable/outline_info_24"
+                            android:drawablePadding="10dp"
+                            android:gravity="start"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
 
                 </LinearLayout>
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:alpha="0.5"
-                    android:background="@color/gray" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
                     android:orientation="horizontal"
                     android:padding="8dp">
 
 
                     <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/editColorDetails"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Color"
-                        android:textColorHint="@color/gray"
-                        app:hintAnimationEnabled="true">
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        app:boxBackgroundMode="outline"
+                        app:boxStrokeWidth="2dp"
+                        app:boxStrokeColor="@color/black"
+                        app:boxCornerRadiusTopStart="30dp"
+                        app:boxCornerRadiusTopEnd="30dp"
+                        app:boxCornerRadiusBottomStart="30dp"
+                        app:boxCornerRadiusBottomEnd="30dp"
+                        app:hintTextColor="@color/blue"
+                        app:hintTextAppearance="@style/FloatingHintStyle">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editColorDetails"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/edittextshape"
-                            android:ems="10"
-                            android:fontFamily="@font/roboto"
-                            android:inputType="text"
-                            android:paddingLeft="15sp"
-                            android:paddingRight="15sp"
-                            android:textSize="20dp" />
+                            android:textColor="@color/black"
+                            android:paddingStart="20dp"
+                            android:drawableLeft="@drawable/outline_info_24"
+                            android:drawablePadding="10dp"
+                            android:gravity="start"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
 
                 </LinearLayout>
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:alpha="0.5"
-                    android:background="@color/gray" />
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
                     android:orientation="horizontal"
                     android:padding="8dp">
 
 
                     <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/editSeasonalityDetails"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Seasonality"
-                        android:textColorHint="@color/gray"
-                        app:hintAnimationEnabled="true">
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        app:boxBackgroundMode="outline"
+                        app:boxStrokeWidth="2dp"
+                        app:boxStrokeColor="@color/black"
+                        app:boxCornerRadiusTopStart="30dp"
+                        app:boxCornerRadiusTopEnd="30dp"
+                        app:boxCornerRadiusBottomStart="30dp"
+                        app:boxCornerRadiusBottomEnd="30dp"
+                        app:hintTextColor="@color/blue"
+                        app:hintTextAppearance="@style/FloatingHintStyle">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editSeasonalityDetails"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/edittextshape"
-                            android:ems="10"
-                            android:fontFamily="@font/roboto"
-                            android:inputType="text"
-                            android:paddingLeft="15sp"
-                            android:paddingRight="15sp"
-                            android:textSize="20dp" />
+                            android:textColor="@color/black"
+                            android:paddingStart="20dp"
+                            android:drawableLeft="@drawable/outline_info_24"
+                            android:drawablePadding="10dp"
+                            android:gravity="start"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
 
                 </LinearLayout>
 
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:alpha="0.5"
-                    android:background="@color/gray" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
                     android:orientation="horizontal"
                     android:padding="8dp">
 
 
                     <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/editDescriptionDetails"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Description"
-                        android:textColorHint="@color/gray"
-                        app:hintAnimationEnabled="true">
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        app:boxBackgroundMode="outline"
+                        app:boxStrokeWidth="2dp"
+                        app:boxStrokeColor="@color/black"
+                        app:boxCornerRadiusTopStart="30dp"
+                        app:boxCornerRadiusTopEnd="30dp"
+                        app:boxCornerRadiusBottomStart="30dp"
+                        app:boxCornerRadiusBottomEnd="30dp"
+                        app:hintTextColor="@color/blue"
+                        app:hintTextAppearance="@style/FloatingHintStyle">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editDescriptionDetails"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/edittextshape"
-                            android:ems="10"
-                            android:fontFamily="@font/roboto"
-                            android:inputType="text"
-                            android:paddingLeft="15sp"
-                            android:paddingRight="15sp"
-                            android:textSize="20dp" />
+                            android:textColor="@color/black"
+                            android:paddingStart="20dp"
+                            android:drawableLeft="@drawable/outline_info_24"
+                            android:drawablePadding="10dp"
+                            android:gravity="start"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
 

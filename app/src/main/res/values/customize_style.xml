@@ -5,7 +5,7 @@
     </style>
 
     <style name="FloatingHintStyle" parent="TextAppearance.MaterialComponents.Caption">
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:letterSpacing">0.1</item> <!-- Adds spacing for a shifted effect -->
         <item name="android:fontFamily">@font/roboto</item>
     </style>

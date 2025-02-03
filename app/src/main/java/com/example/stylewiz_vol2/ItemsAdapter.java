@@ -67,6 +67,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         DataClass currentData = dataList.get(position);
+        //new addition
+        String documentId = currentData.getDocumentId(); // Ensure your model class has this method
+
 
         //showing the cardview for recyclerview
         Glide.with(context).load(dataList.get(position).getImage()).into(holder.recImage);
@@ -79,6 +82,10 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
 
         // Long press functionality to open an edit fragment
         holder.itemView.setOnLongClickListener(v -> {
+            //new addition
+            Bundle bundle = new Bundle();
+            //new addition
+            bundle.putString("DocumentId", documentId);
 
             FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -103,6 +110,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
 
             // Create a new instance of EditDetailsFragment
             EditDetailsFragment editDetailsFragment = new EditDetailsFragment();
+            //new addition
+            editDetailsFragment.setArguments(bundle); //Pass documentId to fragment
+
             transaction.add(R.id.frameLayout, editDetailsFragment, "EDIT_DETAILS")
                     .addToBackStack("EDIT_DETAILS")
                     .commit();
