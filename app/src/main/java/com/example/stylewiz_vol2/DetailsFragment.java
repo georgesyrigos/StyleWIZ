@@ -82,37 +82,6 @@ public class DetailsFragment extends Fragment {
             }
         });
 
-        // Set up the click listener for edit
-        editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                EditDetailsFragment editDetailsFragment = new EditDetailsFragment();
-
-
-                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-
-                // Find the currently visible fragment and hide it
-                Fragment currentFragment = null;
-                for (Fragment fragment : fragmentManager.getFragments()) {
-                    if (fragment.isVisible()) {
-                        currentFragment = fragment;
-                        break;
-                    }
-                }
-                if (currentFragment != null) {
-                    transaction.hide(currentFragment);
-                }
-
-                // Add DetailsFragment or show if already added
-                transaction.add(R.id.frameLayout, editDetailsFragment, "EDIT_DETAILS")
-                        .addToBackStack("EDIT_DETAILS")
-                        .commit();
-
-            }
-        });
-
 
         //get the details from the adapter
         Bundle bundle = getArguments();
@@ -135,6 +104,40 @@ public class DetailsFragment extends Fragment {
             // Load image using Glide
             //Glide.with(requireContext()).load(image).into(detailImage);
             Log.e("DetailsFragment", userId + "," + documentId);
+
+
+            // Set up the click listener for edit and getting the document id passed to edit details
+            editButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    EditDetailsFragment editDetailsFragment = new EditDetailsFragment();
+                    //getting from the bundle above all the elements
+                    editDetailsFragment.setArguments(bundle); //Pass documentId to fragment
+
+
+                    FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+                    // Find the currently visible fragment and hide it
+                    Fragment currentFragment = null;
+                    for (Fragment fragment : fragmentManager.getFragments()) {
+                        if (fragment.isVisible()) {
+                            currentFragment = fragment;
+                            break;
+                        }
+                    }
+                    if (currentFragment != null) {
+                        transaction.hide(currentFragment);
+                    }
+
+                    // Add DetailsFragment or show if already added
+                    transaction.add(R.id.frameLayout, editDetailsFragment, "EDIT_DETAILS")
+                            .addToBackStack("EDIT_DETAILS")
+                            .commit();
+
+                }
+            });
 
 
 

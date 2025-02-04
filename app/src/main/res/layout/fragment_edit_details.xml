@@ -34,7 +34,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/like"
+            android:id="@+id/deleteEdit"
             android:layout_margin="10dp"
             android:padding="5dp"
             android:elevation="5dp"
@@ -147,6 +147,7 @@
                             android:drawableLeft="@drawable/outline_info_24"
                             android:drawablePadding="10dp"
                             android:gravity="start"/>
+
                     </com.google.android.material.textfield.TextInputLayout>
 
 

@@ -126,6 +126,25 @@ public class FirestoreHelper {
                 });
     }
 
+
+
+    /*
+    public void deleteItem(String userId, String documentId, final DeletionCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(userId).collection("items").document(documentId)
+                .delete()
+                .addOnSuccessListener(aVoid -> callback.onSuccess())
+                .addOnFailureListener(callback::onFailure);
+    }
+
+    // Callback interface for deletion
+    public interface DeletionCallback {
+        void onSuccess();
+        void onFailure(Exception e);
+    }*/
+
+
+
     public interface ItemDataCallback {
         void onSuccess(String category, String styleTag, String description, String color, String season);
         void onFailure(Exception e);
