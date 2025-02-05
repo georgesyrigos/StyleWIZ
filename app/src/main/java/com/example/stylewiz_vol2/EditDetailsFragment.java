@@ -22,6 +22,12 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class EditDetailsFragment extends Fragment {
@@ -37,9 +43,11 @@ public class EditDetailsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_edit_details, container, false);
 
-
+        // Initialize the button
         backButton = view.findViewById(R.id.backEdit);
         deleteButton = view.findViewById(R.id.deleteEdit);
+        cancelBtn = view.findViewById(R.id.cancel_button_details);
+        saveBtn = view.findViewById(R.id.save_button_details);
 
         // Set up the click listener for back
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -56,52 +64,6 @@ public class EditDetailsFragment extends Fragment {
         });
 
 
-        /*
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle = getArguments();
-                if (bundle != null) {
-                    String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                    String documentId = bundle.getString("DocumentId");
-
-                    if (documentId != null) {
-                        FirestoreHelper firestoreHelper = new FirestoreHelper();
-                        firestoreHelper.deleteItem(userId, documentId, new FirestoreHelper.DeletionCallback() {
-                            @Override
-                            public void onSuccess() {
-
-                                // Notify adapter about deletion using the Activity/Fragment callback
-                                if (getActivity() instanceof ItemsAdapter.OnItemDeleteListener) {
-                                    ((ItemsAdapter.OnItemDeleteListener) getActivity()).onItemDelete(documentId);
-                                }
-
-
-                                // Navigate back to HomeFragment instead of just popping the stack
-                                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                                fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE); // Clear back stack
-
-                                // Load HomeFragment
-                                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                                transaction.replace(R.id.frameLayout, new HomeFragment());
-                                transaction.commit();
-                            }
-
-                            @Override
-                            public void onFailure(Exception e) {
-                                Toast.makeText(requireContext(), "Failed to delete item: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                Log.e("EditDetailsFragment", "Error deleting item", e);
-                            }
-                        });
-                    }
-                }
-            }
-        });*/
-
-
-
-        // Initialize the button
-        cancelBtn = view.findViewById(R.id.cancel_button_details);
 
         // Set up the click listener
         cancelBtn.setOnClickListener(new View.OnClickListener() {
@@ -127,6 +89,14 @@ public class EditDetailsFragment extends Fragment {
             String documentId = bundle.getString("DocumentId");
             showItemData(view,userId, documentId);
             Log.e("DetailsFragment", userId + "," + documentId);
+
+            // Set up the click listener for delete
+            deleteButton.setOnClickListener(v -> {
+                showDeleteConfirmationDialog(userId, documentId);
+
+            });
+
+
 
 
         }
@@ -166,6 +136,26 @@ public class EditDetailsFragment extends Fragment {
                 if (colorEditDetails != null) colorEditDetails.setText(color);
                 if (seasonalityEditDetails != null) seasonalityEditDetails.setText(season);
                 if (descriptionEditDetails != null) descriptionEditDetails.setText(description);
+
+                //save the changes to firestore
+                saveBtn.setOnClickListener(v -> {
+                    if (categoryEditDetails != null){
+                        // Get the updated text from input fields
+                        String updatedCategory = categoryEditDetails.getText().toString().trim();
+                        String updatedStyleTag = styleTagEditDetails.getText().toString().trim();
+                        String updatedColor = colorEditDetails.getText().toString().trim();
+                        String updatedSeason = seasonalityEditDetails.getText().toString().trim();
+                        String updatedDescription = descriptionEditDetails.getText().toString().trim();
+                        // Call the update function with the new values
+                        saveDetailsChanges(userId, documentId, updatedCategory, updatedStyleTag, updatedDescription, updatedColor, updatedSeason);
+                    }
+                    else {
+                        Toast.makeText(getContext(), "All fields are required!", Toast.LENGTH_SHORT).show();
+                    }
+
+                });
+
+
             }
 
             @Override
@@ -173,6 +163,85 @@ public class EditDetailsFragment extends Fragment {
                 System.err.println("Error fetching item data: " + e.getMessage());
             }
         });
+
+
+    }
+
+
+    private void saveDetailsChanges(String userId, String itemId, String category, String styleTag, String description, String color, String season) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("category", category);
+        updates.put("styleTag", styleTag);
+        updates.put("description", description);
+        updates.put("color", color);
+        updates.put("season", season);
+
+        db.collection("users")
+                .document(userId)
+                .collection("wardrobe")
+                .document(itemId)
+                .update(updates) // Updates only these fields
+                .addOnSuccessListener(aVoid -> System.out.println("Item successfully updated!"))
+                .addOnFailureListener(e -> System.err.println("Error updating item: " + e.getMessage()));
+    }
+
+
+
+    //confirmation to delete
+    private void showDeleteConfirmationDialog(String userId,String documentId) {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Delete Item")
+                .setMessage("Are you sure you want to delete this item?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    deleteSelectedItem(userId, documentId);
+                })
+                .setNegativeButton("No", (dialog, which) -> {
+                    dialog.dismiss(); // Do nothing, close the dialog
+                })
+                .setCancelable(false)
+                .show();
+    }
+
+
+    private void deleteSelectedItem(String userId, String itemId) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("users")
+                .document(userId)
+                .collection("wardrobe")
+                .document(itemId)
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    Log.e("EditDetailsFragment", "Item deleted successfully");
+
+
+                    //remove the current fragment and return to home
+                    FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+
+                    // Clear the back stack completely before navigating
+                    fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+                    // Ensure only the HomeFragment is visible
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                    Fragment homeFragment = fragmentManager.findFragmentByTag("HOME");
+                    if (homeFragment == null) {
+                        // Add the HomeFragment if it doesn't exist
+                        homeFragment = new HomeFragment();
+                        transaction.add(R.id.frameLayout, homeFragment, "HOME");
+                    } else {
+                        // Show the HomeFragment if it exists
+                        transaction.show(homeFragment);
+                    }
+
+                    // Remove DetailsFragment explicitly to avoid stacking
+                    transaction.remove(EditDetailsFragment.this).commit();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("EditDetailsFragment", "Failed to delete item: " + e.getMessage());
+
+                });
     }
 
 }
