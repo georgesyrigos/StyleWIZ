@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:padding="5dp">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="175dp"
+        android:layout_height="175dp"
+        android:layout_margin="10dp"
+        app:cardElevation="5dp"
+        app:cardCornerRadius="20dp">
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:columnCount="2"
+            android:rowCount="2">
+
+            <!-- Top Left Segment -->
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
+                android:src="@drawable/outline_person_24"
+                android:background="@color/red"/>
+
+            <!-- Top Right Segment -->
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
+                android:src="@drawable/outline_person_24"
+                android:background="@color/blue" />
+
+            <!-- Bottom Left Segment -->
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
+                android:src="@drawable/outline_person_24"
+                android:backgroundTint="@color/gray"
+                android:background="@color/black" />
+
+            <!-- Bottom Right Segment -->
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
+                android:src="@drawable/baseline_more_24"
+                android:background="@color/white" />
+
+        </GridLayout>
+
+
+
+    </androidx.cardview.widget.CardView>
+    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/gridCaption"
+        android:text="Caption"
+        android:textSize="20dp"
+        android:fontFamily="@font/roboto"
+        android:textColor="@color/blue"/>
+
+
+
+</LinearLayout>

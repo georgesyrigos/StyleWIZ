@@ -3,10 +3,15 @@
     <style name="circular">
         <item name="cornerSize">50%</item>
     </style>
+    
+    <style name="fab_square" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">40dp</item>
+    </style>
 
     <style name="FloatingHintStyle" parent="TextAppearance.MaterialComponents.Caption">
         <item name="android:textSize">14sp</item>
-        <item name="android:letterSpacing">0.1</item> <!-- Adds spacing for a shifted effect -->
+        <item name="android:letterSpacing">0.1</item> 
         <item name="android:fontFamily">@font/roboto</item>
     </style>
 </resources>

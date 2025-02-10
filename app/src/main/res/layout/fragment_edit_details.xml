@@ -142,6 +142,7 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:textColor="@color/black"
                             android:paddingStart="20dp"
                             android:drawableLeft="@drawable/outline_info_24"
