@@ -45,6 +45,7 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore:25.1.1")
 
     implementation("com.github.CanHub:Android-Image-Cropper:4.2.1")
+    implementation("com.google.firebase:firebase-storage:21.0.1")
 
 
 

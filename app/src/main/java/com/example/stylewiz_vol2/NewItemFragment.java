@@ -43,9 +43,14 @@ import com.canhub.cropper.CropImageContract;
 import com.canhub.cropper.CropImageContractOptions;
 import com.canhub.cropper.CropImageOptions;
 import com.canhub.cropper.CropImageView;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.InputStream;
 
@@ -58,6 +63,8 @@ public class NewItemFragment extends Fragment {
     AppCompatButton addItem;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
+    private FirebaseStorage fStorage;
+    private StorageReference mStorageRef;
     private ActivityResultLauncher<Intent> launcher;
     private MaterialCardView selectPhoto;
     private ImageView ItemImageView;
@@ -186,6 +193,8 @@ public class NewItemFragment extends Fragment {
         // Initialize Firebase instances
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
+        fStorage = FirebaseStorage.getInstance();
+        mStorageRef = fStorage.getReference();
 
         // Initialize FirestoreHelper with fStore
         firestoreHelper = new FirestoreHelper();
@@ -207,57 +216,29 @@ public class NewItemFragment extends Fragment {
         addItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Fetch the text inside the onClick method
                 String cat = item_Category;
                 String tag = item_StyleTag;
                 String des = mDes.getText().toString().trim();
                 String col = mCol.getText().toString().trim();
                 String sea = item_Seasonality;
+                boolean liked = false;
 
-
-
-
-                // Check if any required field is empty
                 if (cat == null || cat.isEmpty() || tag == null || tag.isEmpty() || des.isEmpty() || col.isEmpty() || sea == null || sea.isEmpty()) {
-                    // Show a Toast message if any field is empty
                     Toast.makeText(getActivity(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
-                }else if (ImageUri == null) {
-                    // Check if the image is selected
+                } else if (ImageUri == null) {
                     Toast.makeText(getActivity(), "Please select an image", Toast.LENGTH_SHORT).show();
                 } else {
-                    // Use the class-level username variable here
                     if (user != null) {
-                        // Define default values for the wardrobe item
-                        String category = cat;
-                        String styleTag = tag;
-                        String description = des;
-                        String color = col;
-                        String season = sea;
-                        boolean liked = false;
-
-                        // Call function that inserts data to Firestore based on the username
-                        firestoreHelper.addWardrobeItemByUsername(user, category, styleTag, description, color, season, liked);
-                        Toast.makeText(getActivity(), "New item added!", Toast.LENGTH_SHORT).show();
-                        // Reset all fields after submission
-                        resetFields();
-
+                        UploadImage(user, cat, tag, des, col, sea, liked);
                     } else {
                         System.out.println("Username not available");
                     }
                 }
-
             }
         });
 
 
     }
-
-
-
-
-
-
-
 
 
 
@@ -437,9 +418,26 @@ public class NewItemFragment extends Fragment {
 
 
 
-    //upload image into Firebase storage in store Image Url into Firebase firestore
+    //upload image into Firebase storage and store Image Url into Firebase firestore
+    private void UploadImage(String username, String category, String styleTag, String description, String color, String season, boolean liked) {
+        if (ImageUri != null) {
+            final StorageReference myRef = mStorageRef.child("wardrobe_images/" + System.currentTimeMillis() + "_" + ImageUri.getLastPathSegment());
 
-    //make a method to Upload Image into firebase storage
+            myRef.putFile(ImageUri)
+                    .addOnSuccessListener(taskSnapshot -> myRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        if (uri != null) {
+                            String photoUrl = uri.toString();
+                            firestoreHelper.addWardrobeItemByUsername(username, category, styleTag, description, color, season, liked, photoUrl);
+                            //Toast.makeText(getActivity(), "New item added!", Toast.LENGTH_SHORT).show();
+                            resetFields();
+                        }
+                    }))
+                    .addOnFailureListener(e -> Toast.makeText(getContext(), "Image upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+        } else {
+            Toast.makeText(getActivity(), "Please select an image", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
 
 
