@@ -2,6 +2,7 @@ package com.example.stylewiz_vol2;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -20,6 +22,12 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
@@ -70,9 +78,12 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         //new addition
         String documentId = currentData.getDocumentId(); // Ensure your model class has this method
 
-
         //showing the cardview for recyclerview
-        Glide.with(context).load(dataList.get(position).getImage()).into(holder.recImage);
+        Glide.with(context)
+                .load(currentData.getPhotoUrl())
+                .placeholder(R.drawable.round_image_search_24)
+                .error(R.drawable.round_image_search_24)
+                .into(holder.recImage);
 
         holder.recCategory.setText(currentData.getCategory());
         holder.recStyleTag.setText(currentData.getStyleTag());
@@ -86,6 +97,8 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
             Bundle bundle = new Bundle();
             //new addition
             bundle.putString("DocumentId", documentId);
+            bundle.putString("PhotoUrl", currentData.getPhotoUrl());
+
 
             FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -136,7 +149,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
                 bundle.putString("Color", dataList.get(holder.getAdapterPosition()).getColor());
                 bundle.putString("Season", dataList.get(holder.getAdapterPosition()).getSeason());
                 bundle.putString("Description", dataList.get(holder.getAdapterPosition()).getDescription());
-                bundle.putString("Image", dataList.get(holder.getAdapterPosition()).getImage());
+                bundle.putString("PhotoUrl", dataList.get(holder.getAdapterPosition()).getPhotoUrl());
                 // Add the documentId to the bundle
                 bundle.putString("DocumentId", currentData.getDocumentId());
 

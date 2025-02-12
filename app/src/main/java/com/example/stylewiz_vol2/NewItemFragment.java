@@ -229,7 +229,7 @@ public class NewItemFragment extends Fragment {
                     Toast.makeText(getActivity(), "Please select an image", Toast.LENGTH_SHORT).show();
                 } else {
                     if (user != null) {
-                        UploadImage(user, cat, tag, des, col, sea, liked);
+                        UploadImage(cat, tag, des, col, sea, liked);
                     } else {
                         System.out.println("Username not available");
                     }
@@ -419,24 +419,31 @@ public class NewItemFragment extends Fragment {
 
 
     //upload image into Firebase storage and store Image Url into Firebase firestore
-    private void UploadImage(String username, String category, String styleTag, String description, String color, String season, boolean liked) {
+    private void UploadImage(String category, String styleTag, String description, String color, String season, boolean liked) {
         if (ImageUri != null) {
-            final StorageReference myRef = mStorageRef.child("wardrobe_images/" + System.currentTimeMillis() + "_" + ImageUri.getLastPathSegment());
+            if (fAuth.getCurrentUser() != null) {
+                String userId = fAuth.getCurrentUser().getUid();
 
-            myRef.putFile(ImageUri)
-                    .addOnSuccessListener(taskSnapshot -> myRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                        if (uri != null) {
-                            String photoUrl = uri.toString();
-                            firestoreHelper.addWardrobeItemByUsername(username, category, styleTag, description, color, season, liked, photoUrl);
-                            //Toast.makeText(getActivity(), "New item added!", Toast.LENGTH_SHORT).show();
-                            resetFields();
-                        }
-                    }))
-                    .addOnFailureListener(e -> Toast.makeText(getContext(), "Image upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                final StorageReference myRef = mStorageRef.child("wardrobe_images/" + userId + "/" + System.currentTimeMillis() + "_" + ImageUri.getLastPathSegment());
+
+                myRef.putFile(ImageUri)
+                        .addOnSuccessListener(taskSnapshot -> myRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                            if (uri != null) {
+                                String photoUrl = uri.toString();
+                                Toast.makeText(getActivity(), "New item added!", Toast.LENGTH_SHORT).show();
+                                resetFields();
+                                firestoreHelper.addWardrobeItem(userId, category, styleTag, description, color, season, liked, photoUrl);
+                            }
+                        }))
+                        .addOnFailureListener(e -> Toast.makeText(getContext(), "Image upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+            } else {
+                Toast.makeText(getActivity(), "User not logged in!", Toast.LENGTH_SHORT).show(); // ⚠️ Handle no user case
+            }
         } else {
             Toast.makeText(getActivity(), "Please select an image", Toast.LENGTH_SHORT).show();
         }
     }
+
 
 
 

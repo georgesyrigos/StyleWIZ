@@ -51,6 +51,7 @@ public class DetailsFragment extends Fragment {
         detailColor = view.findViewById(R.id.detailColor);
         detailSeason = view.findViewById(R.id.detailSeason);
         detailDesc = view.findViewById(R.id.detailDesc);
+        ImageView detailImage = view.findViewById(R.id.detailImage);
 
 
         // Get user ID from FirebaseAuth
@@ -92,6 +93,7 @@ public class DetailsFragment extends Fragment {
             String color = bundle.getString("Color");
             String season = bundle.getString("Season");
             String description = bundle.getString("Description");
+            String imageUrl = bundle.getString("PhotoUrl");
             documentId = bundle.getString("DocumentId");
 
 
@@ -102,7 +104,11 @@ public class DetailsFragment extends Fragment {
             detailDesc.setText(description);
 
             // Load image using Glide
-            //Glide.with(requireContext()).load(image).into(detailImage);
+            if (imageUrl != null && !imageUrl.isEmpty()) {
+                Glide.with(requireContext())
+                        .load(imageUrl)
+                        .into(detailImage);
+            }
             Log.e("DetailsFragment", userId + "," + documentId);
 
 

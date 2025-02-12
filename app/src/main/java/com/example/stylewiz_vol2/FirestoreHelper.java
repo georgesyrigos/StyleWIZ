@@ -14,23 +14,9 @@ public class FirestoreHelper {
     public FirestoreHelper() {
         db = FirebaseFirestore.getInstance();
     }
-    // Method to get userId by username and add a wardrobe item
-    public void addWardrobeItemByUsername(String username, String category, String styleTag, String description, String color, String season, boolean liked, String photoUrl) {
-        db.collection("users")
-                .whereEqualTo("username", username)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
-                        String userId = task.getResult().getDocuments().get(0).getId();
-                        addWardrobeItem(userId, category, styleTag, description, color, season, liked, photoUrl);
-                    } else {
-                        System.out.println("No user found with username: " + username);
-                    }
-                })
-                .addOnFailureListener(e -> System.err.println("Error getting user ID: " + e.getMessage()));
-    }
 
-    private void addWardrobeItem(String userId, String category, String styleTag, String description, String color, String season, boolean liked, String photoUrl) {
+    //Method to add item to wardrobe based on the userId
+    public void addWardrobeItem(String userId, String category, String styleTag, String description, String color, String season, boolean liked, String photoUrl) {
         CollectionReference wardrobeRef = db.collection("users").document(userId).collection("wardrobe");
 
         Map<String, Object> wardrobeItem = new HashMap<>();

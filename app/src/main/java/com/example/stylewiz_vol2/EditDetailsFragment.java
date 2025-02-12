@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,7 +34,7 @@ import java.util.Map;
 public class EditDetailsFragment extends Fragment {
 
     Button cancelBtn, saveBtn;
-    private ImageView detailImage, backButton, deleteButton;
+    private ImageView editDetailsImage, backButton, deleteButton;
 
 
 
@@ -48,6 +49,7 @@ public class EditDetailsFragment extends Fragment {
         deleteButton = view.findViewById(R.id.deleteEdit);
         cancelBtn = view.findViewById(R.id.cancel_button_details);
         saveBtn = view.findViewById(R.id.save_button_details);
+        editDetailsImage = view.findViewById(R.id.editDetailsImage);
 
         // Set up the click listener for back
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -87,6 +89,15 @@ public class EditDetailsFragment extends Fragment {
         if (bundle != null) {
             String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
             String documentId = bundle.getString("DocumentId");
+            String imageUrl = bundle.getString("PhotoUrl");
+
+            //Load image using Glide
+            if (imageUrl != null && !imageUrl.isEmpty()) {
+                Glide.with(requireContext())
+                        .load(imageUrl)
+                        .into(editDetailsImage);
+            }
+            //show the rest of the data
             showItemData(view,userId, documentId);
             Log.e("DetailsFragment", userId + "," + documentId);
 

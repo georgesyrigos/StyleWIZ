@@ -6,7 +6,7 @@ public class DataClass {
     private String color;
     private String season;
     private String description;
-    private String image;
+    private String photoUrl;
     private String documentId;
     private boolean liked;
 
@@ -41,9 +41,9 @@ public class DataClass {
         return description;
     }
 
-    public String getImage() {
+    public String getPhotoUrl() {
 
-        return image;
+        return photoUrl;
     }
 
     //item id
@@ -69,7 +69,7 @@ public class DataClass {
         this.category = dataCategory;
         this.styleTag = dataStyleTag;
         this.season = dataSeasonality;
-        this.image = dataImage;
+        this.photoUrl = dataImage;
     }
 
     
