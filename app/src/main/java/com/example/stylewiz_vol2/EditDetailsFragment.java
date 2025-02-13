@@ -5,14 +5,21 @@ import android.app.AlertDialog;
 import android.nfc.Tag;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -35,7 +42,70 @@ public class EditDetailsFragment extends Fragment {
 
     Button cancelBtn, saveBtn;
     private ImageView editDetailsImage, backButton, deleteButton;
+    String edit_Category, item_StyleTag, item_Seasonality;
 
+    String[] category = {"Top", "Bottom", "Outwear", "Shoes", "Hats"};
+    AutoCompleteTextView categoryDropdown, styleTagDropdown, seasonalityDropdown;
+
+
+
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        categoryDropdown = view.findViewById(R.id.categoryDropdown);
+
+// Setup the adapter
+        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(getActivity(), R.layout.list_item, category);
+        categoryDropdown.setAdapter(categoryAdapter);
+
+// Prevent typing in the AutoCompleteTextView
+        categoryDropdown.setFocusable(false);
+        categoryDropdown.setClickable(true);
+
+// Handle touch events to open the dropdown
+        categoryDropdown.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // Allow the dropdown to be shown but not allow text input
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    // Open the dropdown without opening the keyboard
+                    categoryDropdown.showDropDown();
+                }
+                return false; // Return false to allow normal touch behavior
+            }
+        });
+
+// Set the selected category if it exists
+        if (!TextUtils.isEmpty(edit_Category)) {
+            categoryDropdown.setText(edit_Category, false);
+        }
+
+// Handle selection from the dropdown
+        categoryDropdown.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
+                // Update the selected category
+                edit_Category = adapterView.getItemAtPosition(i).toString();
+
+                // After selecting an item, we should stop the keyboard from appearing when the user taps the field again
+                categoryDropdown.setText(edit_Category, false);
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
 
 
     @Override
@@ -130,7 +200,7 @@ public class EditDetailsFragment extends Fragment {
         TextInputLayout descriptionInputLayout = view.findViewById(R.id.editDescriptionDetails);
 
         // Access the TextInputEditTexts inside the TextInputLayouts
-        TextInputEditText categoryEditDetails = (TextInputEditText) categoryInputLayout.getEditText();
+        AutoCompleteTextView categoryEditDetails = (AutoCompleteTextView) categoryInputLayout.getEditText();
         TextInputEditText styleTagEditDetails = (TextInputEditText) styleTagInputLayout.getEditText();
         TextInputEditText colorEditDetails = (TextInputEditText) colorInputLayout.getEditText();
         TextInputEditText seasonalityEditDetails = (TextInputEditText) seasonalityInputLayout.getEditText();
@@ -142,7 +212,12 @@ public class EditDetailsFragment extends Fragment {
         firestoreHelper.getItemData(userId, documentId, new FirestoreHelper.ItemDataCallback() {
             @Override
             public void onSuccess(String category, String styleTag, String description, String color, String season) {
-                if (categoryEditDetails != null) categoryEditDetails.setText(category);
+                if (categoryEditDetails != null) {
+                    categoryEditDetails.post(() -> {
+                        categoryEditDetails.setText(category, false); // Prevent filtering
+                        categoryEditDetails.clearFocus(); // Optional: Prevents unwanted keyboard popup
+                    });
+                }
                 if (styleTagEditDetails != null) styleTagEditDetails.setText(styleTag);
                 if (colorEditDetails != null) colorEditDetails.setText(color);
                 if (seasonalityEditDetails != null) seasonalityEditDetails.setText(season);
