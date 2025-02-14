@@ -134,8 +134,7 @@
                         android:id="@+id/editCategoryDetails"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/select"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         app:boxBackgroundMode="outline"
                         app:boxStrokeWidth="2dp"
                         app:boxStrokeColor="@color/black"
@@ -143,22 +142,24 @@
                         app:boxCornerRadiusTopEnd="30dp"
                         app:boxCornerRadiusBottomStart="30dp"
                         app:boxCornerRadiusBottomEnd="30dp"
-                        app:hintTextColor="@color/blue">
+                        app:hintTextColor="@color/blue"
+                        app:cursorColor="@color/blue">
 
                         <AutoCompleteTextView
                             android:id="@+id/categoryDropdown"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/black"
-                            android:drawableStart="@drawable/outline_info_24"
                             android:paddingStart="20dp"
-                            android:drawablePadding="10dp"
-                            android:gravity="start"/>
+                            android:minHeight="55dp"
+                            android:clickable="true"
+                            android:hint="Select Category"
+                            android:inputType="none"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
 
 
-                </LinearLayout>
+
+            </LinearLayout>
 
 
                 <LinearLayout

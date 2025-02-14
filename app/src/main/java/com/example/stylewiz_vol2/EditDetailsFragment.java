@@ -2,11 +2,14 @@ package com.example.stylewiz_vol2;
 
 
 import android.app.AlertDialog;
+import android.content.Context;
+import android.content.res.ColorStateList;
 import android.nfc.Tag;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -17,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -53,24 +57,32 @@ public class EditDetailsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        // Initialize dropdown
         categoryDropdown = view.findViewById(R.id.categoryDropdown);
 
-// Setup the adapter
+// Setup the adapter for the AutoCompleteTextView
         ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(getActivity(), R.layout.list_item, category);
         categoryDropdown.setAdapter(categoryAdapter);
 
-// Prevent typing in the AutoCompleteTextView
-        categoryDropdown.setFocusable(false);
+// Allow the AutoCompleteTextView to remain focusable
+        categoryDropdown.setFocusable(true);
         categoryDropdown.setClickable(true);
 
-// Handle touch events to open the dropdown
+// Handle touch events to open the dropdown without opening the keyboard
         categoryDropdown.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                // Allow the dropdown to be shown but not allow text input
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    // Open the dropdown without opening the keyboard
-                    categoryDropdown.showDropDown();
+                    // Open the dropdown if it's not already showing
+                    if (!categoryDropdown.isPopupShowing()) {
+                        categoryDropdown.showDropDown();
+                    }
+
+                    // Hide the keyboard if it's showing
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (imm != null) {
+                        imm.hideSoftInputFromWindow(categoryDropdown.getWindowToken(), 0);
+                    }
                 }
                 return false; // Return false to allow normal touch behavior
             }
@@ -92,17 +104,6 @@ public class EditDetailsFragment extends Fragment {
                 categoryDropdown.setText(edit_Category, false);
             }
         });
-
-
-
-
-
-
-
-
-
-
-
 
 
     }
@@ -216,8 +217,10 @@ public class EditDetailsFragment extends Fragment {
                     categoryEditDetails.post(() -> {
                         categoryEditDetails.setText(category, false); // Prevent filtering
                         categoryEditDetails.clearFocus(); // Optional: Prevents unwanted keyboard popup
+
                     });
                 }
+
                 if (styleTagEditDetails != null) styleTagEditDetails.setText(styleTag);
                 if (colorEditDetails != null) colorEditDetails.setText(color);
                 if (seasonalityEditDetails != null) seasonalityEditDetails.setText(season);
