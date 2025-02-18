@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:gravity="center">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Your Outfit"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_gravity="center" />
+
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/imgTop"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_margin="20dp"
+            android:src="@drawable/round_add_24"
+            android:background="@drawable/dashed_border"
+            app:tint="@color/gray"
+            android:scaleType="centerCrop"
+            android:contentDescription="Top"/>
+
+
+        <ImageView
+            android:id="@+id/imgSecondTop"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_margin="20dp"
+            android:src="@drawable/round_add_24"
+            app:tint="@color/gray"
+            android:background="@drawable/dashed_border"
+            android:scaleType="centerCrop"
+            android:contentDescription="Second Top"
+            android:visibility="gone"/>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <ImageView
+        android:id="@+id/imgBottom"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/round_add_24"
+        app:tint="@color/gray"
+        android:background="@drawable/dashed_border"
+        android:scaleType="centerCrop"
+        android:contentDescription="Bottom" />
+
+    <ImageView
+        android:id="@+id/imgShoes"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/round_add_24"
+        app:tint="@color/gray"
+        android:background="@drawable/dashed_border"
+        android:scaleType="centerCrop"
+        android:contentDescription="Shoes" />
+
+        <ImageView
+            android:id="@+id/imgOnePiece"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/round_add_24"
+            app:tint="@color/gray"
+            android:background="@drawable/dashed_border"
+            android:scaleType="centerCrop"
+            android:contentDescription="One Piece"
+            android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="10dp">
+        <CheckBox
+            android:id="@+id/chkOnePiece"
+            android:layout_margin="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Use One-Piece Outfit"
+            android:layout_weight="1"/>
+
+        <CheckBox
+            android:id="@+id/chkSecondLayer"
+            android:layout_margin="20dp"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add second top layer" />
+
+
+        <Spinner
+            android:id="@+id/spinnerAccessories"
+            android:layout_margin="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnSaveOutfit"
+        android:layout_margin="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save Outfit"
+        />
+
+    </LinearLayout>
+</ScrollView>

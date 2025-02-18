@@ -255,7 +255,9 @@ public class HomeFragment extends Fragment {
             emptyStateLayout.setVisibility(View.VISIBLE); // Show empty state layout (e.g., "add" button or message)
             recyclerView.setVisibility(View.GONE); // Hide RecyclerView
 
-            emptyStateLayout.setOnClickListener(new View.OnClickListener() {
+            ImageView addIcon = emptyStateLayout.findViewById(R.id.addIcon);
+            //Navigate to new item only when the icon is clicked
+            addIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // Update the bottom navigation to reflect the new fragment
