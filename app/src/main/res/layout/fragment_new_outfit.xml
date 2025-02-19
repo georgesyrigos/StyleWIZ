@@ -9,117 +9,401 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp"
         android:gravity="center">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add Your Outfit"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_gravity="center" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Your Outfit"
+            android:layout_marginTop="20dp"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_gravity="center" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+            <CheckBox
+                android:id="@+id/chkOnePiece"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:text="One-Piece Outfit" />
 
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        </LinearLayout>
+
+        <!-- Accessories Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:gravity="start"
+            android:padding="5dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Accessories"
+                    android:layout_margin="5dp"
+                    android:textSize="20dp"
+                    android:fontFamily="@font/roboto"/>
+
+                <Spinner
+                    android:id="@+id/spinnerAccessories"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_margin="5dp"
+                    />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imgAccessory1"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/round_add_24"
+                app:tint="@color/gray"
+                android:background="@drawable/dashed_border"
+                android:scaleType="centerCrop"
+                android:contentDescription="Accessory 1"/>
+
+            <ImageView
+                android:id="@+id/imgAccessory2"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/round_add_24"
+                app:tint="@color/gray"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/dashed_border"
+                android:scaleType="centerCrop"
+                android:contentDescription="Accessory 2"
+                />
+        </LinearLayout>
+
+        <!-- Tops Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:gravity="start"
+            android:padding="5dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tops"
+                    android:layout_margin="5dp"
+                    android:textSize="20dp"
+                    android:fontFamily="@font/roboto"/>
+
+                <CheckBox
+                    android:id="@+id/chkSecondLayer"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="Add Layer"
+                    android:fontFamily="@font/roboto"/>
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imgTop1"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/round_add_24"
+                app:tint="@color/gray"
+                android:background="@drawable/dashed_border"
+                android:scaleType="centerCrop"
+                android:contentDescription="Top 1"
+                />
+
+            <ImageView
+                android:id="@+id/imgTop2"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/round_add_24"
+                app:tint="@color/gray"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/dashed_border"
+                android:scaleType="centerCrop"
+                android:contentDescription="Top 2"
+                />
+        </LinearLayout>
+
+
+        <!-- Outerwear Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:gravity="start"
+            android:padding="5dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Outwear"
+                    android:layout_margin="5dp"
+                    android:textSize="20dp"
+                    android:fontFamily="@font/roboto"/>
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imgOutwear"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/round_add_24"
+                app:tint="@color/gray"
+                android:background="@drawable/dashed_border"
+                android:scaleType="centerCrop"
+                android:contentDescription="Outwear"/>
+
+            <View
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:visibility="invisible"
+                android:layout_marginStart="10dp"
+                />
+        </LinearLayout>
+
+        <!-- Bottom Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:gravity="start"
+            android:padding="5dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bottom"
+                    android:layout_margin="5dp"
+                    android:textSize="20dp"
+                    android:fontFamily="@font/roboto"/>
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imgBottomNew"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/round_add_24"
+                app:tint="@color/gray"
+                android:background="@drawable/dashed_border"
+                android:scaleType="centerCrop"
+                android:contentDescription="Outwear"/>
+
+            <View
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:visibility="invisible"
+                android:layout_marginStart="10dp"
+                />
+        </LinearLayout>
+
+        <!-- Outerwear Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:gravity="start"
+            android:padding="5dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Shoes"
+                    android:layout_margin="5dp"
+                    android:textSize="20dp"
+                    android:fontFamily="@font/roboto"/>
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imgShoesNew"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/round_add_24"
+                app:tint="@color/gray"
+                android:background="@drawable/dashed_border"
+                android:scaleType="centerCrop"
+                android:contentDescription="Outwear"/>
+
+            <View
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:visibility="invisible"
+                android:layout_marginStart="10dp"
+                />
+        </LinearLayout>
+
+
+
+
 
         <ImageView
-            android:id="@+id/imgTop"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_margin="20dp"
+            android:id="@+id/imgHat"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
             android:src="@drawable/round_add_24"
-            android:background="@drawable/dashed_border"
+            android:layout_marginTop="20dp"
             app:tint="@color/gray"
+            android:background="@drawable/dashed_border"
             android:scaleType="centerCrop"
-            android:contentDescription="Top"/>
+            android:contentDescription="Hat" />
+
+        <GridLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:columnCount="2"
+            android:rowCount="2"
+            android:layout_marginTop="10dp"
+            android:alignmentMode="alignMargins"
+            android:rowOrderPreserved="false">
+
+            <ImageView
+                android:id="@+id/imgTop"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_margin="10dp"
+                android:src="@drawable/round_add_24"
+                android:background="@drawable/dashed_border"
+                app:tint="@color/gray"
+                android:scaleType="centerCrop"
+                android:contentDescription="Top"
+                android:layout_column="0"
+                android:layout_row="1"/>
+
+            <ImageView
+                android:id="@+id/imgOnePiece"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_margin="10dp"
+                android:src="@drawable/round_add_24"
+                app:tint="@color/gray"
+                android:background="@drawable/dashed_border"
+                android:scaleType="centerCrop"
+                android:contentDescription="One Piece"
+                android:layout_column="0"
+                android:layout_row="1"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/imgOuterwear"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_margin="10dp"
+                android:src="@drawable/round_add_24"
+                android:background="@drawable/dashed_border"
+                app:tint="@color/gray"
+                android:scaleType="centerCrop"
+                android:contentDescription="Outerwear"
+                android:layout_column="1"
+                android:layout_row="1"/>
+
+            <ImageView
+                android:id="@+id/imgSecondTop"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_margin="10dp"
+                android:src="@drawable/round_add_24"
+                android:background="@drawable/dashed_border"
+                app:tint="@color/gray"
+                android:scaleType="centerCrop"
+                android:contentDescription="Second Top"
+                android:visibility="gone"
+                android:layout_columnSpan="2"
+                android:layout_gravity="center"
+                android:layout_row="1"/>
+        </GridLayout>
+
+
+
+        <!-- Bottom -->
+        <ImageView
+            android:id="@+id/imgBottom"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/round_add_24"
+            app:tint="@color/gray"
+            android:background="@drawable/dashed_border"
+            android:scaleType="centerCrop"
+            android:contentDescription="Bottom" />
+
+        <!-- Shoes -->
+        <ImageView
+            android:id="@+id/imgShoes"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/round_add_24"
+            app:tint="@color/gray"
+            android:background="@drawable/dashed_border"
+            android:scaleType="centerCrop"
+            android:contentDescription="Shoes" />
+
 
 
         <ImageView
-            android:id="@+id/imgSecondTop"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_margin="20dp"
+            android:id="@+id/imgAccessories"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="20dp"
             android:src="@drawable/round_add_24"
             app:tint="@color/gray"
             android:background="@drawable/dashed_border"
             android:scaleType="centerCrop"
-            android:contentDescription="Second Top"
+            android:contentDescription="Accessories"
             android:visibility="gone"/>
-    </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <ImageView
-        android:id="@+id/imgBottom"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:src="@drawable/round_add_24"
-        app:tint="@color/gray"
-        android:background="@drawable/dashed_border"
-        android:scaleType="centerCrop"
-        android:contentDescription="Bottom" />
-
-    <ImageView
-        android:id="@+id/imgShoes"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="20dp"
-        android:src="@drawable/round_add_24"
-        app:tint="@color/gray"
-        android:background="@drawable/dashed_border"
-        android:scaleType="centerCrop"
-        android:contentDescription="Shoes" />
-
-        <ImageView
-            android:id="@+id/imgOnePiece"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:src="@drawable/round_add_24"
-            app:tint="@color/gray"
-            android:background="@drawable/dashed_border"
-            android:scaleType="centerCrop"
-            android:contentDescription="One Piece"
-            android:visibility="gone" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="10dp">
-        <CheckBox
-            android:id="@+id/chkOnePiece"
-            android:layout_margin="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Use One-Piece Outfit"
-            android:layout_weight="1"/>
-
-        <CheckBox
-            android:id="@+id/chkSecondLayer"
-            android:layout_margin="20dp"
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add second top layer" />
-
-
-        <Spinner
-            android:id="@+id/spinnerAccessories"
-            android:layout_margin="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/btnSaveOutfit"
-        android:layout_margin="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Save Outfit"
-        />
-
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/AddItemBtn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/edittextshape"
+            android:backgroundTint="@color/blue"
+            android:text="SAVE OUTFIT"
+            android:textColor="@color/white"
+            android:fontFamily="@font/roboto"
+            android:textStyle="bold"
+            android:layout_margin="30dp"/>
     </LinearLayout>
 </ScrollView>
