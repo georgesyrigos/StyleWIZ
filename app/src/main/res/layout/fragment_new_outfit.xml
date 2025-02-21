@@ -33,6 +33,13 @@
                 android:layout_margin="10dp"
                 android:layout_weight="1"
                 android:text="One-Piece Outfit" />
+            <Switch
+                android:id="@+id/switchOnePiece"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:text="One-Piece Outfit "/>
 
 
         </LinearLayout>
@@ -90,6 +97,8 @@
                 android:scaleType="centerCrop"
                 android:contentDescription="Accessory 2"
                 android:visibility="invisible"/>
+
+
 
 
 
@@ -336,6 +345,7 @@
                 android:layout_marginStart="10dp"
                 />
         </LinearLayout>
+
 
 
         <androidx.appcompat.widget.AppCompatButton

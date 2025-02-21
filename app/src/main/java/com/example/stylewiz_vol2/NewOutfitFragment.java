@@ -11,12 +11,14 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 
 
 public class NewOutfitFragment extends Fragment {
     CheckBox chkAccessory, chkTop, chkOnePiece, chkLayerOnePiece;
     ImageView imgAccessory1, imgAccessory2, imgTop1, imgTop2, imgOnePiece, imgLayerOnePiece;
     LinearLayout topSection, bottomSection, onePieceSection;
+    Switch switchOnePiece;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -29,6 +31,7 @@ public class NewOutfitFragment extends Fragment {
         chkTop = view.findViewById(R.id.chkSecondLayer);
         chkOnePiece = view.findViewById(R.id.chkOnePiece);
         chkLayerOnePiece = view.findViewById(R.id.chkLayerOnePiece);
+        switchOnePiece = view.findViewById(R.id.switchOnePiece);
 
         //imageViews
         imgAccessory1 = view.findViewById(R.id.imgAccessory1);
@@ -85,6 +88,22 @@ public class NewOutfitFragment extends Fragment {
 
         // Set a listener on the CheckBox for One-Piece
         chkOnePiece.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    onePieceSection.setVisibility(View.VISIBLE);
+                    topSection.setVisibility(View.GONE);
+                    bottomSection.setVisibility(View.GONE);
+
+                } else {
+                    onePieceSection.setVisibility(View.GONE);
+                    topSection.setVisibility(View.VISIBLE);
+                    bottomSection.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        switchOnePiece.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
