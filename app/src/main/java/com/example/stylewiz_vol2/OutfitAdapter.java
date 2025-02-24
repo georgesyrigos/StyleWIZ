@@ -1,6 +1,9 @@
 package com.example.stylewiz_vol2;
 
+import static androidx.core.content.ContentProviderCompat.requireContext;
+
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,11 +45,13 @@ public class OutfitAdapter extends RecyclerView.Adapter<OutfitAdapter.OutfitView
     public void onBindViewHolder(@NonNull OutfitViewHolder holder, int position) {
         OutfitItem outfitItem = itemList.get(position);
 
+        String documentId = outfitItem.getDocumentId(); // Get the Id of the selected item
+
         Glide.with(context).load(outfitItem.getPhotoUrl()).into(holder.recImage);
 
-        holder.recCategory.setText("Category: " + outfitItem.getCategory());
-        holder.recStyleTag.setText("Style tag: " + outfitItem.getStyleTag());
-        holder.recSeasonality.setText("Seasonality: " + outfitItem.getSeason());
+        holder.recCategory.setText(outfitItem.getCategory());
+        holder.recStyleTag.setText(outfitItem.getStyleTag());
+        holder.recSeasonality.setText(outfitItem.getSeason());
 
         holder.itemView.setOnClickListener(v -> listener.onItemClick(outfitItem));
     }

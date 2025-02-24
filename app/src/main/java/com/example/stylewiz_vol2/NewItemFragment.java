@@ -71,7 +71,7 @@ public class NewItemFragment extends Fragment {
     private Uri ImageUri;
     private Bitmap bitmap;
 
-    String[] category = {"Top", "Bottom", "Outerwear", "Shoes", "Accessories"};
+    String[] category = {"Top", "Bottom", "Outerwear", "Shoes", "Accessory"};
     String[] styleTag = {"Sport", "Casual", "Formal"};
     String[] seasonality = {"Autumn/Fall", "Spring/Summer", "All season"};
     AutoCompleteTextView categoryDropdown, styleTagDropdown, seasonalityDropdown;

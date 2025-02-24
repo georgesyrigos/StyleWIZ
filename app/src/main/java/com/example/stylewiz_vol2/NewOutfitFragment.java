@@ -1,12 +1,18 @@
 package com.example.stylewiz_vol2;
 
 import android.app.AlertDialog;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +24,11 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;
@@ -42,14 +53,13 @@ public class NewOutfitFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_new_outfit, container, false);
 
-        //checkboxes
+        //Checkboxes and switches
         chkAccessory = view.findViewById(R.id.chkSecondAccessory);
         chkTop = view.findViewById(R.id.chkSecondLayer);
-        chkOnePiece = view.findViewById(R.id.chkOnePiece);
         chkLayerOnePiece = view.findViewById(R.id.chkLayerOnePiece);
         switchOnePiece = view.findViewById(R.id.switchOnePiece);
 
-        //imageViews
+        //ImageViews
         imgAccessory1 = view.findViewById(R.id.imgAccessory1);
         imgAccessory2 = view.findViewById(R.id.imgAccessory2);
         imgOutwear = view.findViewById(R.id.imgOutwear);
@@ -64,18 +74,6 @@ public class NewOutfitFragment extends Fragment {
         topSection = view.findViewById(R.id.topSection);
         bottomSection = view.findViewById(R.id.bottomSection);
         onePieceSection = view.findViewById(R.id.onePieceSection);
-
-
-        // Set click listeners for ImageViews to open the selection dialog
-        imgAccessory1.setOnClickListener(v -> showItemSelectionDialog("Accessory", imgAccessory1));
-        imgAccessory2.setOnClickListener(v -> showItemSelectionDialog("Second Accessory", imgAccessory2));
-        imgOutwear.setOnClickListener(v -> showItemSelectionDialog("Outerwear", imgOutwear));
-        imgTop1.setOnClickListener(v -> showItemSelectionDialog("Top", imgTop1));
-        imgTop2.setOnClickListener(v -> showItemSelectionDialog("Layer Top", imgTop2));
-        imgOnePiece.setOnClickListener(v -> showItemSelectionDialog("One-Piece", imgOnePiece));
-        imgLayerOnePiece.setOnClickListener(v -> showItemSelectionDialog("Layer One-Piece", imgLayerOnePiece));
-        imgBottom.setOnClickListener(v -> showItemSelectionDialog("Bottom", imgBottom));
-        imgShoes.setOnClickListener(v -> showItemSelectionDialog("Shoes", imgShoes));
 
 
 
@@ -116,23 +114,7 @@ public class NewOutfitFragment extends Fragment {
         });
 
 
-        // Set a listener on the CheckBox for One-Piece
-        chkOnePiece.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    onePieceSection.setVisibility(View.VISIBLE);
-                    topSection.setVisibility(View.GONE);
-                    bottomSection.setVisibility(View.GONE);
-
-                } else {
-                    onePieceSection.setVisibility(View.GONE);
-                    topSection.setVisibility(View.VISIBLE);
-                    bottomSection.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
+        // Set a listener on the Switch for One-Piece
         switchOnePiece.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -150,6 +132,32 @@ public class NewOutfitFragment extends Fragment {
         });
 
 
+        db = FirebaseFirestore.getInstance();
+
+        //Call the dialog with the category requested
+        imgAccessory1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showItemSelectionDialog("Accessory", imgAccessory1);
+            }
+        });
+
+        if (chkAccessory.isChecked()){
+            imgAccessory2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showItemSelectionDialog("Accessory", imgAccessory2);
+                }
+            });
+        }
+
+        imgOutwear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showItemSelectionDialog("Outerwear", imgOutwear);
+            }
+        });
+
         imgTop1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -157,10 +165,45 @@ public class NewOutfitFragment extends Fragment {
             }
         });
 
+        imgTop2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showItemSelectionDialog("Top", imgTop2);
+            }
+        });
 
 
+        imgBottom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showItemSelectionDialog("Bottom", imgBottom);
+            }
+        });
 
+        imgShoes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showItemSelectionDialog("Shoes", imgShoes);
+            }
+        });
 
+        if (switchOnePiece.isChecked())
+        {
+            imgOnePiece.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showItemSelectionDialog("One-Piece", imgOnePiece);
+                }
+            });
+            if (chkOnePiece.isChecked()){
+                imgLayerOnePiece.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showItemSelectionDialog("Top", imgLayerOnePiece);
+                    }
+                });
+            }
+        }
 
 
         return view;
@@ -176,14 +219,29 @@ public class NewOutfitFragment extends Fragment {
 
         List<OutfitItem> itemList = new ArrayList<>();
 
-        // Declare the alertDialog before using it in the adapter
+        // Create the dialog FIRST and store it in a final variable
         final AlertDialog alertDialog = builder.create();
 
         OutfitAdapter adapter = new OutfitAdapter(requireContext(), itemList, selectedItem -> {
-            Glide.with(requireContext()).load(selectedItem.getPhotoUrl()).into(targetImageView);
+            // Ensure the targetImageView is valid before updating
+            if (targetImageView != null) {
+                String photoUrl = selectedItem.getPhotoUrl(); // Get the URL of the selected item's photo
+                if (photoUrl != null && !photoUrl.isEmpty()) {
+                    Log.e("Photo URL", "URL: " + photoUrl);  // Debugging
+
+                    // Load the image into the ImageView using Glide
+                    Glide.with(requireContext())
+                            .load(photoUrl)
+                            .placeholder(R.drawable.round_image_search_24)
+                            .error(R.drawable.round_image_search_24)
+                            .transform(new RoundedCorners(10))
+                            .into(targetImageView);
+                } else {
+                    Log.e("Image Selection", "Photo URL is empty or invalid");
+                }
+            }
             alertDialog.dismiss();
         });
-
         recyclerView.setAdapter(adapter);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -192,19 +250,24 @@ public class NewOutfitFragment extends Fragment {
             db.collection("users")
                     .document(userId)
                     .collection("wardrobe")
-                    .whereEqualTo("Category", category)  // Filter items by category
+                    .whereEqualTo("category", category)
                     .get()
                     .addOnSuccessListener(queryDocumentSnapshots -> {
-                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                            OutfitItem item = doc.toObject(OutfitItem.class);
-                            item.setDocumentId(doc.getId()); // Store Firestore document ID
-                            itemList.add(item);
+                        if (queryDocumentSnapshots.isEmpty()) {
+                            Log.e("Firestore", "No items found for category: " + category);
+                        } else {
+                            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                                OutfitItem item = doc.toObject(OutfitItem.class);
+                                item.setDocumentId(doc.getId());
+                                itemList.add(item);
+                            }
+                            adapter.notifyDataSetChanged();
                         }
-                        adapter.notifyDataSetChanged();
                     });
-
-
         }
 
+        // Show the dialog after setting up everything
+        alertDialog.show();
     }
+
 }
