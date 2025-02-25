@@ -1,7 +1,9 @@
 package com.example.stylewiz_vol2;
 
 import android.app.AlertDialog;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
@@ -28,7 +30,9 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;
@@ -75,6 +79,19 @@ public class NewOutfitFragment extends Fragment {
         bottomSection = view.findViewById(R.id.bottomSection);
         onePieceSection = view.findViewById(R.id.onePieceSection);
 
+        // Apply gray tint if default placeholder is shown
+        imgAccessory1.setColorFilter(ContextCompat.getColor(requireContext(), R.color.gray), PorterDuff.Mode.SRC_IN);
+        imgAccessory2.setColorFilter(ContextCompat.getColor(requireContext(), R.color.gray), PorterDuff.Mode.SRC_IN);
+        imgOutwear.setColorFilter(ContextCompat.getColor(requireContext(), R.color.gray), PorterDuff.Mode.SRC_IN);
+        imgTop1.setColorFilter(ContextCompat.getColor(requireContext(), R.color.gray), PorterDuff.Mode.SRC_IN);
+        imgTop2.setColorFilter(ContextCompat.getColor(requireContext(), R.color.gray), PorterDuff.Mode.SRC_IN);
+        imgOnePiece.setColorFilter(ContextCompat.getColor(requireContext(), R.color.gray), PorterDuff.Mode.SRC_IN);
+        imgLayerOnePiece.setColorFilter(ContextCompat.getColor(requireContext(), R.color.gray), PorterDuff.Mode.SRC_IN);
+        imgBottom.setColorFilter(ContextCompat.getColor(requireContext(), R.color.gray), PorterDuff.Mode.SRC_IN);
+        imgShoes.setColorFilter(ContextCompat.getColor(requireContext(), R.color.gray), PorterDuff.Mode.SRC_IN);
+
+
+
 
 
         // Set a listener on the CheckBox for Accessories
@@ -101,20 +118,8 @@ public class NewOutfitFragment extends Fragment {
             }
         });
 
-        // Set a listener on the CheckBox for One-Piece
-        chkLayerOnePiece.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    imgLayerOnePiece.setVisibility(View.VISIBLE);  // Show image if checked
-                } else {
-                    imgLayerOnePiece.setVisibility(View.INVISIBLE);  // Hide image if unchecked
-                }
-            }
-        });
+        // Set a listener on the switch for One-Piece
 
-
-        // Set a listener on the Switch for One-Piece
         switchOnePiece.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -123,13 +128,44 @@ public class NewOutfitFragment extends Fragment {
                     topSection.setVisibility(View.GONE);
                     bottomSection.setVisibility(View.GONE);
 
+                    // Assign the click listener dynamically when switch is turned on
+                    imgOnePiece.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            showItemSelectionDialog("One-Piece", imgOnePiece);
+                        }
+                    });
+
+                    chkLayerOnePiece.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                            if (isChecked) {
+                                imgLayerOnePiece.setVisibility(View.VISIBLE);
+                                imgLayerOnePiece.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        showItemSelectionDialog("Top", imgLayerOnePiece);
+                                    }
+                                });
+                            } else {
+                                imgLayerOnePiece.setVisibility(View.INVISIBLE);
+                                imgLayerOnePiece.setOnClickListener(null); // Remove click listener
+                            }
+                        }
+                    });
+
                 } else {
                     onePieceSection.setVisibility(View.GONE);
                     topSection.setVisibility(View.VISIBLE);
                     bottomSection.setVisibility(View.VISIBLE);
+
+                    // Remove click listener when switch is off
+                    imgOnePiece.setOnClickListener(null);
+                    imgLayerOnePiece.setOnClickListener(null);
                 }
             }
         });
+
 
 
         db = FirebaseFirestore.getInstance();
@@ -142,14 +178,13 @@ public class NewOutfitFragment extends Fragment {
             }
         });
 
-        if (chkAccessory.isChecked()){
-            imgAccessory2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showItemSelectionDialog("Accessory", imgAccessory2);
-                }
-            });
-        }
+        imgAccessory2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showItemSelectionDialog("Accessory", imgAccessory2);
+            }
+        });
+
 
         imgOutwear.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -187,23 +222,7 @@ public class NewOutfitFragment extends Fragment {
             }
         });
 
-        if (switchOnePiece.isChecked())
-        {
-            imgOnePiece.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showItemSelectionDialog("One-Piece", imgOnePiece);
-                }
-            });
-            if (chkOnePiece.isChecked()){
-                imgLayerOnePiece.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showItemSelectionDialog("Top", imgLayerOnePiece);
-                    }
-                });
-            }
-        }
+
 
 
         return view;
@@ -221,6 +240,8 @@ public class NewOutfitFragment extends Fragment {
 
         // Create the dialog FIRST and store it in a final variable
         final AlertDialog alertDialog = builder.create();
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
 
         OutfitAdapter adapter = new OutfitAdapter(requireContext(), itemList, selectedItem -> {
             // Ensure the targetImageView is valid before updating
@@ -230,12 +251,31 @@ public class NewOutfitFragment extends Fragment {
                     Log.e("Photo URL", "URL: " + photoUrl);  // Debugging
 
                     // Load the image into the ImageView using Glide
-                    Glide.with(requireContext())
+                    Glide.with(this)
                             .load(photoUrl)
-                            .placeholder(R.drawable.round_image_search_24)
-                            .error(R.drawable.round_image_search_24)
+                            .placeholder(R.drawable.round_add_24)
+                            .error(R.drawable.round_add_24)
                             .transform(new RoundedCorners(10))
-                            .into(targetImageView);
+                            .into(new CustomTarget<Drawable>() {
+                                @Override
+                                public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                                    if (isAdded()) {
+                                        targetImageView.setImageDrawable(resource);
+                                        targetImageView.clearColorFilter(); // Remove tint when an actual image is loaded
+                                    }
+                                }
+
+                                @Override
+                                public void onLoadCleared(@Nullable Drawable placeholder) {
+                                    if (isAdded()) {
+                                        targetImageView.setImageDrawable(placeholder);
+                                        if (placeholder != null && placeholder.getConstantState() == ContextCompat.getDrawable(requireContext(), R.drawable.round_add_24).getConstantState()) {
+                                            targetImageView.setColorFilter(ContextCompat.getColor(requireContext(), R.color.gray), PorterDuff.Mode.SRC_IN);
+                                        }
+                                    }
+                                }
+                            });
+
                 } else {
                     Log.e("Image Selection", "Photo URL is empty or invalid");
                 }
@@ -256,15 +296,22 @@ public class NewOutfitFragment extends Fragment {
                         if (queryDocumentSnapshots.isEmpty()) {
                             Log.e("Firestore", "No items found for category: " + category);
                         } else {
+                            int startPosition = itemList.size(); // Store the start position before adding items
+                            List<OutfitItem> newItems = new ArrayList<>(); // Temporary list to hold new items
+
                             for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                                 OutfitItem item = doc.toObject(OutfitItem.class);
                                 item.setDocumentId(doc.getId());
-                                itemList.add(item);
+                                newItems.add(item); // Add to temp list
                             }
-                            adapter.notifyDataSetChanged();
+
+                            // Add all new items at once
+                            itemList.addAll(newItems);
+                            adapter.notifyItemRangeInserted(startPosition, newItems.size()); // Notify batch update
                         }
                     });
         }
+
 
         // Show the dialog after setting up everything
         alertDialog.show();

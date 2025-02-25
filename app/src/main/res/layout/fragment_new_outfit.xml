@@ -76,22 +76,22 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:src="@drawable/round_add_24"
-                app:tint="@color/gray"
                 android:background="@drawable/dashed_border"
                 android:scaleType="centerCrop"
-                android:contentDescription="Accessory 1"/>
+                android:contentDescription="Accessory 1"
+                android:clipToOutline="true"/>
 
             <ImageView
                 android:id="@+id/imgAccessory2"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:src="@drawable/round_add_24"
-                app:tint="@color/gray"
                 android:layout_marginStart="10dp"
                 android:background="@drawable/dashed_border"
                 android:scaleType="centerCrop"
                 android:contentDescription="Accessory 2"
-                android:visibility="invisible"/>
+                android:visibility="invisible"
+                android:clipToOutline="true"/>
 
 
 
@@ -189,12 +189,12 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:src="@drawable/round_add_24"
-                app:tint="@color/gray"
                 android:layout_marginStart="10dp"
                 android:background="@drawable/dashed_border"
                 android:scaleType="centerCrop"
                 android:contentDescription="Top 2"
-                android:visibility="invisible"/>
+                android:visibility="invisible"
+                android:clipToOutline="true"/>
         </LinearLayout>
 
         <!-- Bottom Section -->
@@ -227,10 +227,10 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:src="@drawable/round_add_24"
-                app:tint="@color/gray"
                 android:background="@drawable/dashed_border"
                 android:scaleType="centerCrop"
-                android:contentDescription="Outwear"/>
+                android:contentDescription="Bottom"
+                android:clipToOutline="true"/>
 
             <View
                 android:layout_width="120dp"
@@ -280,22 +280,22 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:src="@drawable/round_add_24"
-                app:tint="@color/gray"
                 android:background="@drawable/dashed_border"
                 android:scaleType="centerCrop"
-                android:contentDescription="One-Piece" />
+                android:contentDescription="One-Piece"
+                android:clipToOutline="true"/>
 
             <ImageView
                 android:id="@+id/imgLayerOnePiece"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:src="@drawable/round_add_24"
-                app:tint="@color/gray"
                 android:layout_marginStart="10dp"
                 android:background="@drawable/dashed_border"
                 android:scaleType="centerCrop"
                 android:contentDescription="Top Layer"
-                android:visibility="invisible"/>
+                android:visibility="invisible"
+                android:clipToOutline="true"/>
         </LinearLayout>
 
         <!-- Shoes Section -->
@@ -327,10 +327,10 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:src="@drawable/round_add_24"
-                app:tint="@color/gray"
                 android:background="@drawable/dashed_border"
                 android:scaleType="centerCrop"
-                android:contentDescription="Shoes"/>
+                android:contentDescription="Shoes"
+                android:clipToOutline="true"/>
 
             <View
                 android:layout_width="120dp"
