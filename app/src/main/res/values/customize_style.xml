@@ -14,4 +14,9 @@
         <item name="android:letterSpacing">0.1</item> 
         <item name="android:fontFamily">@font/roboto</item>
     </style>
+
+    <style name="CustomProgressDialog" parent="Theme.MaterialComponents.Light.Dialog">
+        <item name="android:windowMinWidthMajor">40%</item>
+        <item name="android:windowMinWidthMinor">40%</item>
+    </style>
 </resources>

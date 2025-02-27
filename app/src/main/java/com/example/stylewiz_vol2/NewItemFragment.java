@@ -33,6 +33,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.graphics.Color;
@@ -71,10 +72,13 @@ public class NewItemFragment extends Fragment {
     private Uri ImageUri;
     private Bitmap bitmap;
 
-    String[] category = {"Top", "Bottom", "Outerwear", "Shoes", "Accessory"};
+    String[] category = {"Top", "One-Piece", "Bottom", "Outerwear", "Shoes", "Accessory"};
     String[] styleTag = {"Sport", "Casual", "Formal"};
     String[] seasonality = {"Autumn/Fall", "Spring/Summer", "All season"};
     AutoCompleteTextView categoryDropdown, styleTagDropdown, seasonalityDropdown;
+    private ProgressDialogHelper progressDialogHelper;
+
+
 
 
 
@@ -116,6 +120,9 @@ public class NewItemFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
+
+        // Initialize ProgressDialogHelper
+        progressDialogHelper = new ProgressDialogHelper(requireContext());
 
         // Dropdown for category
         categoryDropdown = view.findViewById(R.id.textCategory);
@@ -229,6 +236,7 @@ public class NewItemFragment extends Fragment {
                     Toast.makeText(getActivity(), "Please select an image", Toast.LENGTH_SHORT).show();
                 } else {
                     if (user != null) {
+                        progressDialogHelper.showProgressDialog(getActivity()); // Show the progress dialog
                         UploadImage(cat, tag, des, col, sea, liked);
                     } else {
                         System.out.println("Username not available");
@@ -434,10 +442,16 @@ public class NewItemFragment extends Fragment {
                                 resetFields();
                                 firestoreHelper.addWardrobeItem(userId, category, styleTag, description, color, season, liked, photoUrl);
                             }
+                            // Dismiss progress dialog after upload success
+                            progressDialogHelper.dismissProgressDialog();
                         }))
-                        .addOnFailureListener(e -> Toast.makeText(getContext(), "Image upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(getContext(), "Image upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            // Dismiss progress dialog if upload fails
+                            progressDialogHelper.dismissProgressDialog();
+                        });
             } else {
-                Toast.makeText(getActivity(), "User not logged in!", Toast.LENGTH_SHORT).show(); // ⚠️ Handle no user case
+                Toast.makeText(getActivity(), "User not logged in!", Toast.LENGTH_SHORT).show();
             }
         } else {
             Toast.makeText(getActivity(), "Please select an image", Toast.LENGTH_SHORT).show();
