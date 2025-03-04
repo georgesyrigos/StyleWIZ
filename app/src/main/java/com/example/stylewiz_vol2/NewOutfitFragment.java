@@ -350,7 +350,68 @@ public class NewOutfitFragment extends Fragment {
             String userId = user.getUid();
             Map<String, Object> outfitData = new HashMap<>();
 
-            List<Integer> allItemIds = Arrays.asList(
+            boolean isOnePieceMode = switchOnePiece.isChecked();
+            boolean isSecondTopEnabled = chkTop.isChecked();
+            boolean isLayerOnePieceEnabled = chkLayerOnePiece.isChecked();
+
+            // Store only the items currently visible
+            if (isOnePieceMode) {
+                // Store one-piece items
+                outfitData.put("one-piece", selectedItemUrls.getOrDefault(R.id.imgOnePiece, "none"));
+                outfitData.put("top1", "none");
+                outfitData.put("top2", "none");
+                outfitData.put("bottom", "none");
+
+                if (isLayerOnePieceEnabled) {
+                    outfitData.put("layer one-piece", selectedItemUrls.getOrDefault(R.id.imgLayerOnePiece, "none"));
+                } else {
+                    outfitData.put("layer one-piece", "none");
+                }
+            } else {
+                // Store top and bottom items
+                outfitData.put("top1", selectedItemUrls.getOrDefault(R.id.imgTop1, "none"));
+                if (isSecondTopEnabled) {
+                    outfitData.put("top2", selectedItemUrls.getOrDefault(R.id.imgTop2, "none"));
+                } else {
+                    outfitData.put("top2", "none");
+                }
+                outfitData.put("bottom", selectedItemUrls.getOrDefault(R.id.imgBottom, "none"));
+
+                // Make sure one-piece fields are set to "none"
+                outfitData.put("one-piece", "none");
+                outfitData.put("layer one-piece", "none");
+            }
+
+            // Add common items that are always visible
+            outfitData.put("accessory1", selectedItemUrls.getOrDefault(R.id.imgAccessory1, "none"));
+            if (chkAccessory.isChecked()) {
+                outfitData.put("accessory2", selectedItemUrls.getOrDefault(R.id.imgAccessory2, "none"));
+            } else {
+                outfitData.put("accessory2", "none");
+            }
+            outfitData.put("outerwear", selectedItemUrls.getOrDefault(R.id.imgOuterwear, "none"));
+            outfitData.put("shoes", selectedItemUrls.getOrDefault(R.id.imgShoes, "none"));
+
+
+            /*Check if the outfit is complete before saving**
+            boolean isComplete = false;
+            if (isOnePieceMode) {
+                if (!outfitData.get("one-piece").equals("none") && !outfitData.get("shoes").equals("none")) {
+                    isComplete = true;
+                }
+            } else {
+                if (!outfitData.get("top1").equals("none") && !outfitData.get("bottom").equals("none") && !outfitData.get("shoes").equals("none")) {
+                    isComplete = true;
+                }
+            }
+
+            if (!isComplete) {
+                Toast.makeText(requireContext(), "Outfit incomplete! Please add the required items.", Toast.LENGTH_SHORT).show();
+                return;
+            }*/
+
+
+            /*List<Integer> allItemIds = Arrays.asList(
                     R.id.imgAccessory1, R.id.imgAccessory2,
                     R.id.imgOuterwear, R.id.imgTop1,
                     R.id.imgTop2, R.id.imgBottom,
@@ -362,7 +423,7 @@ public class NewOutfitFragment extends Fragment {
                 String imageUrl = selectedItemUrls.getOrDefault(imageViewId, "none");
                 String itemType = getItemTypeFromId(imageViewId);
                 outfitData.put(itemType, imageUrl);
-            }
+            }*/
 
             db.collection("users")
                     .document(userId)
