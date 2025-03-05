@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -55,6 +57,8 @@ public class NewOutfitFragment extends Fragment {
     FirebaseFirestore db;
     Button addOutfitBtn;
     private Map<Integer, String> selectedItemUrls = new HashMap<>();  // Store selected image URLs
+    private ProgressDialogHelper progressDialogHelper;
+
 
 
 
@@ -64,6 +68,9 @@ public class NewOutfitFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_new_outfit, container, false);
+
+        //ProgressBar
+        progressDialogHelper = new ProgressDialogHelper(requireContext());
 
         //Checkboxes and switches
         chkAccessory = view.findViewById(R.id.chkSecondAccessory);
@@ -102,7 +109,10 @@ public class NewOutfitFragment extends Fragment {
         imgBottom.setColorFilter(ContextCompat.getColor(requireContext(), R.color.gray), PorterDuff.Mode.SRC_IN);
         imgShoes.setColorFilter(ContextCompat.getColor(requireContext(), R.color.gray), PorterDuff.Mode.SRC_IN);
 
-
+        //Warning textViews
+        TextView tvWarningAccessory = view.findViewById(R.id.tvWarningAccessory);
+        TextView tvWarningTop = view.findViewById(R.id.tvWarningTop);
+        TextView tvWarningOnePiece = view.findViewById(R.id.tvWarningOnePiece);
 
 
 
@@ -156,6 +166,25 @@ public class NewOutfitFragment extends Fragment {
                                 imgLayerOnePiece.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
+                                        if (!selectedItemUrls.containsKey(R.id.imgLayerOnePiece) ||
+                                                selectedItemUrls.get(R.id.imgLayerOnePiece).equals("none")) {
+
+                                            // Show the warning message
+                                            tvWarningOnePiece.setVisibility(View.VISIBLE);
+                                            tvWarningOnePiece.setAlpha(1.0f); // Ensure full opacity
+
+                                            // Animate disappearance after 3 seconds
+                                            new Handler().postDelayed(() -> {
+                                                tvWarningOnePiece.animate()
+                                                        .alpha(0.0f)  // Fade out
+                                                        .setDuration(1000)  // 1 second fade duration
+                                                        .withEndAction(() -> tvWarningOnePiece.setVisibility(View.GONE))
+                                                        .start();
+                                            }, 3000);  // Show for 3 seconds before starting fade out
+
+                                            return;  // Prevent further execution
+                                        }
+
                                         showItemSelectionDialog("Top", imgLayerOnePiece, R.id.imgLayerOnePiece);
                                     }
                                 });
@@ -179,7 +208,7 @@ public class NewOutfitFragment extends Fragment {
         });
 
 
-
+        //Initialize firestore
         db = FirebaseFirestore.getInstance();
 
         //Call the dialog with the category requested
@@ -190,9 +219,47 @@ public class NewOutfitFragment extends Fragment {
             }
         });
 
+        /*
         imgAccessory2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!selectedItemUrls.containsKey(R.id.imgAccessory1) ||
+                        selectedItemUrls.get(R.id.imgAccessory1).equals("none")) {
+                    Toast.makeText(requireContext(), "Select an image for the first accessory before adding a second!", Toast.LENGTH_SHORT).show();
+                    return;  // Prevent further execution
+                }
+
+
+                showItemSelectionDialog("Accessory", imgAccessory2, R.id.imgAccessory2);
+            }
+        });
+        */
+
+
+
+        imgAccessory2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!selectedItemUrls.containsKey(R.id.imgAccessory1) ||
+                        selectedItemUrls.get(R.id.imgAccessory1).equals("none")) {
+
+                    // Show the warning message
+                    tvWarningAccessory.setVisibility(View.VISIBLE);
+                    tvWarningAccessory.setAlpha(1.0f); // Ensure full opacity
+
+                    // Animate disappearance after 3 seconds
+                    new Handler().postDelayed(() -> {
+                        tvWarningAccessory.animate()
+                                .alpha(0.0f)  // Fade out
+                                .setDuration(1000)  // 1 second fade duration
+                                .withEndAction(() -> tvWarningAccessory.setVisibility(View.GONE))
+                                .start();
+                    }, 3000);  // Show for 3 seconds before starting fade out
+
+                    return;  // Prevent further execution
+                }
+
+                // Proceed to open the selection dialog
                 showItemSelectionDialog("Accessory", imgAccessory2, R.id.imgAccessory2);
             }
         });
@@ -215,6 +282,26 @@ public class NewOutfitFragment extends Fragment {
         imgTop2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!selectedItemUrls.containsKey(R.id.imgTop2) ||
+                        selectedItemUrls.get(R.id.imgTop2).equals("none")) {
+
+                    // Show the warning message
+                    tvWarningTop.setVisibility(View.VISIBLE);
+                    tvWarningTop.setAlpha(1.0f); // Ensure full opacity
+
+                    // Animate disappearance after 3 seconds
+                    new Handler().postDelayed(() -> {
+                        tvWarningTop.animate()
+                                .alpha(0.0f)  // Fade out
+                                .setDuration(1000)  // 1 second fade duration
+                                .withEndAction(() -> tvWarningTop.setVisibility(View.GONE))
+                                .start();
+                    }, 3000);  // Show for 3 seconds before starting fade out
+
+                    return;  // Prevent further execution
+                }
+
+                // Proceed to open the selection dialog
                 showItemSelectionDialog("Top", imgTop2, R.id.imgTop2);
             }
         });
@@ -239,6 +326,7 @@ public class NewOutfitFragment extends Fragment {
         addOutfitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressDialogHelper.showProgressDialog(getActivity()); // Show the progress dialog
                 saveOutfit();
             }
         });
@@ -432,10 +520,14 @@ public class NewOutfitFragment extends Fragment {
                     .addOnSuccessListener(documentReference -> {
                         Toast.makeText(requireContext(), "Outfit saved!", Toast.LENGTH_SHORT).show();
                         resetImageViews();  // Reset images after saving
+                        progressDialogHelper.dismissProgressDialog();
+
                     })
-                    .addOnFailureListener(e ->
-                            Toast.makeText(requireContext(), "Error saving outfit.", Toast.LENGTH_SHORT).show()
-                    );
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(requireContext(), "Error saving outfit.", Toast.LENGTH_SHORT).show();
+                        progressDialogHelper.dismissProgressDialog();
+
+                    });
         }
     }
 

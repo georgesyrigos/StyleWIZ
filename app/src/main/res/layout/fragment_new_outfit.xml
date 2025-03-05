@@ -24,17 +24,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="10dp"
-            >
+            android:layout_margin="15dp">
 
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="One-Piece Outfit"
+                android:textSize="18sp"
+                android:fontFamily="@font/roboto"
+                android:layout_weight="1"
+                android:layout_marginStart="5dp"/>
 
             <Switch
                 android:id="@+id/switchOnePiece"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:text="One-Piece Outfit "/>
+                android:clickable="true"
+                android:focusable="true"
+                android:textOff=""
+                android:textOn=""/>
 
 
         </LinearLayout>
@@ -98,6 +106,21 @@
 
 
         </LinearLayout>
+        <TextView
+            android:id="@+id/tvWarningAccessory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="Select an image for the first accessory!"
+            android:textSize="16sp"
+            android:textColor="@color/red"
+            android:drawableStart="@drawable/outline_info_24"
+            android:drawablePadding="5dp"
+            android:drawableTint="@color/red"
+            android:padding="8dp"
+            android:alpha="1.0"
+            android:visibility="gone"/>
+
 
         <!-- Outerwear Section -->
         <LinearLayout
@@ -196,6 +219,20 @@
                 android:visibility="invisible"
                 android:clipToOutline="true"/>
         </LinearLayout>
+        <TextView
+            android:id="@+id/tvWarningTop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="Select an image for the first top!"
+            android:textSize="16sp"
+            android:textColor="@color/red"
+            android:drawableStart="@drawable/outline_info_24"
+            android:drawablePadding="5dp"
+            android:drawableTint="@color/red"
+            android:padding="8dp"
+            android:alpha="1.0"
+            android:visibility="gone"/>
 
         <!-- Bottom Section -->
         <LinearLayout
@@ -297,6 +334,21 @@
                 android:visibility="invisible"
                 android:clipToOutline="true"/>
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvWarningOnePiece"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="Select an image for the one-piece first!"
+            android:textSize="16sp"
+            android:textColor="@color/red"
+            android:drawableStart="@drawable/outline_info_24"
+            android:drawablePadding="5dp"
+            android:drawableTint="@color/red"
+            android:padding="8dp"
+            android:alpha="1.0"
+            android:visibility="gone"/>
 
         <!-- Shoes Section -->
         <LinearLayout

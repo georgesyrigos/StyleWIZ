@@ -131,7 +131,7 @@ public class UserActivity extends AppCompatActivity{
 
 
         }
-
+/*  Notifications for app
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
                     != PackageManager.PERMISSION_GRANTED) {
@@ -140,7 +140,7 @@ public class UserActivity extends AppCompatActivity{
             }
         }
 
-
+*/
 
 
     }
