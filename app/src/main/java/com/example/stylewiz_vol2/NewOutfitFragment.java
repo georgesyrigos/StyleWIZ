@@ -166,8 +166,8 @@ public class NewOutfitFragment extends Fragment {
                                 imgLayerOnePiece.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        if (!selectedItemUrls.containsKey(R.id.imgLayerOnePiece) ||
-                                                selectedItemUrls.get(R.id.imgLayerOnePiece).equals("none")) {
+                                        if (!selectedItemUrls.containsKey(R.id.imgOnePiece) ||
+                                                selectedItemUrls.get(R.id.imgOnePiece).equals("none")) {
 
                                             // Show the warning message
                                             tvWarningOnePiece.setVisibility(View.VISIBLE);
@@ -282,8 +282,8 @@ public class NewOutfitFragment extends Fragment {
         imgTop2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!selectedItemUrls.containsKey(R.id.imgTop2) ||
-                        selectedItemUrls.get(R.id.imgTop2).equals("none")) {
+                if (!selectedItemUrls.containsKey(R.id.imgTop1) ||
+                        selectedItemUrls.get(R.id.imgTop1).equals("none")) {
 
                     // Show the warning message
                     tvWarningTop.setVisibility(View.VISIBLE);
@@ -430,6 +430,7 @@ public class NewOutfitFragment extends Fragment {
     private void saveOutfit() {
         if (selectedItemUrls.isEmpty()) {
             Toast.makeText(requireContext(), "No items selected!", Toast.LENGTH_SHORT).show();
+            progressDialogHelper.dismissProgressDialog();
             return;
         }
 
@@ -445,15 +446,15 @@ public class NewOutfitFragment extends Fragment {
             // Store only the items currently visible
             if (isOnePieceMode) {
                 // Store one-piece items
-                outfitData.put("one-piece", selectedItemUrls.getOrDefault(R.id.imgOnePiece, "none"));
+                outfitData.put("onePiece", selectedItemUrls.getOrDefault(R.id.imgOnePiece, "none"));
                 outfitData.put("top1", "none");
                 outfitData.put("top2", "none");
                 outfitData.put("bottom", "none");
 
                 if (isLayerOnePieceEnabled) {
-                    outfitData.put("layer one-piece", selectedItemUrls.getOrDefault(R.id.imgLayerOnePiece, "none"));
+                    outfitData.put("layerOnePiece", selectedItemUrls.getOrDefault(R.id.imgLayerOnePiece, "none"));
                 } else {
-                    outfitData.put("layer one-piece", "none");
+                    outfitData.put("layerOnePiece", "none");
                 }
             } else {
                 // Store top and bottom items
@@ -466,8 +467,8 @@ public class NewOutfitFragment extends Fragment {
                 outfitData.put("bottom", selectedItemUrls.getOrDefault(R.id.imgBottom, "none"));
 
                 // Make sure one-piece fields are set to "none"
-                outfitData.put("one-piece", "none");
-                outfitData.put("layer one-piece", "none");
+                outfitData.put("onePiece", "none");
+                outfitData.put("layerOnePiece", "none");
             }
 
             // Add common items that are always visible
@@ -539,8 +540,8 @@ public class NewOutfitFragment extends Fragment {
         if (imageViewId == R.id.imgTop2) return "top2";
         if (imageViewId == R.id.imgBottom) return "bottom";
         if (imageViewId == R.id.imgShoes) return "shoes";
-        if (imageViewId == R.id.imgOnePiece) return "one-piece";
-        if (imageViewId == R.id.imgLayerOnePiece) return "layer one-piece";
+        if (imageViewId == R.id.imgOnePiece) return "onePiece";
+        if (imageViewId == R.id.imgLayerOnePiece) return "layerOnePiece";
 
         return "unknown";
     }

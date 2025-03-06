@@ -1,5 +1,9 @@
 package com.example.stylewiz_vol2;
 
+import static com.google.firebase.firestore.DocumentChange.Type.ADDED;
+import static com.google.firebase.firestore.DocumentChange.Type.MODIFIED;
+import static com.google.firebase.firestore.DocumentChange.Type.REMOVED;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -25,18 +29,26 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class OutfitsFragment extends Fragment {
 
+    private GridView gridView;
+    private List<ShowOutfitsItem> outfitList;
+    private ShowOutfitAdapter outfitAdapter;
+    private FirebaseFirestore db;
     private LinearLayout emptyStateLayout;
-    GridView gridView;
-    ItemsAdapter adapter;
-    List<DataClass> dataList;
-    FirebaseFirestore db;
     private boolean isManualUpdate = false;
+    private ListenerRegistration outfitsListener;
+
+
+
+    public OutfitsFragment() {}
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,7 +56,15 @@ public class OutfitsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_outfits, container, false);
 
+
+
+        gridView = view.findViewById(R.id.gridViews);
+        emptyStateLayout = view.findViewById(R.id.emptyStateLayoutOutfits);
         FloatingActionButton fab = view.findViewById(R.id.fab_outfits);
+        db = FirebaseFirestore.getInstance();
+        outfitList = new ArrayList<>();
+        outfitAdapter = new ShowOutfitAdapter(requireContext(), outfitList);
+        gridView.setAdapter(outfitAdapter);
 
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -84,10 +104,59 @@ public class OutfitsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+    }
 
+    public void onStart() {
+        super.onStart();
+        listenForOutfitChanges();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (outfitsListener != null) {
+            outfitsListener.remove();  // Stop listening when fragment is not visible
+        }
+    }
+
+    private void listenForOutfitChanges() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user == null) return;
+        String userId = user.getUid();
+        outfitsListener = db.collection("users")
+                .document(userId)
+                .collection("outfits")
+                .addSnapshotListener((queryDocumentSnapshots, e) -> {
+                    if (e != null) {
+                        Toast.makeText(requireContext(), "Error loading outfits", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    if (queryDocumentSnapshots != null) {
+                        outfitList.clear();
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            ShowOutfitsItem outfit = doc.toObject(ShowOutfitsItem.class);
+                            outfitList.add(outfit);
+                        }
+
+                        // Toggle visibility based on outfit list size
+                        if (outfitList.isEmpty()) {
+                            gridView.setVisibility(View.GONE);
+                            emptyStateLayout.setVisibility(View.VISIBLE);
+                        } else {
+                            gridView.setVisibility(View.VISIBLE);
+                            emptyStateLayout.setVisibility(View.GONE);
+                        }
+
+                        outfitAdapter.notifyDataSetChanged();  // Refresh GridView
+                    }
+                });
     }
 
 
-
-
 }
+
+
+
+
