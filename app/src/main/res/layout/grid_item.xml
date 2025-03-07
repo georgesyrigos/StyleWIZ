@@ -10,6 +10,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="175dp"
         android:layout_height="175dp"
+        android:id="@+id/gridCard"
         android:layout_margin="10dp"
         app:cardElevation="5dp"
         app:cardCornerRadius="20dp">

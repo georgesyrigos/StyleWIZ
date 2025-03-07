@@ -97,6 +97,7 @@ public class OutfitsFragment extends Fragment {
             }
         });
 
+
         return view;
     }
 

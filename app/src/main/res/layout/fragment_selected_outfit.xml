@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+tools:context=".SelectedOutfitFragment"
+android:scrollbars="none">
+
+
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".ShowOutfitFragment"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/navigation_top"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/back"
+            android:layout_margin="10dp"
+            android:padding="5dp"
+            android:elevation="5dp"
+            android:layout_gravity="center"
+            android:background="@drawable/circle_shape"
+            android:src="@drawable/round_arrow_back_24"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="2"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="My Outfit"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_gravity="center" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="3"/>
+
+
+    </LinearLayout>
+
+
+    <!-- Outerwear -->
+    <ImageView
+        android:id="@+id/imgOuterwear"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/round_add_24"
+        app:tint="@color/gray"
+        android:background="@drawable/dashed_border"
+        android:scaleType="centerCrop"
+        android:contentDescription="Outerwear" />
+
+    <!-- Top and Bottom -->
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:columnCount="2"
+        android:rowCount="2"
+        android:layout_marginTop="10dp"
+        android:alignmentMode="alignMargins"
+        android:rowOrderPreserved="false">
+
+        <ImageView
+            android:id="@+id/imgTop1"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_margin="10dp"
+            android:src="@drawable/round_add_24"
+            android:background="@drawable/dashed_border"
+            app:tint="@color/gray"
+            android:scaleType="centerCrop"
+            android:contentDescription="Top"
+            android:layout_column="0"
+            android:layout_row="1"/>
+
+        <ImageView
+            android:id="@+id/imgTop2"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_margin="10dp"
+            android:src="@drawable/round_add_24"
+            android:background="@drawable/dashed_border"
+            app:tint="@color/gray"
+            android:scaleType="centerCrop"
+            android:contentDescription="Second Top"
+            android:layout_column="1"
+            android:layout_row="1"/>
+
+        <ImageView
+            android:id="@+id/imgBottom"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_margin="10dp"
+            android:src="@drawable/round_add_24"
+            android:background="@drawable/dashed_border"
+            app:tint="@color/gray"
+            android:scaleType="centerCrop"
+            android:contentDescription="Bottom"
+            android:layout_columnSpan="2"
+            android:layout_gravity="center"
+            android:layout_row="1"/>
+    </GridLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="start"
+        android:padding="5dp">
+
+
+        <ImageView
+            android:id="@+id/imgOnePiece"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/round_add_24"
+            android:layout_margin="10dp"
+            app:tint="@color/gray"
+            android:background="@drawable/dashed_border"
+            android:scaleType="centerCrop"
+            android:contentDescription="Accessories"/>
+        <ImageView
+            android:id="@+id/imgLayerOnePiece"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/round_add_24"
+            android:layout_margin="10dp"
+            app:tint="@color/gray"
+            android:background="@drawable/dashed_border"
+            android:scaleType="centerCrop"
+            android:contentDescription="Accessories"/>
+
+
+
+
+
+    </LinearLayout>
+
+    <!-- Shoes -->
+    <ImageView
+        android:id="@+id/imgShoes"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/round_add_24"
+        app:tint="@color/gray"
+        android:background="@drawable/dashed_border"
+        android:scaleType="centerCrop"
+        android:contentDescription="Shoes" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="start"
+        android:padding="5dp">
+
+
+        <ImageView
+            android:id="@+id/imgAccessory1"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/round_add_24"
+            android:layout_margin="10dp"
+            app:tint="@color/gray"
+            android:background="@drawable/dashed_border"
+            android:scaleType="centerCrop"
+            android:contentDescription="Accessories"/>
+        <ImageView
+            android:id="@+id/imgAccessory2"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/round_add_24"
+            android:layout_margin="10dp"
+            app:tint="@color/gray"
+            android:background="@drawable/dashed_border"
+            android:scaleType="centerCrop"
+            android:contentDescription="Accessories"/>
+
+    </LinearLayout>
+
+</LinearLayout>
+
+</ScrollView>

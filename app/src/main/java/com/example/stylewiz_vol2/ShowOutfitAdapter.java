@@ -1,6 +1,7 @@
 package com.example.stylewiz_vol2;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -44,6 +50,10 @@ public class ShowOutfitAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
 
+        ShowOutfitsItem currentData = outfitList.get(position);
+        //new addition
+        String documentId = currentData.getDocumentId(); // Ensure your model class has this method
+
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.grid_item, parent, false);
             holder = new ViewHolder();
@@ -51,6 +61,7 @@ public class ShowOutfitAdapter extends BaseAdapter {
             holder.imgTopRight = convertView.findViewById(R.id.imgTopRight);
             holder.imgBottomLeft = convertView.findViewById(R.id.imgBottomLeft);
             holder.imgBottomRight = convertView.findViewById(R.id.imgBottomRight);
+            holder.gridCard = convertView.findViewById(R.id.gridCard);
             holder.caption = convertView.findViewById(R.id.gridCaption);
             convertView.setTag(holder);
         } else {
@@ -91,11 +102,47 @@ public class ShowOutfitAdapter extends BaseAdapter {
 
         holder.caption.setText("Outfit " + (position + 1));
 
+
+
+        //Switch to SelectedOutfit
+        holder.gridCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SelectedOutfitFragment selectedOutfitFragment = new SelectedOutfitFragment();
+
+                Bundle bundle = new Bundle();
+                bundle.putStringArrayList("selected_images", (ArrayList<String>) images);
+                selectedOutfitFragment.setArguments(bundle);
+
+                FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+                // Hide current fragment if visible
+                Fragment currentFragment = null;
+                for (Fragment fragment : fragmentManager.getFragments()) {
+                    if (fragment.isVisible()) {
+                        currentFragment = fragment;
+                        break;
+                    }
+                }
+                if (currentFragment != null) {
+                    transaction.hide(currentFragment);
+                }
+
+                // Replace with SelectedOutfitFragment
+                transaction.replace(R.id.frameLayout, selectedOutfitFragment, "SELECTED_OUTFIT")
+                        .addToBackStack("SELECTED_OUTFIT")
+                        .commit();
+            }
+        });
+
+
         return convertView;
     }
 
     private static class ViewHolder {
         ImageView imgTopLeft, imgTopRight, imgBottomLeft, imgBottomRight;
+        CardView gridCard;
         TextView caption;
     }
 }

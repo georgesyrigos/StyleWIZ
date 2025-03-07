@@ -59,6 +59,7 @@ public class UserActivity extends AppCompatActivity{
         DetailsFragment detailsFragment = new DetailsFragment();
         EditDetailsFragment editDetailsFragment = new EditDetailsFragment();
         NewOutfitFragment newOutfitFragment = new NewOutfitFragment();
+        SelectedOutfitFragment selectedOutfitFragment = new SelectedOutfitFragment();
 
 
 
@@ -75,6 +76,7 @@ public class UserActivity extends AppCompatActivity{
                 .add(R.id.frameLayout, detailsFragment, "DETAILS").hide(detailsFragment)
                 .add(R.id.frameLayout, editDetailsFragment, "EDIT_DETAILS").hide(editDetailsFragment)
                 .add(R.id.frameLayout, newOutfitFragment, "NEW_OUTFIT").hide(newOutfitFragment)
+                .add(R.id.frameLayout, selectedOutfitFragment, "SELECTED_OUTFIT").hide(selectedOutfitFragment)
                 .commit();
 
 
@@ -94,7 +96,9 @@ public class UserActivity extends AppCompatActivity{
                     .hide(editProfileFragment)
                     .hide(detailsFragment)
                     .hide(editDetailsFragment)
-                    .hide(newOutfitFragment);
+                    .hide(newOutfitFragment)
+                    .hide(selectedOutfitFragment);
+
 
 
             // Show the selected fragment based on the item clicked

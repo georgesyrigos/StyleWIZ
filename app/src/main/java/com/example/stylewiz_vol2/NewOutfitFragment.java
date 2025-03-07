@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -51,7 +53,7 @@ import java.util.Map;
 
 public class NewOutfitFragment extends Fragment {
     CheckBox chkAccessory, chkTop, chkLayerOnePiece;
-    ImageView imgAccessory1, imgAccessory2, imgOuterwear, imgTop1, imgTop2, imgOnePiece, imgLayerOnePiece, imgBottom, imgShoes;
+    ImageView imgAccessory1, imgAccessory2, imgOuterwear, imgTop1, imgTop2, imgOnePiece, imgLayerOnePiece, imgBottom, imgShoes, backButton;
     LinearLayout topSection, bottomSection, onePieceSection;
     Switch switchOnePiece;
     FirebaseFirestore db;
@@ -80,6 +82,8 @@ public class NewOutfitFragment extends Fragment {
 
         //Button initialization
         addOutfitBtn = view.findViewById(R.id.addOutfitBtn);
+        backButton = view.findViewById(R.id.back);
+
 
 
         //ImageViews
@@ -113,6 +117,34 @@ public class NewOutfitFragment extends Fragment {
         TextView tvWarningAccessory = view.findViewById(R.id.tvWarningAccessory);
         TextView tvWarningTop = view.findViewById(R.id.tvWarningTop);
         TextView tvWarningOnePiece = view.findViewById(R.id.tvWarningOnePiece);
+
+
+
+        // Set up the click listener for back
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+                // Find the existing OutfitsFragment
+                Fragment outfitsFragment = fragmentManager.findFragmentByTag("OUTFIT");
+
+                if (outfitsFragment != null) {
+                    // Just show the existing fragment instead of recreating it
+                    transaction.show(outfitsFragment);
+                }
+
+                // Remove SelectedOutfitFragment to ensure it's cleared
+                transaction.remove(NewOutfitFragment.this).commit();
+
+                // Pop from the back stack to ensure proper navigation
+                fragmentManager.popBackStack();
+
+            }
+        });
+
 
 
 
