@@ -44,7 +44,7 @@ android:scrollbars="none">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="My Outfit"
-            android:textSize="24sp"
+            android:textSize="30sp"
             android:textStyle="bold"
             android:layout_gravity="center" />
         <View
@@ -59,14 +59,14 @@ android:scrollbars="none">
     <!-- Outerwear -->
     <ImageView
         android:id="@+id/imgOuterwear"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginTop="10dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="30dp"
         android:src="@drawable/round_add_24"
-        app:tint="@color/gray"
         android:background="@drawable/dashed_border"
         android:scaleType="centerCrop"
-        android:contentDescription="Outerwear" />
+        android:contentDescription="Outerwear"
+        android:clipToOutline="true"/>
 
     <!-- Top and Bottom -->
     <GridLayout
@@ -80,43 +80,43 @@ android:scrollbars="none">
 
         <ImageView
             android:id="@+id/imgTop1"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:layout_margin="10dp"
             android:src="@drawable/round_add_24"
             android:background="@drawable/dashed_border"
-            app:tint="@color/gray"
             android:scaleType="centerCrop"
-            android:contentDescription="Top"
+            android:contentDescription="First Top"
             android:layout_column="0"
-            android:layout_row="1"/>
+            android:layout_row="1"
+            android:clipToOutline="true"/>
 
         <ImageView
             android:id="@+id/imgTop2"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:layout_margin="10dp"
             android:src="@drawable/round_add_24"
             android:background="@drawable/dashed_border"
-            app:tint="@color/gray"
             android:scaleType="centerCrop"
             android:contentDescription="Second Top"
             android:layout_column="1"
-            android:layout_row="1"/>
+            android:layout_row="1"
+            android:clipToOutline="true"/>
 
         <ImageView
             android:id="@+id/imgBottom"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:layout_margin="10dp"
             android:src="@drawable/round_add_24"
             android:background="@drawable/dashed_border"
-            app:tint="@color/gray"
             android:scaleType="centerCrop"
             android:contentDescription="Bottom"
             android:layout_columnSpan="2"
             android:layout_gravity="center"
-            android:layout_row="1"/>
+            android:layout_row="1"
+            android:clipToOutline="true"/>
     </GridLayout>
 
 
@@ -130,27 +130,24 @@ android:scrollbars="none">
 
         <ImageView
             android:id="@+id/imgOnePiece"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:src="@drawable/round_add_24"
             android:layout_margin="10dp"
-            app:tint="@color/gray"
             android:background="@drawable/dashed_border"
             android:scaleType="centerCrop"
-            android:contentDescription="Accessories"/>
+            android:contentDescription="Accessories"
+            android:clipToOutline="true"/>
         <ImageView
             android:id="@+id/imgLayerOnePiece"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:src="@drawable/round_add_24"
             android:layout_margin="10dp"
-            app:tint="@color/gray"
             android:background="@drawable/dashed_border"
             android:scaleType="centerCrop"
-            android:contentDescription="Accessories"/>
-
-
-
+            android:contentDescription="Accessories"
+            android:clipToOutline="true"/>
 
 
     </LinearLayout>
@@ -158,13 +155,13 @@ android:scrollbars="none">
     <!-- Shoes -->
     <ImageView
         android:id="@+id/imgShoes"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:src="@drawable/round_add_24"
-        app:tint="@color/gray"
         android:background="@drawable/dashed_border"
         android:scaleType="centerCrop"
-        android:contentDescription="Shoes" />
+        android:contentDescription="Shoes"
+        android:clipToOutline="true"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -176,24 +173,24 @@ android:scrollbars="none">
 
         <ImageView
             android:id="@+id/imgAccessory1"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:src="@drawable/round_add_24"
             android:layout_margin="10dp"
-            app:tint="@color/gray"
             android:background="@drawable/dashed_border"
             android:scaleType="centerCrop"
-            android:contentDescription="Accessories"/>
+            android:contentDescription="Accessory 1"
+            android:clipToOutline="true"/>
         <ImageView
             android:id="@+id/imgAccessory2"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:src="@drawable/round_add_24"
             android:layout_margin="10dp"
-            app:tint="@color/gray"
             android:background="@drawable/dashed_border"
             android:scaleType="centerCrop"
-            android:contentDescription="Accessories"/>
+            android:contentDescription="Accessory 2"
+            android:clipToOutline="true"/>
 
     </LinearLayout>
 

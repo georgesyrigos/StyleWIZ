@@ -74,13 +74,12 @@ public class ShowOutfitAdapter extends BaseAdapter {
         List<String> images = new ArrayList<>();
 
 
-
+        if (outfit.getOuterwear() != null && !outfit.getOuterwear().equals("none")) images.add(outfit.getOuterwear());
         if (outfit.getTop1() != null && !outfit.getTop1().equals("none")) images.add(outfit.getTop1());
-        if (outfit.getOnePiece() != null && !outfit.getOnePiece().equals("none")) images.add(outfit.getOnePiece());
-        if (outfit.getLayerOnePiece() != null && !outfit.getLayerOnePiece().equals("none")) images.add(outfit.getLayerOnePiece());
         if (outfit.getTop2() != null && !outfit.getTop2().equals("none")) images.add(outfit.getTop2());
         if (outfit.getBottom() != null && !outfit.getBottom().equals("none")) images.add(outfit.getBottom());
-        if (outfit.getOuterwear() != null && !outfit.getOuterwear().equals("none")) images.add(outfit.getOuterwear());
+        if (outfit.getOnePiece() != null && !outfit.getOnePiece().equals("none")) images.add(outfit.getOnePiece());
+        if (outfit.getLayerOnePiece() != null && !outfit.getLayerOnePiece().equals("none")) images.add(outfit.getLayerOnePiece());
         if (outfit.getShoes() != null && !outfit.getShoes().equals("none")) images.add(outfit.getShoes());
         if (outfit.getAccessory1() != null && !outfit.getAccessory1().equals("none")) images.add(outfit.getAccessory1());
         if (outfit.getAccessory2() != null && !outfit.getAccessory2().equals("none")) images.add(outfit.getAccessory2());
@@ -110,9 +109,9 @@ public class ShowOutfitAdapter extends BaseAdapter {
             public void onClick(View v) {
                 SelectedOutfitFragment selectedOutfitFragment = new SelectedOutfitFragment();
 
-                Bundle bundle = new Bundle();
-                bundle.putStringArrayList("selected_images", (ArrayList<String>) images);
-                selectedOutfitFragment.setArguments(bundle);
+                Bundle bundleOutfit = new Bundle();
+                bundleOutfit.putStringArrayList("selected_images", (ArrayList<String>) images);
+                selectedOutfitFragment.setArguments(bundleOutfit);
 
                 FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();

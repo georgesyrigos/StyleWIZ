@@ -143,8 +143,6 @@ public class HomeFragment extends Fragment {
     }
 
 
-
-
     private void showUserData(View view) {
         textViewUsername = view.findViewById(R.id.homeFragment);
 
