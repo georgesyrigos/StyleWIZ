@@ -2,6 +2,7 @@ package com.example.stylewiz_vol2;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,7 +75,7 @@ public class ShowOutfitAdapter extends BaseAdapter {
         List<String> images = new ArrayList<>();
 
 
-        if (outfit.getOuterwear() != null && !outfit.getOuterwear().equals("none")) images.add(outfit.getOuterwear());
+        /*if (outfit.getOuterwear() != null && !outfit.getOuterwear().equals("none")) images.add(outfit.getOuterwear());
         if (outfit.getTop1() != null && !outfit.getTop1().equals("none")) images.add(outfit.getTop1());
         if (outfit.getTop2() != null && !outfit.getTop2().equals("none")) images.add(outfit.getTop2());
         if (outfit.getBottom() != null && !outfit.getBottom().equals("none")) images.add(outfit.getBottom());
@@ -82,10 +83,65 @@ public class ShowOutfitAdapter extends BaseAdapter {
         if (outfit.getLayerOnePiece() != null && !outfit.getLayerOnePiece().equals("none")) images.add(outfit.getLayerOnePiece());
         if (outfit.getShoes() != null && !outfit.getShoes().equals("none")) images.add(outfit.getShoes());
         if (outfit.getAccessory1() != null && !outfit.getAccessory1().equals("none")) images.add(outfit.getAccessory1());
-        if (outfit.getAccessory2() != null && !outfit.getAccessory2().equals("none")) images.add(outfit.getAccessory2());
+        if (outfit.getAccessory2() != null && !outfit.getAccessory2().equals("none")) images.add(outfit.getAccessory2());*/
+
+        if (outfit.getOuterwear() != null && !outfit.getOuterwear().equals("none")) {
+            images.add(outfit.getOuterwear());
+        } else {
+            images.add("none");
+        }
+
+        if (outfit.getTop1() != null && !outfit.getTop1().equals("none")) {
+            images.add(outfit.getTop1());
+        } else {
+            images.add("none");
+        }
+
+        if (outfit.getTop2() != null && !outfit.getTop2().equals("none")) {
+            images.add(outfit.getTop2());
+        } else {
+            images.add("none");
+        }
+
+        if (outfit.getBottom() != null && !outfit.getBottom().equals("none")) {
+            images.add(outfit.getBottom());
+        } else {
+            images.add("none");
+        }
+
+        if (outfit.getOnePiece() != null && !outfit.getOnePiece().equals("none")) {
+            images.add(outfit.getOnePiece());
+        } else {
+            images.add("none");
+        }
+
+        if (outfit.getLayerOnePiece() != null && !outfit.getLayerOnePiece().equals("none")) {
+            images.add(outfit.getLayerOnePiece());
+        } else {
+            images.add("none");
+        }
+
+        if (outfit.getShoes() != null && !outfit.getShoes().equals("none")) {
+            images.add(outfit.getShoes());
+        } else {
+            images.add("none");
+        }
+
+        if (outfit.getAccessory1() != null && !outfit.getAccessory1().equals("none")) {
+            images.add(outfit.getAccessory1());
+        } else {
+            images.add("none");
+        }
+
+        if (outfit.getAccessory2() != null && !outfit.getAccessory2().equals("none")) {
+            images.add(outfit.getAccessory2());
+        } else {
+            images.add("none");
+        }
+
 
         // Set images dynamically, ensuring the first three positions are filled
-        if (!images.isEmpty()){
+        /*if (!images.isEmpty()){
             Glide.with(context).load(images.get(0)).into(holder.imgTopLeft);
         } else{
             holder.imgTopLeft.setVisibility(View.INVISIBLE); // Hide if no image
@@ -97,7 +153,38 @@ public class ShowOutfitAdapter extends BaseAdapter {
         if (images.size() > 2) Glide.with(context).load(images.get(2)).into(holder.imgBottomLeft);
         else holder.imgBottomLeft.setVisibility(View.INVISIBLE); // Hide if no image
 
-        if (images.size() > 3) Glide.with(context).load(images.get(3)).into(holder.imgBottomRight);
+        if (images.size() > 3) Glide.with(context).load(images.get(3)).into(holder.imgBottomRight);*/
+
+        // Collect available images in a list (excluding "none")
+        List<String> validImages = new ArrayList<>();
+        for (String image : images) {
+            if (!image.equals("none")) {
+                validImages.add(image);
+            }
+        }
+
+
+        // Assign images dynamically, only if available
+        if (validImages.size() > 0) {
+            Glide.with(context).load(validImages.get(0)).into(holder.imgTopLeft);
+            holder.imgTopLeft.setVisibility(View.VISIBLE);
+        }
+
+        if (validImages.size() > 1) {
+            Glide.with(context).load(validImages.get(1)).into(holder.imgTopRight);
+            holder.imgTopRight.setVisibility(View.VISIBLE);
+        }
+
+        if (validImages.size() > 2) {
+            Glide.with(context).load(validImages.get(2)).into(holder.imgBottomLeft);
+            holder.imgBottomLeft.setVisibility(View.VISIBLE);
+        }
+
+        if (validImages.size() > 3) {
+            Glide.with(context).load(validImages.get(3)).into(holder.imgBottomRight);
+            holder.imgBottomRight.setVisibility(View.VISIBLE);
+        }
+
 
         holder.caption.setText("Outfit " + (position + 1));
 
@@ -108,6 +195,9 @@ public class ShowOutfitAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 SelectedOutfitFragment selectedOutfitFragment = new SelectedOutfitFragment();
+
+                // Log the selected images array
+                Log.d("SelectedOutfit", "Selected images: " + images.toString());
 
                 Bundle bundleOutfit = new Bundle();
                 bundleOutfit.putStringArrayList("selected_images", (ArrayList<String>) images);
