@@ -129,7 +129,7 @@ public class ShowOutfitAdapter extends BaseAdapter {
                 }
 
                 // Replace with SelectedOutfitFragment
-                transaction.replace(R.id.frameLayout, selectedOutfitFragment, "SELECTED_OUTFIT")
+                transaction.add(R.id.frameLayout, selectedOutfitFragment, "SELECTED_OUTFIT")
                         .addToBackStack("SELECTED_OUTFIT")
                         .commit();
             }
