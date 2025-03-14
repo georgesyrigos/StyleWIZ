@@ -251,24 +251,6 @@ public class NewOutfitFragment extends Fragment {
             }
         });
 
-        /*
-        imgAccessory2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!selectedItemUrls.containsKey(R.id.imgAccessory1) ||
-                        selectedItemUrls.get(R.id.imgAccessory1).equals("none")) {
-                    Toast.makeText(requireContext(), "Select an image for the first accessory before adding a second!", Toast.LENGTH_SHORT).show();
-                    return;  // Prevent further execution
-                }
-
-
-                showItemSelectionDialog("Accessory", imgAccessory2, R.id.imgAccessory2);
-            }
-        });
-        */
-
-
-
         imgAccessory2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -435,7 +417,7 @@ public class NewOutfitFragment extends Fragment {
                     .whereEqualTo("category", category)
                     .get()
                     .addOnSuccessListener(queryDocumentSnapshots -> {
-                        if (queryDocumentSnapshots.isEmpty()) {
+                        /*if (queryDocumentSnapshots.isEmpty()) {
                             Log.e("Firestore", "No items found for category: " + category);
                         } else {
                             int startPosition = itemList.size(); // Store the start position before adding items
@@ -450,6 +432,54 @@ public class NewOutfitFragment extends Fragment {
                             // Add all new items at once
                             itemList.addAll(newItems);
                             adapter.notifyItemRangeInserted(startPosition, newItems.size()); // Notify batch update
+                        }*/
+                        if (queryDocumentSnapshots.isEmpty()) {
+                            Log.e("Firestore", "No items found for category: " + category);
+                        } else {
+                            int startPosition = itemList.size(); // Store the start position before adding items
+                            List<OutfitItem> newItems = new ArrayList<>(); // Temporary list to hold new items
+
+
+                            // Retrieve the first selected item dynamically
+                            /*String firstSelectedUrl = selectedItemUrls.get(getCategoryImageId(category));
+
+                            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                                OutfitItem item = doc.toObject(OutfitItem.class);
+                                item.setDocumentId(doc.getId());
+
+                                // Exclude the first selected item
+                                if (firstSelectedUrl != null && firstSelectedUrl.equals(item.getPhotoUrl())) {
+                                    continue; // Skip adding this item
+                                }
+
+                                newItems.add(item); // Add only non-selected items
+                            }*/
+                            // Check if we're selecting a Layer for One Piece (category == "Top" and a One Piece item is selected)
+                            boolean isOnePieceSelected = selectedItemUrls.get(R.id.imgOnePiece) != null && !selectedItemUrls.get(R.id.imgOnePiece).equals("none");
+
+                            // Retrieve the first selected item dynamically for other categories
+                            String firstSelectedUrl = isOnePieceSelected ? null : selectedItemUrls.get(getCategoryImageId(category));
+
+                            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                                OutfitItem item = doc.toObject(OutfitItem.class);
+                                item.setDocumentId(doc.getId());
+
+                                // If it's "Top" and the user is selecting a layer for "One Piece", don't exclude anything
+
+                                // Otherwise, exclude the first selected item for other categories
+
+                                if (isOnePieceSelected && category.equals("Top")) {
+                                    newItems.add(item); // Show all Top items when selecting a layer for One Piece
+                                } else if (firstSelectedUrl != null && firstSelectedUrl.equals(item.getPhotoUrl())) {
+                                    continue; // Skip adding this item
+                                } else {
+                                    newItems.add(item); // Add only non-selected items
+                                }
+                            }
+
+                            // Add all new items at once
+                            itemList.addAll(newItems);
+                            adapter.notifyItemRangeInserted(startPosition, newItems.size()); // Notify batch update
                         }
                     });
         }
@@ -457,6 +487,18 @@ public class NewOutfitFragment extends Fragment {
 
         // Show the dialog after setting up everything
         alertDialog.show();
+    }
+
+    private Integer getCategoryImageId(String category) {
+        Map<String, Integer> categoryImageMap = new HashMap<>();
+        categoryImageMap.put("Accessory", R.id.imgAccessory1);
+        categoryImageMap.put("Top", R.id.imgTop1);
+        categoryImageMap.put("Bottom", R.id.imgBottom);
+        categoryImageMap.put("Shoes", R.id.imgShoes);
+        categoryImageMap.put("Outerwear", R.id.imgOuterwear);
+        categoryImageMap.put("OnePiece", R.id.imgOnePiece);
+
+        return categoryImageMap.get(category); // Returns null if category isn't found
     }
 
     private void saveOutfit() {
