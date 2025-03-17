@@ -357,6 +357,8 @@ public class NewOutfitFragment extends Fragment {
         builder.setView(view);
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewItems);
+        TextView textNoItems = view.findViewById(R.id.textNoItems);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         List<OutfitItem> itemList = new ArrayList<>();
@@ -408,6 +410,27 @@ public class NewOutfitFragment extends Fragment {
         });
         recyclerView.setAdapter(adapter);
 
+        //Check if One Piece should be considered
+        boolean isOnePieceSelected = selectedItemUrls.get(R.id.imgOnePiece) != null &&
+                !selectedItemUrls.get(R.id.imgOnePiece).equals("none");
+
+        boolean isUsingOnePiece = switchOnePiece.isChecked(); // Get switch state
+
+        // If switch is OFF, ignore One Piece
+        if (!isUsingOnePiece) {
+            isOnePieceSelected = false;
+        }
+        //updateItemList(category, adapter, itemList, isOnePieceSelected);
+        updateItemList(category, adapter, itemList, isOnePieceSelected, textNoItems);
+
+        // Show the dialog after setting up everything
+        alertDialog.show();
+    }
+
+    private void updateItemList(String category, OutfitAdapter adapter, List<OutfitItem> itemList,
+                                boolean isUsingOnePiece, TextView textNoItems) {
+        itemList.clear(); // Clear existing items
+
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             String userId = user.getUid();
@@ -417,77 +440,38 @@ public class NewOutfitFragment extends Fragment {
                     .whereEqualTo("category", category)
                     .get()
                     .addOnSuccessListener(queryDocumentSnapshots -> {
-                        /*if (queryDocumentSnapshots.isEmpty()) {
-                            Log.e("Firestore", "No items found for category: " + category);
-                        } else {
-                            int startPosition = itemList.size(); // Store the start position before adding items
-                            List<OutfitItem> newItems = new ArrayList<>(); // Temporary list to hold new items
-
-                            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                                OutfitItem item = doc.toObject(OutfitItem.class);
-                                item.setDocumentId(doc.getId());
-                                newItems.add(item); // Add to temp list
-                            }
-
-                            // Add all new items at once
-                            itemList.addAll(newItems);
-                            adapter.notifyItemRangeInserted(startPosition, newItems.size()); // Notify batch update
-                        }*/
                         if (queryDocumentSnapshots.isEmpty()) {
                             Log.e("Firestore", "No items found for category: " + category);
+                            textNoItems.setVisibility(View.VISIBLE);
                         } else {
-                            int startPosition = itemList.size(); // Store the start position before adding items
-                            List<OutfitItem> newItems = new ArrayList<>(); // Temporary list to hold new items
+                            textNoItems.setVisibility(View.INVISIBLE);
 
+                            int startPosition = itemList.size();
+                            List<OutfitItem> newItems = new ArrayList<>();
 
-                            // Retrieve the first selected item dynamically
-                            /*String firstSelectedUrl = selectedItemUrls.get(getCategoryImageId(category));
-
-                            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                                OutfitItem item = doc.toObject(OutfitItem.class);
-                                item.setDocumentId(doc.getId());
-
-                                // Exclude the first selected item
-                                if (firstSelectedUrl != null && firstSelectedUrl.equals(item.getPhotoUrl())) {
-                                    continue; // Skip adding this item
-                                }
-
-                                newItems.add(item); // Add only non-selected items
-                            }*/
-                            // Check if we're selecting a Layer for One Piece (category == "Top" and a One Piece item is selected)
-                            boolean isOnePieceSelected = selectedItemUrls.get(R.id.imgOnePiece) != null && !selectedItemUrls.get(R.id.imgOnePiece).equals("none");
-
-                            // Retrieve the first selected item dynamically for other categories
-                            String firstSelectedUrl = isOnePieceSelected ? null : selectedItemUrls.get(getCategoryImageId(category));
+                            String firstSelectedUrl = isUsingOnePiece ? null : selectedItemUrls.get(getCategoryImageId(category));
 
                             for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                                 OutfitItem item = doc.toObject(OutfitItem.class);
                                 item.setDocumentId(doc.getId());
 
-                                // If it's "Top" and the user is selecting a layer for "One Piece", don't exclude anything
-
-                                // Otherwise, exclude the first selected item for other categories
-
-                                if (isOnePieceSelected && category.equals("Top")) {
-                                    newItems.add(item); // Show all Top items when selecting a layer for One Piece
-                                } else if (firstSelectedUrl != null && firstSelectedUrl.equals(item.getPhotoUrl())) {
-                                    continue; // Skip adding this item
+                                if (isUsingOnePiece && category.equals("Top")) {
+                                    newItems.add(item);
+                                } else if (!isUsingOnePiece && firstSelectedUrl != null && firstSelectedUrl.equals(item.getPhotoUrl())) {
+                                    continue;
                                 } else {
-                                    newItems.add(item); // Add only non-selected items
+                                    newItems.add(item);
                                 }
                             }
 
-                            // Add all new items at once
                             itemList.addAll(newItems);
-                            adapter.notifyItemRangeInserted(startPosition, newItems.size()); // Notify batch update
+                            adapter.notifyItemRangeInserted(startPosition, newItems.size());
                         }
                     });
         }
-
-
-        // Show the dialog after setting up everything
-        alertDialog.show();
     }
+
+
 
     private Integer getCategoryImageId(String category) {
         Map<String, Integer> categoryImageMap = new HashMap<>();
