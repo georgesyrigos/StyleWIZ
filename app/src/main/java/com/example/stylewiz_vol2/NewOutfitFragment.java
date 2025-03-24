@@ -421,14 +421,14 @@ public class NewOutfitFragment extends Fragment {
             isOnePieceSelected = false;
         }
         //updateItemList(category, adapter, itemList, isOnePieceSelected);
-        updateItemList(category, adapter, itemList, isOnePieceSelected, textNoItems);
+        updateItemList(category, adapter, itemList, isOnePieceSelected, textNoItems, recyclerView);
 
         // Show the dialog after setting up everything
         alertDialog.show();
     }
 
     private void updateItemList(String category, OutfitAdapter adapter, List<OutfitItem> itemList,
-                                boolean isUsingOnePiece, TextView textNoItems) {
+                                boolean isUsingOnePiece, TextView textNoItems, RecyclerView recyclerView) {
         itemList.clear(); // Clear existing items
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -443,9 +443,10 @@ public class NewOutfitFragment extends Fragment {
                         if (queryDocumentSnapshots.isEmpty()) {
                             Log.e("Firestore", "No items found for category: " + category);
                             textNoItems.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.GONE);
                         } else {
-                            textNoItems.setVisibility(View.INVISIBLE);
-
+                            textNoItems.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.VISIBLE);
                             int startPosition = itemList.size();
                             List<OutfitItem> newItems = new ArrayList<>();
 

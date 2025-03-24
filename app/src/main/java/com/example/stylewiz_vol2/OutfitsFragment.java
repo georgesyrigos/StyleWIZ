@@ -44,6 +44,7 @@ public class OutfitsFragment extends Fragment {
     private LinearLayout emptyStateLayout;
     private boolean isManualUpdate = false;
     private ListenerRegistration outfitsListener;
+    private FloatingActionButton fab;
 
 
 
@@ -60,7 +61,7 @@ public class OutfitsFragment extends Fragment {
 
         gridView = view.findViewById(R.id.gridViews);
         emptyStateLayout = view.findViewById(R.id.emptyStateLayoutOutfits);
-        FloatingActionButton fab = view.findViewById(R.id.fab_outfits);
+        fab = view.findViewById(R.id.fab_outfits);
         db = FirebaseFirestore.getInstance();
         outfitList = new ArrayList<>();
         outfitAdapter = new ShowOutfitAdapter(requireContext(), outfitList);
@@ -89,7 +90,7 @@ public class OutfitsFragment extends Fragment {
                     transaction.hide(currentFragment);
                 }
 
-                // Add DetailsFragment or show if already added
+                // Add NewOutfitFragment or show if already added
                 transaction.add(R.id.frameLayout, newOutfitFragment , "NEW_OUTFIT")
                         .addToBackStack("NEW_OUTFIT")
                         .commit();
@@ -144,9 +145,42 @@ public class OutfitsFragment extends Fragment {
                         // Toggle visibility based on outfit list size
                         if (outfitList.isEmpty()) {
                             gridView.setVisibility(View.GONE);
+                            fab.setVisibility(View.GONE);
                             emptyStateLayout.setVisibility(View.VISIBLE);
+                            ImageView addIcon = emptyStateLayout.findViewById(R.id.addIconOutfits);
+
+                            addIcon.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    NewOutfitFragment newOutfitFragment = new NewOutfitFragment();
+
+
+                                    FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+                                    // Find the currently visible fragment and hide it
+                                    Fragment currentFragment = null;
+                                    for (Fragment fragment : fragmentManager.getFragments()) {
+                                        if (fragment.isVisible()) {
+                                            currentFragment = fragment;
+                                            break;
+                                        }
+                                    }
+                                    if (currentFragment != null) {
+                                        transaction.hide(currentFragment);
+                                    }
+
+                                    // Add NewOutfitFragment or show if already added
+                                    transaction.add(R.id.frameLayout, newOutfitFragment , "NEW_OUTFIT")
+                                            .addToBackStack("NEW_OUTFIT")
+                                            .commit();
+
+                                }
+                            });
+
                         } else {
                             gridView.setVisibility(View.VISIBLE);
+                            fab.setVisibility(View.VISIBLE);
                             emptyStateLayout.setVisibility(View.GONE);
                         }
 

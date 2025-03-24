@@ -51,9 +51,6 @@ public class ShowOutfitAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
 
-        ShowOutfitsItem currentData = outfitList.get(position);
-        //new addition
-        String documentId = currentData.getDocumentId(); // Ensure your model class has this method
 
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.grid_item, parent, false);
@@ -70,20 +67,11 @@ public class ShowOutfitAdapter extends BaseAdapter {
         }
 
         ShowOutfitsItem outfit = outfitList.get(position);
+        String documentId = outfit.getDocumentId(); // Ensure your model class has this method
+        Log.d("ShowOutfitAdapter", "Passing DocumentId: " + documentId);
 
         // Collect available images in a list
         List<String> images = new ArrayList<>();
-
-
-        /*if (outfit.getOuterwear() != null && !outfit.getOuterwear().equals("none")) images.add(outfit.getOuterwear());
-        if (outfit.getTop1() != null && !outfit.getTop1().equals("none")) images.add(outfit.getTop1());
-        if (outfit.getTop2() != null && !outfit.getTop2().equals("none")) images.add(outfit.getTop2());
-        if (outfit.getBottom() != null && !outfit.getBottom().equals("none")) images.add(outfit.getBottom());
-        if (outfit.getOnePiece() != null && !outfit.getOnePiece().equals("none")) images.add(outfit.getOnePiece());
-        if (outfit.getLayerOnePiece() != null && !outfit.getLayerOnePiece().equals("none")) images.add(outfit.getLayerOnePiece());
-        if (outfit.getShoes() != null && !outfit.getShoes().equals("none")) images.add(outfit.getShoes());
-        if (outfit.getAccessory1() != null && !outfit.getAccessory1().equals("none")) images.add(outfit.getAccessory1());
-        if (outfit.getAccessory2() != null && !outfit.getAccessory2().equals("none")) images.add(outfit.getAccessory2());*/
 
         if (outfit.getOuterwear() != null && !outfit.getOuterwear().equals("none")) {
             images.add(outfit.getOuterwear());
@@ -140,21 +128,6 @@ public class ShowOutfitAdapter extends BaseAdapter {
         }
 
 
-        // Set images dynamically, ensuring the first three positions are filled
-        /*if (!images.isEmpty()){
-            Glide.with(context).load(images.get(0)).into(holder.imgTopLeft);
-        } else{
-            holder.imgTopLeft.setVisibility(View.INVISIBLE); // Hide if no image
-        }
-
-        if (images.size() > 1) Glide.with(context).load(images.get(1)).into(holder.imgTopRight);
-        else holder.imgTopRight.setVisibility(View.INVISIBLE); // Hide if no image
-
-        if (images.size() > 2) Glide.with(context).load(images.get(2)).into(holder.imgBottomLeft);
-        else holder.imgBottomLeft.setVisibility(View.INVISIBLE); // Hide if no image
-
-        if (images.size() > 3) Glide.with(context).load(images.get(3)).into(holder.imgBottomRight);*/
-
         // Collect available images in a list (excluding "none")
         List<String> validImages = new ArrayList<>();
         for (String image : images) {
@@ -180,11 +153,6 @@ public class ShowOutfitAdapter extends BaseAdapter {
             holder.imgBottomLeft.setVisibility(View.VISIBLE);
         }
 
-        if (validImages.size() > 3) {
-            Glide.with(context).load(validImages.get(3)).into(holder.imgBottomRight);
-            holder.imgBottomRight.setVisibility(View.VISIBLE);
-        }
-
 
         holder.caption.setText("Outfit " + (position + 1));
 
@@ -196,8 +164,11 @@ public class ShowOutfitAdapter extends BaseAdapter {
             public void onClick(View v) {
                 SelectedOutfitFragment selectedOutfitFragment = new SelectedOutfitFragment();
 
-                // Log the selected images array
-                Log.d("SelectedOutfit", "Selected images: " + images.toString());
+
+                // Get documentId for the outfit
+                //Log.d("ShowOutfitAdapter", "Passing DocumentId: " + documentId);
+
+
 
                 Bundle bundleOutfit = new Bundle();
                 bundleOutfit.putStringArrayList("selected_images", (ArrayList<String>) images);

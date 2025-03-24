@@ -8,19 +8,6 @@ public class ShowOutfitsItem {
         // Empty constructor needed for Firestore
     }
 
-    public ShowOutfitsItem(String top1, String top2, String bottom, String onePiece, String layerOnePiece, String shoes,
-                  String accessory1, String accessory2, String outerwear, String documentId) {
-        this.top1 = top1;
-        this.top2 = top2;
-        this.bottom = bottom;
-        this.onePiece = onePiece;
-        this.layerOnePiece = layerOnePiece;
-        this.shoes = shoes;
-        this.accessory1 = accessory1;
-        this.accessory2 = accessory2;
-        this.outerwear = outerwear;
-        this.documentId = documentId;
-    }
 
     // Getters
     public String getTop1() { return top1; }
@@ -33,5 +20,23 @@ public class ShowOutfitsItem {
     public String getAccessory2() { return accessory2; }
     public String getOuterwear() { return outerwear; }
     public String getDocumentId() { return documentId; }
+    public void setDocumentId(String documentId) {
+
+        this.documentId = documentId;
+    }
+
+    public ShowOutfitsItem(String top1, String top2, String bottom, String onePiece, String layerOnePiece, String shoes,
+                           String accessory1, String accessory2, String outerwear, String documentId) {
+        this.top1 = top1;
+        this.top2 = top2;
+        this.bottom = bottom;
+        this.onePiece = onePiece;
+        this.layerOnePiece = layerOnePiece;
+        this.shoes = shoes;
+        this.accessory1 = accessory1;
+        this.accessory2 = accessory2;
+        this.outerwear = outerwear;
+        this.documentId = documentId;
+    }
 }
 
