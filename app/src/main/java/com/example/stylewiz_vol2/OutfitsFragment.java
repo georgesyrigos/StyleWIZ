@@ -30,6 +30,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
@@ -129,6 +130,7 @@ public class OutfitsFragment extends Fragment {
         outfitsListener = db.collection("users")
                 .document(userId)
                 .collection("outfits")
+                .orderBy("createdAt", Query.Direction.ASCENDING) // Ensure ordering
                 .addSnapshotListener((queryDocumentSnapshots, e) -> {
                     if (e != null) {
                         Toast.makeText(requireContext(), "Error loading outfits", Toast.LENGTH_SHORT).show();
@@ -139,6 +141,7 @@ public class OutfitsFragment extends Fragment {
                         outfitList.clear();
                         for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                             ShowOutfitsItem outfit = doc.toObject(ShowOutfitsItem.class);
+                            outfit.setDocumentId(doc.getId());
                             outfitList.add(outfit);
                         }
 

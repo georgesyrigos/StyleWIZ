@@ -66,9 +66,9 @@ public class ShowOutfitAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
+        //get the position of item and id
         ShowOutfitsItem outfit = outfitList.get(position);
-        String documentId = outfit.getDocumentId(); // Ensure your model class has this method
-        Log.d("ShowOutfitAdapter", "Passing DocumentId: " + documentId);
+        String documentId = outfitList.get(position).getDocumentId();
 
         // Collect available images in a list
         List<String> images = new ArrayList<>();
@@ -171,6 +171,7 @@ public class ShowOutfitAdapter extends BaseAdapter {
 
 
                 Bundle bundleOutfit = new Bundle();
+                bundleOutfit.putString("DocumentId", documentId);
                 bundleOutfit.putStringArrayList("selected_images", (ArrayList<String>) images);
                 selectedOutfitFragment.setArguments(bundleOutfit);
 

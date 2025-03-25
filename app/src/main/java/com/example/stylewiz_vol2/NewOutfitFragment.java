@@ -26,6 +26,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,8 +61,7 @@ public class NewOutfitFragment extends Fragment {
     Button addOutfitBtn;
     private Map<Integer, String> selectedItemUrls = new HashMap<>();  // Store selected image URLs
     private ProgressDialogHelper progressDialogHelper;
-
-
+    private ScrollView scrollView;
 
 
 
@@ -71,8 +71,9 @@ public class NewOutfitFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_new_outfit, container, false);
 
-        //ProgressBar
+        //ProgressBar and scrollView
         progressDialogHelper = new ProgressDialogHelper(requireContext());
+        scrollView = view.findViewById(R.id.newOutfitScrollView);
 
         //Checkboxes and switches
         chkAccessory = view.findViewById(R.id.chkSecondAccessory);
@@ -539,6 +540,7 @@ public class NewOutfitFragment extends Fragment {
             }
             outfitData.put("outerwear", selectedItemUrls.getOrDefault(R.id.imgOuterwear, "none"));
             outfitData.put("shoes", selectedItemUrls.getOrDefault(R.id.imgShoes, "none"));
+            outfitData.put("createdAt", com.google.firebase.Timestamp.now()); // Firestore timestamp
 
 
             /*Check if the outfit is complete before saving**
@@ -622,6 +624,11 @@ public class NewOutfitFragment extends Fragment {
                 imageView.setColorFilter(ContextCompat.getColor(requireContext(), R.color.gray), PorterDuff.Mode.SRC_IN);
 
             }
+        }
+
+        //Scroll back to the top
+        if (scrollView != null) {
+            scrollView.fullScroll(ScrollView.FOCUS_UP);
         }
 
         selectedItemUrls.clear(); // Clear the selected items
