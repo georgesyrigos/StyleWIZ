@@ -27,7 +27,7 @@
         android:id="@+id/textNoItems"
         android:layout_width="match_parent"
         android:layout_height="400dp"
-        android:text="No items available for this category."
+        android:text="No available items for this category."
         android:textSize="16sp"
         android:textColor="@color/black"
         android:gravity="center"

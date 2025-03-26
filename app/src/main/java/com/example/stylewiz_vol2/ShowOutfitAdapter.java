@@ -165,11 +165,6 @@ public class ShowOutfitAdapter extends BaseAdapter {
                 SelectedOutfitFragment selectedOutfitFragment = new SelectedOutfitFragment();
 
 
-                // Get documentId for the outfit
-                //Log.d("ShowOutfitAdapter", "Passing DocumentId: " + documentId);
-
-
-
                 Bundle bundleOutfit = new Bundle();
                 bundleOutfit.putString("DocumentId", documentId);
                 bundleOutfit.putStringArrayList("selected_images", (ArrayList<String>) images);
