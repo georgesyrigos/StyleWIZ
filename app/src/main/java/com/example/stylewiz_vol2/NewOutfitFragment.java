@@ -440,36 +440,6 @@ public class NewOutfitFragment extends Fragment {
                     .whereEqualTo("category", category)
                     .get()
                     .addOnSuccessListener(queryDocumentSnapshots -> {
-                        /*if (queryDocumentSnapshots.isEmpty()) {
-                            Log.e("Firestore", "No items found for category: " + category);
-                            textNoItems.setVisibility(View.VISIBLE);
-                            recyclerView.setVisibility(View.GONE);
-                        } else {
-                            textNoItems.setVisibility(View.GONE);
-                            recyclerView.setVisibility(View.VISIBLE);
-                            int startPosition = itemList.size();
-                            List<OutfitItem> newItems = new ArrayList<>();
-
-                            String firstSelectedUrl = isUsingOnePiece ? null : selectedItemUrls.get(getCategoryImageId(category));
-
-                            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                                OutfitItem item = doc.toObject(OutfitItem.class);
-                                item.setDocumentId(doc.getId());
-
-                                if (isUsingOnePiece && category.equals("Top")) {
-                                    newItems.add(item);
-                                } else if (!isUsingOnePiece && firstSelectedUrl != null && firstSelectedUrl.equals(item.getPhotoUrl())) {
-                                    continue;
-                                } else {
-                                    newItems.add(item);
-                                }
-
-
-                            }
-
-                            itemList.addAll(newItems);
-                            adapter.notifyItemRangeInserted(startPosition, newItems.size());
-                        }*/
                         List<OutfitItem> newItems = new ArrayList<>();
                         String firstSelectedUrl = isUsingOnePiece ? null : selectedItemUrls.get(getCategoryImageId(category));
 
