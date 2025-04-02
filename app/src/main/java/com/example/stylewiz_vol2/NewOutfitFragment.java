@@ -359,6 +359,7 @@ public class NewOutfitFragment extends Fragment {
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewItems);
         TextView textNoItems = view.findViewById(R.id.textNoItems);
+        LinearLayout btnRemoveImage = view.findViewById(R.id.btnRemoveItem); // Find the button
 
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
@@ -367,6 +368,22 @@ public class NewOutfitFragment extends Fragment {
         // Create the dialog FIRST and store it in a final variable
         final AlertDialog alertDialog = builder.create();
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        // Initially disable the remove button if no image is selected
+        String currentSelection = selectedItemUrls.getOrDefault(imageViewId, "none");
+        boolean hasImageSelected = currentSelection != null && !currentSelection.equals("none");
+        // Change background color based on selection
+        if (hasImageSelected) {
+            btnRemoveImage.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.holo_red_dark)); // Enabled color
+            btnRemoveImage.setAlpha(1f);
+            btnRemoveImage.setClickable(true);
+        } else {
+            btnRemoveImage.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.gray)); // Disabled color
+            btnRemoveImage.setAlpha(0.5f);
+            btnRemoveImage.setClickable(false);
+        }
+
+        btnRemoveImage.setEnabled(hasImageSelected); // Disable button if no image
 
 
         OutfitAdapter adapter = new OutfitAdapter(requireContext(), itemList, selectedItem -> {
@@ -402,6 +419,7 @@ public class NewOutfitFragment extends Fragment {
                                 }
                             });
                     selectedItemUrls.put(imageViewId, photoUrl);
+                    btnRemoveImage.setEnabled(true); // Enable button since an image is selected
 
                 } else {
                     Log.e("Image Selection", "Photo URL is empty or invalid");
@@ -422,6 +440,17 @@ public class NewOutfitFragment extends Fragment {
             isOnePieceSelected = false;
         }
         updateItemList(category, adapter, itemList, isOnePieceSelected, textNoItems, recyclerView);
+
+        // Button click removes the selected image
+        btnRemoveImage.setOnClickListener(v -> {
+            if (targetImageView != null) {
+                targetImageView.setImageResource(R.drawable.round_add_24); // Reset to default
+                targetImageView.setColorFilter(ContextCompat.getColor(requireContext(), R.color.gray), PorterDuff.Mode.SRC_IN);
+                selectedItemUrls.put(imageViewId, "none"); // Remove from selected list
+                btnRemoveImage.setEnabled(false); // Disable button since no image is selected
+            }
+            alertDialog.dismiss();
+        });
 
         // Show the dialog after setting up everything
         alertDialog.show();
