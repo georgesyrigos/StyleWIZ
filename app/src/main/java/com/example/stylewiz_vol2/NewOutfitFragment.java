@@ -478,8 +478,10 @@ public class NewOutfitFragment extends Fragment {
 
                             if (isUsingOnePiece && category.equals("Top")) {
                                 newItems.add(item);
+                                //check for already submitted item in one-piece layer
                             } else if (!isUsingOnePiece && firstSelectedUrl != null && firstSelectedUrl.equals(item.getPhotoUrl())) {
                                 continue;
+                                //check for already submitted item in top layer
                             } else {
                                 newItems.add(item);
                             }
