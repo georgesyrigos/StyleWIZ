@@ -79,12 +79,12 @@ public class SuggestionsFragment extends Fragment {
         // Remove previous content if any
         contentContainer.removeAllViews();
 
-        // Add content for "Occasion"
-        TextView content = new TextView(requireContext());
-        content.setText("Information for Occasion");
-        content.setTextSize(16);
-        content.setPadding(10, 10, 10, 10);
-        contentContainer.addView(content);
+        // Inflate and add the GridLayout for occasion dynamically
+        View styleGrid = getLayoutInflater().inflate(R.layout.style_selector, contentContainer, false);
+        contentContainer.addView(styleGrid);
+
+        // Set up the style selector (handle clicks)
+        setupStyleSelector(styleGrid);
     }
 
     private void displayTypeContent() {
@@ -126,6 +126,33 @@ public class SuggestionsFragment extends Fragment {
         View defaultSelectedView = seasonGrid.findViewById(R.id.seasonSpring);
         if (defaultSelectedView != null) {
             defaultSelectedView.setBackgroundResource(R.drawable.selected_background); // Pre-select Spring
+        }
+    }
+
+    private void setupStyleSelector(View rootView) {
+        GridLayout styleGrid = rootView.findViewById(R.id.styleGrid);
+
+        for (int i = 0; i < styleGrid.getChildCount(); i++) {
+            View item = styleGrid.getChildAt(i);
+
+            item.setOnClickListener(v -> {
+                // Clear selection
+                for (int j = 0; j < styleGrid.getChildCount(); j++) {
+                    styleGrid.getChildAt(j).setBackgroundColor(Color.TRANSPARENT);
+                }
+
+                // Highlight selected
+                v.setBackgroundResource(R.drawable.selected_background);
+
+                // Save selection
+                String selectedStyle = (String) v.getTag();
+                Log.d("SelectedStyle", selectedStyle);
+            });
+        }
+        // Optionally, pre-select one (e.g., Sport)
+        View defaultSelectedView = styleGrid.findViewById(R.id.styleSport);
+        if (defaultSelectedView != null) {
+            defaultSelectedView.setBackgroundResource(R.drawable.selected_background); // Pre-select Sport
         }
     }
 

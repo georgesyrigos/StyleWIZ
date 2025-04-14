@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/styleGrid"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:alignmentMode="alignMargins"
+    android:columnCount="2"
+    android:rowCount="3"
+    android:useDefaultMargins="true"
+    android:padding="12dp">
+
+    <!-- Sport -->
+    <TextView
+        android:id="@+id/styleSport"
+        style="@style/StyleTagText"
+        android:tag="sport"
+        android:text="Sport" />
+
+    <!-- Casual -->
+    <TextView
+        android:id="@+id/styleCasual"
+        style="@style/StyleTagText"
+        android:tag="casual"
+        android:text="Casual" />
+
+    <!-- Formal -->
+    <TextView
+        android:id="@+id/styleFormal"
+        style="@style/StyleTagText"
+        android:tag="formal"
+        android:text="Formal" />
+
+    <!-- Elegant -->
+    <TextView
+        android:id="@+id/styleElegant"
+        style="@style/StyleTagText"
+        android:tag="elegant"
+        android:text="Elegant" />
+
+    <!-- Streetwear -->
+    <TextView
+        android:id="@+id/styleStreetwear"
+        style="@style/StyleTagText"
+        android:tag="streetwear"
+        android:text="Streetwear" />
+
+    <!-- Bohemian -->
+    <TextView
+        android:id="@+id/styleWork"
+        style="@style/StyleTagText"
+        android:tag="bohemian"
+        android:text="Work" />
+</GridLayout>
