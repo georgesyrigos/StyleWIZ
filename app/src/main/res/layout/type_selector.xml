@@ -1,0 +1,85 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/typeContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="20dp"
+
+    android:padding="12dp">
+
+    <!-- Outfit Structure -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Outfit Type"
+        android:textStyle="bold"
+        android:layout_marginTop="15dp"
+        android:textSize="18sp"
+        android:paddingBottom="8dp"
+        android:fontFamily="@font/roboto" />
+
+    <GridLayout
+        android:id="@+id/outfitTypeGrid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="2"
+        android:layout_marginTop="20dp"
+        android:useDefaultMargins="true"
+        android:alignmentMode="alignMargins">
+
+        <TextView
+            android:id="@+id/typeOnePiece"
+            style="@style/StyleTagText"
+            android:layout_height="wrap_content"
+            android:tag="one_piece"
+            android:text="One-piece"/>
+
+        <TextView
+            android:id="@+id/typeTwoPiece"
+            style="@style/StyleTagText"
+            android:layout_height="wrap_content"
+            android:tag="two_piece"
+            android:text="Two-piece" />
+    </GridLayout>
+
+    <!-- Accessories -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Outfit Accessories"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:layout_marginTop="20dp"
+        android:paddingBottom="8dp"
+        android:fontFamily="@font/roboto" />
+
+    <GridLayout
+        android:id="@+id/accessoriesGrid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="3"
+        android:layout_marginTop="15dp"
+        android:useDefaultMargins="true"
+        android:alignmentMode="alignMargins">
+
+        <TextView
+            android:id="@+id/accessories0"
+            style="@style/StyleTagText"
+            android:layout_height="wrap_content"
+            android:tag="0"
+            android:text="0" />
+
+        <TextView
+            android:id="@+id/accessories1"
+            style="@style/StyleTagText"
+            android:tag="1"
+            android:text="1" />
+
+        <TextView
+            android:id="@+id/accessories2"
+            style="@style/StyleTagText"
+            android:tag="2"
+            android:text="2" />
+    </GridLayout>
+
+</LinearLayout>

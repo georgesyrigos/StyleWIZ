@@ -14,9 +14,16 @@ import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.function.Consumer;
+
 public class SuggestionsFragment extends Fragment {
     LinearLayout optionSeason, optionOccasion, optionType;
     FrameLayout contentContainer;
+
+    private String selectedSeasonTag = "spring";
+    private String selectedStyleTag = "sport";
+    private String selectedTypeTag = "one_piece";
+    private String selectedAccessoriesTag = "0";
 
 
     @Override
@@ -91,12 +98,12 @@ public class SuggestionsFragment extends Fragment {
         // Remove previous content if any
         contentContainer.removeAllViews();
 
-        // Add content for "Type"
-        TextView content = new TextView(requireContext());
-        content.setText("Information for Type");
-        content.setTextSize(16);
-        content.setPadding(10, 10, 10, 10);
-        contentContainer.addView(content);
+        // Inflate and add the GridLayout for type dynamically
+        View typeGrid = getLayoutInflater().inflate(R.layout.type_selector, contentContainer, false);
+        contentContainer.addView(typeGrid);
+
+        // Set up the type selector (handle clicks)
+        setupTypeSelector(typeGrid);
     }
 
     private void setupSeasonSelector(View rootView) {
@@ -105,27 +112,22 @@ public class SuggestionsFragment extends Fragment {
 
         for (int i = 0; i < seasonGrid.getChildCount(); i++) {
             View item = seasonGrid.getChildAt(i);
-
-            // Set an OnClickListener for each item in the GridLayout
             item.setOnClickListener(v -> {
-                // Clear selection (remove background) for all items
                 for (int j = 0; j < seasonGrid.getChildCount(); j++) {
-                    seasonGrid.getChildAt(j).setBackgroundColor(Color.TRANSPARENT);  // Reset background
+                    seasonGrid.getChildAt(j).setBackgroundColor(Color.TRANSPARENT);
                 }
 
-                // Set the background for the selected item
-                v.setBackgroundResource(R.drawable.selected_background); // Apply custom selected background
-
-                // Optionally, save the selected season
-                String selectedSeason = (String) v.getTag();
-                Log.d("SelectedSeason", selectedSeason);
+                v.setBackgroundResource(R.drawable.selected_background);
+                selectedSeasonTag = (String) v.getTag(); // Save selection
+                Log.d("SelectedSeason", selectedSeasonTag);
             });
-        }
 
-        // Optionally, pre-select one (e.g., Spring)
-        View defaultSelectedView = seasonGrid.findViewById(R.id.seasonSpring);
-        if (defaultSelectedView != null) {
-            defaultSelectedView.setBackgroundResource(R.drawable.selected_background); // Pre-select Spring
+            String tag = (String) item.getTag();
+            if (tag != null && tag.equals(selectedSeasonTag)) {
+                item.setBackgroundResource(R.drawable.selected_background);
+            }
+
+            
         }
     }
 
@@ -134,26 +136,65 @@ public class SuggestionsFragment extends Fragment {
 
         for (int i = 0; i < styleGrid.getChildCount(); i++) {
             View item = styleGrid.getChildAt(i);
-
             item.setOnClickListener(v -> {
-                // Clear selection
                 for (int j = 0; j < styleGrid.getChildCount(); j++) {
                     styleGrid.getChildAt(j).setBackgroundColor(Color.TRANSPARENT);
+                }
+
+                v.setBackgroundResource(R.drawable.selected_background);
+                selectedStyleTag = (String) v.getTag(); // Save selection
+                Log.d("SelectedStyle", selectedStyleTag);
+            });
+
+            // Restore previously selected
+            String tag = (String) item.getTag();
+            if (tag != null && tag.equals(selectedStyleTag)) {
+                item.setBackgroundResource(R.drawable.selected_background);
+            }
+        }
+    }
+
+    private void setupTypeSelector(View rootView) {
+        GridLayout outfitTypeGrid = rootView.findViewById(R.id.outfitTypeGrid);
+        GridLayout accessoriesGrid = rootView.findViewById(R.id.accessoriesGrid);
+
+        setupSingleSelection(outfitTypeGrid, selectedTypeTag, tag -> selectedTypeTag = tag);
+        setupSingleSelection(accessoriesGrid, selectedAccessoriesTag, tag -> selectedAccessoriesTag = tag);
+    }
+
+
+    private void setupSingleSelection(GridLayout grid, String selectedTag, Consumer<String> onSelect) {
+        for (int i = 0; i < grid.getChildCount(); i++) {
+            View item = grid.getChildAt(i);
+            String tag = (String) item.getTag();
+
+            // Pre-select the one matching selectedTag
+            if (tag != null && tag.equals(selectedTag)) {
+                item.setBackgroundResource(R.drawable.selected_background);
+            } else {
+                item.setBackgroundColor(Color.TRANSPARENT);
+            }
+
+            item.setOnClickListener(v -> {
+                // Clear previous selection
+                for (int j = 0; j < grid.getChildCount(); j++) {
+                    grid.getChildAt(j).setBackgroundColor(Color.TRANSPARENT);
                 }
 
                 // Highlight selected
                 v.setBackgroundResource(R.drawable.selected_background);
 
-                // Save selection
-                String selectedStyle = (String) v.getTag();
-                Log.d("SelectedStyle", selectedStyle);
+                // Pass selected tag to handler
+                String newTag = (String) v.getTag();
+                if (newTag != null) {
+                    onSelect.accept(newTag);
+                    Log.d("Selection", "Selected " + newTag);
+                }
             });
         }
-        // Optionally, pre-select one (e.g., Sport)
-        View defaultSelectedView = styleGrid.findViewById(R.id.styleSport);
-        if (defaultSelectedView != null) {
-            defaultSelectedView.setBackgroundResource(R.drawable.selected_background); // Pre-select Sport
-        }
     }
+
+
+
 
 }

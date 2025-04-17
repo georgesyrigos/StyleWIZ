@@ -4,6 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:alignmentMode="alignMargins"
+    android:layout_margin="20dp"
+
     android:columnCount="2"
     android:rowCount="3"
     android:useDefaultMargins="true"
@@ -30,12 +32,12 @@
         android:tag="formal"
         android:text="Formal" />
 
-    <!-- Elegant -->
+    <!-- Seasonal -->
     <TextView
-        android:id="@+id/styleElegant"
+        android:id="@+id/styleSeasonal"
         style="@style/StyleTagText"
-        android:tag="elegant"
-        android:text="Elegant" />
+        android:tag="seasonal"
+        android:text="Seasonal" />
 
     <!-- Streetwear -->
     <TextView
@@ -44,10 +46,10 @@
         android:tag="streetwear"
         android:text="Streetwear" />
 
-    <!-- Bohemian -->
+    <!-- Work -->
     <TextView
         android:id="@+id/styleWork"
         style="@style/StyleTagText"
-        android:tag="bohemian"
+        android:tag="work"
         android:text="Work" />
 </GridLayout>
