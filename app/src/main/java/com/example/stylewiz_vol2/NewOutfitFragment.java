@@ -516,11 +516,6 @@ public class NewOutfitFragment extends Fragment {
     }
 
     private void saveOutfit() {
-        if (selectedItemUrls.isEmpty()) {
-            Toast.makeText(requireContext(), "No items selected!", Toast.LENGTH_SHORT).show();
-            progressDialogHelper.dismissProgressDialog();
-            return;
-        }
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
@@ -571,53 +566,46 @@ public class NewOutfitFragment extends Fragment {
             outfitData.put("createdAt", com.google.firebase.Timestamp.now()); // Firestore timestamp
 
 
-            /*Check if the outfit is complete before saving**
+            // Check if the outfit is complete before saving
             boolean isComplete = false;
+
+            if (selectedItemUrls.size() < 3) {
+                Toast.makeText(requireContext(), "Outfit incomplete!", Toast.LENGTH_SHORT).show();
+                progressDialogHelper.dismissProgressDialog();
+                return;
+            }
+
             if (isOnePieceMode) {
-                if (!outfitData.get("one-piece").equals("none") && !outfitData.get("shoes").equals("none")) {
+                if (!outfitData.get("onePiece").equals("none") && !outfitData.get("shoes").equals("none")) {
                     isComplete = true;
                 }
             } else {
-                if (!outfitData.get("top1").equals("none") && !outfitData.get("bottom").equals("none") && !outfitData.get("shoes").equals("none")) {
+                if (!outfitData.get("top1").equals("none") &&
+                        !outfitData.get("bottom").equals("none") &&
+                        !outfitData.get("shoes").equals("none")) {
                     isComplete = true;
                 }
             }
 
             if (!isComplete) {
-                Toast.makeText(requireContext(), "Outfit incomplete! Please add the required items.", Toast.LENGTH_SHORT).show();
-                return;
-            }*/
+                Toast.makeText(requireContext(), "Outfit incomplete!", Toast.LENGTH_SHORT).show();
+                progressDialogHelper.dismissProgressDialog();
+            } else {
+                db.collection("users")
+                        .document(userId)
+                        .collection("outfits")
+                        .add(outfitData)
+                        .addOnSuccessListener(documentReference -> {
+                            Toast.makeText(requireContext(), "Outfit saved!", Toast.LENGTH_SHORT).show();
+                            resetImageViews();  // Reset images after saving
+                            progressDialogHelper.dismissProgressDialog();
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(requireContext(), "Error saving outfit.", Toast.LENGTH_SHORT).show();
+                            progressDialogHelper.dismissProgressDialog();
+                        });
+            }
 
-
-            /*List<Integer> allItemIds = Arrays.asList(
-                    R.id.imgAccessory1, R.id.imgAccessory2,
-                    R.id.imgOuterwear, R.id.imgTop1,
-                    R.id.imgTop2, R.id.imgBottom,
-                    R.id.imgOnePiece, R.id.imgLayerOnePiece,
-                    R.id.imgShoes
-            );
-
-            for (int imageViewId : allItemIds) {
-                String imageUrl = selectedItemUrls.getOrDefault(imageViewId, "none");
-                String itemType = getItemTypeFromId(imageViewId);
-                outfitData.put(itemType, imageUrl);
-            }*/
-
-            db.collection("users")
-                    .document(userId)
-                    .collection("outfits")
-                    .add(outfitData)
-                    .addOnSuccessListener(documentReference -> {
-                        Toast.makeText(requireContext(), "Outfit saved!", Toast.LENGTH_SHORT).show();
-                        resetImageViews();  // Reset images after saving
-                        progressDialogHelper.dismissProgressDialog();
-
-                    })
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(requireContext(), "Error saving outfit.", Toast.LENGTH_SHORT).show();
-                        progressDialogHelper.dismissProgressDialog();
-
-                    });
         }
     }
 
