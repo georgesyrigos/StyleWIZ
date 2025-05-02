@@ -173,8 +173,45 @@ public class NewOutfitFragment extends Fragment {
             }
         });
 
-        // Set a listener on the switch for One-Piece
+        // Set checkbox listener once outside the switch listener
+        chkLayerOnePiece.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (switchOnePiece.isChecked()) {
+                    if (isChecked) {
+                        imgLayerOnePiece.setVisibility(View.VISIBLE);
+                        imgLayerOnePiece.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (!selectedItemUrls.containsKey(R.id.imgOnePiece) ||
+                                        selectedItemUrls.get(R.id.imgOnePiece).equals("none")) {
 
+                                    tvWarningOnePiece.setVisibility(View.VISIBLE);
+                                    tvWarningOnePiece.setAlpha(1.0f);
+
+                                    new Handler().postDelayed(() -> {
+                                        tvWarningOnePiece.animate()
+                                                .alpha(0.0f)
+                                                .setDuration(1000)
+                                                .withEndAction(() -> tvWarningOnePiece.setVisibility(View.GONE))
+                                                .start();
+                                    }, 3000);
+
+                                    return;
+                                }
+
+                                showItemSelectionDialog("Top", imgLayerOnePiece, R.id.imgLayerOnePiece);
+                            }
+                        });
+                    } else {
+                        imgLayerOnePiece.setVisibility(View.INVISIBLE);
+                        imgLayerOnePiece.setOnClickListener(null);
+                    }
+                }
+            }
+        });
+
+        // Set a listener on the switch for One-Piece
         switchOnePiece.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -183,7 +220,6 @@ public class NewOutfitFragment extends Fragment {
                     topSection.setVisibility(View.GONE);
                     bottomSection.setVisibility(View.GONE);
 
-                    // Assign the click listener dynamically when switch is turned on
                     imgOnePiece.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -191,51 +227,42 @@ public class NewOutfitFragment extends Fragment {
                         }
                     });
 
-                    chkLayerOnePiece.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                            if (isChecked) {
-                                imgLayerOnePiece.setVisibility(View.VISIBLE);
-                                imgLayerOnePiece.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        if (!selectedItemUrls.containsKey(R.id.imgOnePiece) ||
-                                                selectedItemUrls.get(R.id.imgOnePiece).equals("none")) {
+                    // If the checkbox was already checked, manually trigger its effects
+                    if (chkLayerOnePiece.isChecked()) {
+                        imgLayerOnePiece.setVisibility(View.VISIBLE);
+                        imgLayerOnePiece.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (!selectedItemUrls.containsKey(R.id.imgOnePiece) ||
+                                        selectedItemUrls.get(R.id.imgOnePiece).equals("none")) {
 
-                                            // Show the warning message
-                                            tvWarningOnePiece.setVisibility(View.VISIBLE);
-                                            tvWarningOnePiece.setAlpha(1.0f); // Ensure full opacity
+                                    tvWarningOnePiece.setVisibility(View.VISIBLE);
+                                    tvWarningOnePiece.setAlpha(1.0f);
 
-                                            // Animate disappearance after 3 seconds
-                                            new Handler().postDelayed(() -> {
-                                                tvWarningOnePiece.animate()
-                                                        .alpha(0.0f)  // Fade out
-                                                        .setDuration(1000)  // 1 second fade duration
-                                                        .withEndAction(() -> tvWarningOnePiece.setVisibility(View.GONE))
-                                                        .start();
-                                            }, 3000);  // Show for 3 seconds before starting fade out
+                                    new Handler().postDelayed(() -> {
+                                        tvWarningOnePiece.animate()
+                                                .alpha(0.0f)
+                                                .setDuration(1000)
+                                                .withEndAction(() -> tvWarningOnePiece.setVisibility(View.GONE))
+                                                .start();
+                                    }, 3000);
 
-                                            return;  // Prevent further execution
-                                        }
+                                    return;
+                                }
 
-                                        showItemSelectionDialog("Top", imgLayerOnePiece, R.id.imgLayerOnePiece);
-                                    }
-                                });
-                            } else {
-                                imgLayerOnePiece.setVisibility(View.INVISIBLE);
-                                imgLayerOnePiece.setOnClickListener(null); // Remove click listener
+                                showItemSelectionDialog("Top", imgLayerOnePiece, R.id.imgLayerOnePiece);
                             }
-                        }
-                    });
+                        });
+                    }
 
                 } else {
                     onePieceSection.setVisibility(View.GONE);
                     topSection.setVisibility(View.VISIBLE);
                     bottomSection.setVisibility(View.VISIBLE);
 
-                    // Remove click listener when switch is off
                     imgOnePiece.setOnClickListener(null);
                     imgLayerOnePiece.setOnClickListener(null);
+                    imgLayerOnePiece.setVisibility(View.INVISIBLE);
                 }
             }
         });
