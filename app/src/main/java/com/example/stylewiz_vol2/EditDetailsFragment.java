@@ -48,7 +48,7 @@ public class EditDetailsFragment extends Fragment {
     private ImageView editDetailsImage, backButton, deleteButton;
     String edit_Category, item_StyleTag, item_Seasonality;
 
-    String[] category = {"Top", "Bottom", "Outwear", "Shoes", "Hats"};
+    String[] category = {"Top", "One-Piece", "Bottom", "Outerwear", "Shoes", "Accessory"};
     AutoCompleteTextView categoryDropdown, styleTagDropdown, seasonalityDropdown;
 
 

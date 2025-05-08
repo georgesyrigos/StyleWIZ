@@ -14,27 +14,11 @@
     tools:context=".NewItemFragment">
 
 
-    <TextView
-        android:id="@+id/textView9"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/roboto"
-        android:text="New Item Fragment"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.042" />
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="30dp"
         android:padding="10dp"
         android:gravity="center"
@@ -45,8 +29,8 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/selectImage"
-            android:layout_width="100sp"
-            android:layout_height="100sp"
+            android:layout_width="130sp"
+            android:layout_height="130sp"
             app:cardCornerRadius="10sp"
             app:cardElevation="5sp">
 

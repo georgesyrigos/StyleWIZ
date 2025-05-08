@@ -73,8 +73,8 @@ public class NewItemFragment extends Fragment {
     private Bitmap bitmap;
 
     String[] category = {"Top", "One-Piece", "Bottom", "Outerwear", "Shoes", "Accessory"};
-    String[] styleTag = {"Sport", "Casual", "Formal"};
-    String[] seasonality = {"Autumn/Fall", "Spring/Summer", "All season"};
+    String[] styleTag = {"Sport", "Casual", "Formal", "Seasonal", "Streetwear", "Work"};
+    String[] seasonality = {"Autumn/Winter", "Spring/Summer", "All season"};
     AutoCompleteTextView categoryDropdown, styleTagDropdown, seasonalityDropdown;
     private ProgressDialogHelper progressDialogHelper;
 
