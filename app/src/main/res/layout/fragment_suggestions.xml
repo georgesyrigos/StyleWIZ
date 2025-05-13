@@ -37,7 +37,7 @@
                     android:id="@+id/imgSeason"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:src="@drawable/outline_person_24"
+                    android:src="@drawable/seasons_svg"
                     android:scaleType="centerCrop" />
 
                 <TextView
@@ -60,9 +60,10 @@
 
                 <ImageView
                     android:id="@+id/imgOccasion"
+                    android:padding="3dp"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:src="@drawable/round_checkroom_24"
+                    android:src="@drawable/occasion_svg"
                     android:scaleType="centerCrop" />
 
                 <TextView
@@ -85,10 +86,11 @@
 
                 <ImageView
                     android:id="@+id/imgType"
+                    android:padding="3dp"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/round_home_24" />
+                    android:src="@drawable/type_svg" />
 
                 <TextView
                     android:layout_width="wrap_content"
