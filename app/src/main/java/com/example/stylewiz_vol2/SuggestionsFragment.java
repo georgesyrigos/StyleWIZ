@@ -1,5 +1,6 @@
 package com.example.stylewiz_vol2;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
@@ -32,6 +34,9 @@ public class SuggestionsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_suggestions, container, false);
 
+        loadUserPreferences(); //Load and store default values
+
+
         optionSeason = view.findViewById(R.id.optionSeason);
         optionOccasion = view.findViewById(R.id.optionOccasion);
         optionType = view.findViewById(R.id.optionType);
@@ -43,6 +48,11 @@ public class SuggestionsFragment extends Fragment {
         optionSeason.setOnClickListener(v -> selectOption(optionSeason, "season"));
         optionOccasion.setOnClickListener(v -> selectOption(optionOccasion, "occasion"));
         optionType.setOnClickListener(v -> selectOption(optionType, "type"));
+
+        Button btnApplyFilters = view.findViewById(R.id.btnApplyFilters);
+        btnApplyFilters.setOnClickListener(v -> {
+            logUserPreferences(); // Log the saved preferences
+        });
 
         return view;
     }
@@ -120,6 +130,9 @@ public class SuggestionsFragment extends Fragment {
                 v.setBackgroundResource(R.drawable.selected_background);
                 selectedSeasonTag = (String) v.getTag(); // Save selection
                 Log.d("SelectedSeason", selectedSeasonTag);
+
+                saveUserPreferences(); // <<-- Save immediately after change
+
             });
 
             String tag = (String) item.getTag();
@@ -144,6 +157,9 @@ public class SuggestionsFragment extends Fragment {
                 v.setBackgroundResource(R.drawable.selected_background);
                 selectedStyleTag = (String) v.getTag(); // Save selection
                 Log.d("SelectedStyle", selectedStyleTag);
+
+                saveUserPreferences();
+
             });
 
             // Restore previously selected
@@ -189,9 +205,56 @@ public class SuggestionsFragment extends Fragment {
                 if (newTag != null) {
                     onSelect.accept(newTag);
                     Log.d("Selection", "Selected " + newTag);
+
+                    saveUserPreferences();
                 }
             });
         }
+    }
+
+    private void loadUserPreferences() {
+        if (getContext() == null) return;
+
+        SharedPreferences prefs = getContext().getSharedPreferences("user_filters", getContext().MODE_PRIVATE);
+
+        // Load or fall back to default
+        selectedSeasonTag = prefs.getString("season", selectedSeasonTag); // "spring" by default
+        selectedStyleTag = prefs.getString("occasion", selectedStyleTag); // "sport" by default
+        selectedTypeTag = prefs.getString("outfit_type", selectedTypeTag); // "one_piece" by default
+        selectedAccessoriesTag = prefs.getString("accessories", selectedAccessoriesTag); // "0" by default
+
+        // Save these back in case this is the first run (harmless if already exists)
+        saveUserPreferences();
+    }
+
+    //save user preferences
+    private void saveUserPreferences() {
+        if (getContext() == null) return; // Prevent null context crash
+
+        getContext()
+                .getSharedPreferences("user_filters", getContext().MODE_PRIVATE)
+                .edit()
+                .putString("season", selectedSeasonTag)
+                .putString("occasion", selectedStyleTag)
+                .putString("outfit_type", selectedTypeTag)
+                .putString("accessories", selectedAccessoriesTag)
+                .apply();
+    }
+
+    private void logUserPreferences() {
+        if (getContext() == null) return;
+
+        SharedPreferences prefs = getContext().getSharedPreferences("user_filters", getContext().MODE_PRIVATE);
+
+        String season = prefs.getString("season", "not set");
+        String occasion = prefs.getString("occasion", "not set");
+        String type = prefs.getString("outfit_type", "not set");
+        String accessories = prefs.getString("accessories", "not set");
+
+        Log.d("USER_PREFERENCES", "Season: " + season);
+        Log.d("USER_PREFERENCES", "Occasion: " + occasion);
+        Log.d("USER_PREFERENCES", "Outfit Type: " + type);
+        Log.d("USER_PREFERENCES", "Accessories: " + accessories);
     }
 
 
