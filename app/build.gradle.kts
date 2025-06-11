@@ -47,6 +47,8 @@ dependencies {
     implementation("com.github.CanHub:Android-Image-Cropper:4.2.1")
     implementation("com.google.firebase:firebase-storage:21.0.1")
 
+    implementation("androidx.palette:palette:1.0.0")
+
 
 
     testImplementation("junit:junit:4.13.2")

@@ -16,6 +16,7 @@ import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 public class SuggestionsFragment extends Fragment {
@@ -51,8 +52,18 @@ public class SuggestionsFragment extends Fragment {
 
         Button btnApplyFilters = view.findViewById(R.id.btnApplyFilters);
         btnApplyFilters.setOnClickListener(v -> {
-            logUserPreferences(); // Log the saved preferences
+            logUserPreferences();
+
+            Log.d("DEBUG", "Apply Filters clicked");
+
+            OutfitGenerator.generateOutfits(requireContext(), outfits -> {
+                for (int i = 0; i < outfits.size(); i++) {
+                    List<String> outfit = outfits.get(i);
+                    Log.d("OUTFIT_" + (i + 1), outfit.toString());
+                }
+            });
         });
+
 
         return view;
     }

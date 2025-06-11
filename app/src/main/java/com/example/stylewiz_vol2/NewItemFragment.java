@@ -20,6 +20,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.palette.graphics.Palette;
 
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -54,6 +55,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.InputStream;
+import java.util.List;
 
 public class NewItemFragment extends Fragment {
 
@@ -393,36 +395,41 @@ public class NewItemFragment extends Fragment {
     /*private void identifyDominantColor(Bitmap bitmap) {
         if (bitmap == null) return;
 
-        // Scale down the image to improve performance
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 50, 50, false);
+        // Downscale bitmap for performance
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, false);
 
-        int[] colorArray = new int[scaledBitmap.getWidth() * scaledBitmap.getHeight()];
-        scaledBitmap.getPixels(colorArray, 0, scaledBitmap.getWidth(), 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight());
+        // Use Palette to extract dominant color
+        Palette.from(scaledBitmap).generate(new Palette.PaletteAsyncListener() {
+            @Override
+            public void onGenerated(Palette palette) {
+                List<Palette.Swatch> swatches = palette.getSwatches();
+                if (swatches == null || swatches.isEmpty()) return;
 
-        int r = 0, g = 0, b = 0;
-        int totalPixels = colorArray.length;
+                Palette.Swatch bestSwatch = null;
+                int maxScore = 0;
 
-        // Loop through all pixels to calculate average color
-        for (int color : colorArray) {
-            r += Color.red(color);
-            g += Color.green(color);
-            b += Color.blue(color);
-        }
+                for (Palette.Swatch swatch : swatches) {
+                    // Score based on saturation and population
+                    float[] hsl = swatch.getHsl();
+                    int score = (int) (swatch.getPopulation() * hsl[1]); // population * saturation
+                    if (score > maxScore) {
+                        maxScore = score;
+                        bestSwatch = swatch;
+                    }
+                }
 
-        // Calculate the average RGB values
-        r /= totalPixels;
-        g /= totalPixels;
-        b /= totalPixels;
+                if (bestSwatch != null) {
+                    int dominantColor = bestSwatch.getRgb();
+                    String hexColor = String.format("#%06X", (0xFFFFFF & dominantColor));
 
-        // Create a color string in HEX format
-        String hexColor = String.format("#%02x%02x%02x", r, g, b);
+                    mCol.setText(hexColor);
+                    mCol.setBackgroundColor(dominantColor);
+                }
+            }
+        });
 
-        // Set the identified color to the EditText (or use elsewhere)
-        mCol.setText(hexColor);
-
-        // Optionally, set the background color of the color field for preview
-        mCol.setBackgroundColor(Color.rgb(r, g, b));
     }*/
+
 
 
 
