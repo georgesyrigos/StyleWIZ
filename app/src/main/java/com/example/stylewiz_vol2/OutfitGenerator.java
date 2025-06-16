@@ -47,9 +47,9 @@ public class OutfitGenerator {
     public static void generateOutfits(Context context, OutfitCallback callback) {
         SharedPreferences prefs = context.getSharedPreferences("user_filters", Context.MODE_PRIVATE);
 
-        String season = prefs.getString("season", "spring");
-        String style = prefs.getString("occasion", "sport");
-        String outfitType = prefs.getString("outfit_type", "one_piece");
+        String season = prefs.getString("season", "winter");
+        String style = prefs.getString("occasion", "casual");
+        String outfitType = prefs.getString("outfit_type", "two_piece");
         boolean includeAccessories = prefs.getString("accessories", "0").equals("1");
 
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -82,13 +82,15 @@ public class OutfitGenerator {
                 String category = (String) item.get("category");
                 if (category == null) continue;
 
+                category = category.toLowerCase(); // Normalize
+
                 switch (category) {
                     case "top": tops.add(item); break;
                     case "bottom": bottoms.add(item); break;
                     case "shoes": shoes.add(item); break;
                     case "outerwear": outerwear.add(item); break;
                     case "accessories": accessories.add(item); break;
-                    case "onepiece": onePieces.add(item); break;
+                    case "one-piece": onePieces.add(item); break;
                 }
             }
 
@@ -152,7 +154,7 @@ public class OutfitGenerator {
             String itemStyle = (String) item.get("styleTag");
             String color = (String) item.get("color");
 
-            if (season.equals(itemSeason)) score += 2;
+            if (isSeasonMatch(season, itemSeason)) score += 2;
             if (style.equals(itemStyle)) score += 2;
         }
 
@@ -186,6 +188,24 @@ public class OutfitGenerator {
         if (color.contains("beige")) return "beige";
         if (color.contains("pink")) return "pink";
         return "gray"; // default fallback
+    }
+
+    private static boolean isSeasonMatch(String userSeason, String itemSeason) {
+        if (itemSeason == null) return false;
+        itemSeason = itemSeason.toLowerCase();
+
+        switch (userSeason.toLowerCase()) {
+            case "spring":
+            case "summer":
+                return itemSeason.contains("spring/summer") || itemSeason.contains("all");
+            case "autumn":
+            case "fall":
+            case "winter":
+                return itemSeason.contains("autumn/winter") || itemSeason.contains("fall/winter") || itemSeason.contains("all");
+            case "all":
+            default:
+                return true; // Accept all if user selected "all"
+        }
     }
 
     private static class OutfitScore {

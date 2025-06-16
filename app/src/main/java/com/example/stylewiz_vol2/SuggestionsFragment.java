@@ -35,7 +35,7 @@ public class SuggestionsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_suggestions, container, false);
 
-        loadUserPreferences(); //Load and store default values
+        //loadUserPreferences(); //Load and store default values
 
 
         optionSeason = view.findViewById(R.id.optionSeason);
@@ -45,6 +45,7 @@ public class SuggestionsFragment extends Fragment {
 
         // Set default selected (initial selection if needed)
         selectOption(optionSeason, "season");
+
 
         optionSeason.setOnClickListener(v -> selectOption(optionSeason, "season"));
         optionOccasion.setOnClickListener(v -> selectOption(optionOccasion, "occasion"));
