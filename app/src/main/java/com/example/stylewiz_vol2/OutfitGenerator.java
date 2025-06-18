@@ -10,6 +10,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -23,34 +24,53 @@ public class OutfitGenerator {
 
     private static final String[] COLORS = {"black", "white", "gray", "red", "blue", "green", "yellow", "brown", "beige", "pink", "gold"};
 
+    private static final Map<String, List<String>> rankedMatches = new HashMap<>();
+
     private static final Map<String, Map<String, Integer>> colorScores = new HashMap<>();
 
     static {
-        // Compatibility scores between 10 basic colors (values 1 to 5)
+        // Ranked matches (best to good) — max 6 per color
+        rankedMatches.put("black", Arrays.asList("white", "gray", "red", "blue", "gold", "pink"));
+        rankedMatches.put("white", Arrays.asList("black", "blue", "gray", "pink", "red", "gold"));
+        rankedMatches.put("gray", Arrays.asList("white", "black", "blue", "pink", "red", "green"));
+        rankedMatches.put("red", Arrays.asList("black", "white", "gray", "beige", "blue", "pink"));
+        rankedMatches.put("blue", Arrays.asList("white", "gray", "black", "pink", "gold", "red"));
+        rankedMatches.put("green", Arrays.asList("white", "beige", "brown", "gray", "black", "yellow"));
+        rankedMatches.put("yellow", Arrays.asList("blue", "white", "gray", "brown", "black", "green"));
+        rankedMatches.put("brown", Arrays.asList("beige", "green", "yellow", "white", "black", "gold"));
+        rankedMatches.put("beige", Arrays.asList("brown", "white", "green", "gray", "black", "gold"));
+        rankedMatches.put("pink", Arrays.asList("gray", "white", "black", "blue", "red", "gold"));
+        rankedMatches.put("gold", Arrays.asList("black", "white", "blue", "pink", "brown", "beige"));
+
+        // Build the colorScores matrix with 7-point system
         for (String base : COLORS) {
             colorScores.put(base, new HashMap<>());
+            List<String> ranked = rankedMatches.getOrDefault(base, new ArrayList<>());
+
             for (String other : COLORS) {
+                int score;
                 if (base.equals(other)) {
-                    colorScores.get(base).put(other, 5);
+                    score = 7; // Exact match
                 } else {
-                    colorScores.get(base).put(other, 3); // Simple average
+                    int index = ranked.indexOf(other);
+                    score = (index >= 0 && index < 7) ? 7 - index : 1; // Ranked 7→1, else 1
                 }
+                colorScores.get(base).put(other, score);
             }
         }
-        // Manual tweaks
-        colorScores.get("black").put("white", 5);
-        colorScores.get("blue").put("white", 5);
-        colorScores.get("red").put("green", 2);
-        colorScores.get("yellow").put("gray", 2);
     }
+
 
     public static void generateOutfits(Context context, OutfitCallback callback) {
         SharedPreferences prefs = context.getSharedPreferences("user_filters", Context.MODE_PRIVATE);
 
-        String season = prefs.getString("season", "winter");
-        String style = prefs.getString("occasion", "casual");
-        String outfitType = prefs.getString("outfit_type", "two_piece");
+        String season = prefs.getString("season", "spring");
+        String style = prefs.getString("occasion", "sport");
+        String outfitType = prefs.getString("outfit_type", "one_piece");
         boolean includeAccessories = prefs.getString("accessories", "0").equals("1");
+        String outfitAccessories = prefs.getString("accessories", "no");
+        String outfitOuterwear = prefs.getString("outerwear", "no");
+
 
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         CollectionReference
@@ -103,7 +123,7 @@ public class OutfitGenerator {
                             List<Map<String, Object>> outfit = new ArrayList<>();
                             outfit.add(one);
                             outfit.add(shoe);
-                            outfit.add(out);
+                            //outfit.add(out);
                             if (includeAccessories && !accessories.isEmpty())
                                 outfit.add(accessories.get(0));
                             int score = calculateScore(outfit, season, style);
@@ -120,7 +140,7 @@ public class OutfitGenerator {
                                 outfit.add(top);
                                 outfit.add(bottom);
                                 outfit.add(shoe);
-                                outfit.add(out);
+                                //outfit.add(out);
                                 if (includeAccessories && !accessories.isEmpty())
                                     outfit.add(accessories.get(0));
                                 int score = calculateScore(outfit, season, style);
@@ -168,6 +188,7 @@ public class OutfitGenerator {
         return score;
     }
 
+    // Get the compatibility score between two colors (normalized)
     private static int getColorScore(String colorA, String colorB) {
         if (colorA == null || colorB == null) return 0;
         colorA = normalizeColor(colorA);
@@ -175,6 +196,7 @@ public class OutfitGenerator {
         return colorScores.getOrDefault(colorA, new HashMap<>()).getOrDefault(colorB, 1);
     }
 
+    // Normalize incoming color string to match internal keys
     private static String normalizeColor(String color) {
         color = color.toLowerCase();
         if (color.contains("white")) return "white";
@@ -187,7 +209,8 @@ public class OutfitGenerator {
         if (color.contains("brown")) return "brown";
         if (color.contains("beige")) return "beige";
         if (color.contains("pink")) return "pink";
-        return "gray"; // default fallback
+        if (color.contains("gold")) return "gold";
+        return "gray"; // Default fallback
     }
 
     private static boolean isSeasonMatch(String userSeason, String itemSeason) {

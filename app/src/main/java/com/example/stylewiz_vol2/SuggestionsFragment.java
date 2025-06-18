@@ -26,7 +26,8 @@ public class SuggestionsFragment extends Fragment {
     private String selectedSeasonTag = "spring";
     private String selectedStyleTag = "sport";
     private String selectedTypeTag = "one_piece";
-    private String selectedAccessoriesTag = "0";
+    private String selectedAccessoriesTag = "no";
+    private String selectedOuterwearTag = "no";
 
 
     @Override
@@ -185,9 +186,11 @@ public class SuggestionsFragment extends Fragment {
     private void setupTypeSelector(View rootView) {
         GridLayout outfitTypeGrid = rootView.findViewById(R.id.outfitTypeGrid);
         GridLayout accessoriesGrid = rootView.findViewById(R.id.accessoriesGrid);
+        GridLayout outerwearGrid = rootView.findViewById(R.id.outerwearGrid);
 
         setupSingleSelection(outfitTypeGrid, selectedTypeTag, tag -> selectedTypeTag = tag);
         setupSingleSelection(accessoriesGrid, selectedAccessoriesTag, tag -> selectedAccessoriesTag = tag);
+        setupSingleSelection(outerwearGrid, selectedOuterwearTag, tag -> selectedOuterwearTag = tag);
     }
 
 
@@ -233,7 +236,8 @@ public class SuggestionsFragment extends Fragment {
         selectedSeasonTag = prefs.getString("season", selectedSeasonTag); // "spring" by default
         selectedStyleTag = prefs.getString("occasion", selectedStyleTag); // "sport" by default
         selectedTypeTag = prefs.getString("outfit_type", selectedTypeTag); // "one_piece" by default
-        selectedAccessoriesTag = prefs.getString("accessories", selectedAccessoriesTag); // "0" by default
+        selectedAccessoriesTag = prefs.getString("accessories", selectedAccessoriesTag); // "no" by default
+        selectedOuterwearTag = prefs.getString("outerwear", selectedOuterwearTag); // "no" by default
 
         // Save these back in case this is the first run (harmless if already exists)
         saveUserPreferences();
@@ -250,6 +254,7 @@ public class SuggestionsFragment extends Fragment {
                 .putString("occasion", selectedStyleTag)
                 .putString("outfit_type", selectedTypeTag)
                 .putString("accessories", selectedAccessoriesTag)
+                .putString("outerwear", selectedOuterwearTag)
                 .apply();
     }
 
@@ -262,11 +267,13 @@ public class SuggestionsFragment extends Fragment {
         String occasion = prefs.getString("occasion", "not set");
         String type = prefs.getString("outfit_type", "not set");
         String accessories = prefs.getString("accessories", "not set");
+        String outerwear = prefs.getString("outerwear", "not set");
 
         Log.d("USER_PREFERENCES", "Season: " + season);
         Log.d("USER_PREFERENCES", "Occasion: " + occasion);
         Log.d("USER_PREFERENCES", "Outfit Type: " + type);
         Log.d("USER_PREFERENCES", "Accessories: " + accessories);
+        Log.d("USER_PREFERENCES", "Outerwear: " + outerwear);
     }
 
 
