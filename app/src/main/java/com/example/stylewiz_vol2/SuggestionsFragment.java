@@ -4,9 +4,14 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,18 +21,26 @@ import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
 public class SuggestionsFragment extends Fragment {
     LinearLayout optionSeason, optionOccasion, optionType;
     FrameLayout contentContainer;
-
     private String selectedSeasonTag = "spring";
     private String selectedStyleTag = "sport";
     private String selectedTypeTag = "one_piece";
     private String selectedAccessoriesTag = "no";
     private String selectedOuterwearTag = "no";
+    private List<OutfitSuggestion> infiniteSuggestions;
+    private int middleIndex;
+    FirebaseFirestore db;
 
 
     @Override
@@ -52,18 +65,118 @@ public class SuggestionsFragment extends Fragment {
         optionOccasion.setOnClickListener(v -> selectOption(optionOccasion, "occasion"));
         optionType.setOnClickListener(v -> selectOption(optionType, "type"));
 
+        //Additions for the carousel
         Button btnApplyFilters = view.findViewById(R.id.btnApplyFilters);
+        LinearLayout overlayContainer = view.findViewById(R.id.overlayCarouselContainer);
+        RecyclerView suggestionsRecycler = view.findViewById(R.id.suggestionsRecycler);
+        Button closeButton = view.findViewById(R.id.btnCloseCarousel);
+        /*
+
+        // Prepare repeated suggestions (simulate infinite scroll)
+        List<OutfitSuggestion> baseSuggestions = Arrays.asList(
+                new OutfitSuggestion("Sporty Spring", "Light and comfy", R.drawable.baseline_arrow_left_24),
+                new OutfitSuggestion("Summer Casual", "Stay cool", R.drawable.baseline_arrow_left_24),
+                new OutfitSuggestion("Chic Fall", "Warm layers", R.drawable.baseline_arrow_left_24)
+        );
+
+        infiniteSuggestions = new ArrayList<>();
+        for (int i = 0; i < 10; i++) { // Repeat 10 times
+            infiniteSuggestions.addAll(baseSuggestions);
+        }
+        middleIndex = infiniteSuggestions.size() / 2;
+
+        // Setup carousel once
+        setupCarouselRecycler(suggestionsRecycler, middleIndex);*/
+
         btnApplyFilters.setOnClickListener(v -> {
             logUserPreferences();
 
             Log.d("DEBUG", "Apply Filters clicked");
 
-            OutfitGenerator.generateOutfits(requireContext(), outfits -> {
+            /*OutfitGenerator.generateOutfits(requireContext(), outfits -> {
                 for (int i = 0; i < outfits.size(); i++) {
                     List<String> outfit = outfits.get(i);
                     Log.d("OUTFIT_" + (i + 1), outfit.toString());
                 }
+            });*/
+            OutfitGenerator.generateOutfits(requireContext(), outfits -> {
+                List<OutfitSuggestion> baseSuggestions = new ArrayList<>();
+
+                String outerwearText = selectedOuterwearTag.equals("no") ? "without outerwear" : "with outerwear";
+
+                //Initialize firestore
+                db = FirebaseFirestore.getInstance();
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                for (int i = 0; i < outfits.size(); i++) {
+                    List<String> outfitItemIds = outfits.get(i);
+                    // Retrieve each item's imageUrl
+                    List<String> imageUrls = new ArrayList<>();
+
+                    for (String itemId : outfitItemIds) {
+                        String userId = user.getUid();
+                        db.collection("users")
+                                .document(userId)
+                                .collection("wardrobe")
+                                .document(itemId) // 🔑 specify the document ID here
+                                .get()
+                                .addOnSuccessListener(documentSnapshot -> {
+                                    if (documentSnapshot.exists()) {
+                                        DataClass item = documentSnapshot.toObject(DataClass.class);
+                                        if (item != null && item.getPhotoUrl() != null) {
+                                            imageUrls.add(item.getPhotoUrl());
+                                        }
+                                    }
+
+                                    // ✅ Optional: If you need to update the UI after all items are loaded,
+                                    // check here if imageUrls.size() == outfitItemIds.size()
+                                    SuggestionAdapter adapter = new SuggestionAdapter(infiniteSuggestions);
+                                    suggestionsRecycler.setAdapter(adapter);
+
+                                    overlayContainer.setVisibility(View.VISIBLE);
+
+                                    suggestionsRecycler.post(() -> {
+                                        RecyclerView.LayoutManager layoutManager = suggestionsRecycler.getLayoutManager();
+                                        if (layoutManager instanceof LinearLayoutManager) {
+                                            ((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(middleIndex, 0);
+                                        }
+                                    });
+
+
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("FirestoreError", "Failed to fetch item " + itemId, e);
+                                });
+                    }
+
+
+                    String title = "Outfit " + (i + 1);
+
+                    String desc = String.format(
+                            "%s %s outfit %s",
+                            capitalize(selectedStyleTag),
+                            capitalize(selectedSeasonTag),
+                            outerwearText
+                    );
+
+                    // Pass the list of image URLs instead of a single image
+                    baseSuggestions.add(new OutfitSuggestion(title, desc, imageUrls));
+
+                    Log.d("OUTFIT_" + (i + 1), outfitItemIds.toString());
+                }
+
+                // Build infinite suggestions by repeating baseSuggestions
+                infiniteSuggestions = new ArrayList<>();
+                for (int i = 0; i < 10; i++) {
+                    infiniteSuggestions.addAll(baseSuggestions);
+                }
+
+                middleIndex = infiniteSuggestions.size() / 2;
+
+                // Setup carousel here with the new data
+                setupCarouselRecycler(suggestionsRecycler, middleIndex);
             });
+
         });
 
 
@@ -275,6 +388,61 @@ public class SuggestionsFragment extends Fragment {
         Log.d("USER_PREFERENCES", "Accessories: " + accessories);
         Log.d("USER_PREFERENCES", "Outerwear: " + outerwear);
     }
+
+    //Carousel setup
+    private void setupCarouselRecycler(RecyclerView recyclerView, int middleIndex) {
+        int cardWidthPx = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                300,
+                recyclerView.getResources().getDisplayMetrics()
+        );
+        int padding = (recyclerView.getResources().getDisplayMetrics().widthPixels - cardWidthPx) / 2;
+
+        recyclerView.setPadding(padding, 0, padding, 0);
+        recyclerView.setClipToPadding(false);
+        recyclerView.setClipChildren(false);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+
+        new LinearSnapHelper().attachToRecyclerView(recyclerView);
+
+        // Scaling effect on scroll
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int center = recyclerView.getWidth() / 2;
+                for (int i = 0; i < recyclerView.getChildCount(); i++) {
+                    View child = recyclerView.getChildAt(i);
+                    int childCenter = (child.getLeft() + child.getRight()) / 2;
+                    int distance = Math.abs(center - childCenter);
+                    float scale = 1 - (distance / (float) center) * 0.15f;
+                    scale = Math.max(0.85f, scale); // make side cards closer in size
+                    child.setScaleX(scale);
+                    child.setScaleY(scale);
+                    child.setAlpha(scale); // optional fade
+                }
+            }
+
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                LinearLayoutManager lm = (LinearLayoutManager) recyclerView.getLayoutManager();
+                int first = lm.findFirstVisibleItemPosition();
+                int last = lm.findLastVisibleItemPosition();
+                if (first <= 2 || last >= (lm.getItemCount() - 2)) {
+                    recyclerView.scrollToPosition(middleIndex);
+                }
+            }
+        });
+    }
+
+    private String capitalize(String input) {
+        if (input == null || input.isEmpty()) return input;
+        return input.substring(0,1).toUpperCase() + input.substring(1);
+    }
+
 
 
 
