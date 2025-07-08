@@ -90,6 +90,8 @@ public class SuggestionsFragment extends Fragment {
 
         btnApplyFilters.setOnClickListener(v -> {
             logUserPreferences();
+            btnApplyFilters.setVisibility(View.GONE);
+
 
             Log.d("DEBUG", "Apply Filters clicked");
 
@@ -176,6 +178,12 @@ public class SuggestionsFragment extends Fragment {
                 // Setup carousel here with the new data
                 setupCarouselRecycler(suggestionsRecycler, middleIndex);
             });
+
+        });
+
+        closeButton.setOnClickListener(v -> {
+            overlayContainer.setVisibility(View.GONE);
+            btnApplyFilters.setVisibility(View.VISIBLE);
 
         });
 
@@ -405,7 +413,14 @@ public class SuggestionsFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
-        new LinearSnapHelper().attachToRecyclerView(recyclerView);
+        //new LinearSnapHelper().attachToRecyclerView(recyclerView);
+        // ✅ Prevent multiple SnapHelpers attached
+        if (recyclerView.getOnFlingListener() != null) {
+            recyclerView.setOnFlingListener(null);
+        }
+        LinearSnapHelper snapHelper = new LinearSnapHelper();
+        snapHelper.attachToRecyclerView(recyclerView);
+
 
         // Scaling effect on scroll
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {

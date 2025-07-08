@@ -40,22 +40,36 @@ public class SuggestionAdapter extends RecyclerView.Adapter<SuggestionAdapter.Su
         holder.imagesContainer.removeAllViews();
         for (String imageUrl : suggestion.getImageUrls()) {
             ImageView imageView = new ImageView(holder.imagesContainer.getContext());
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    0,
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    1.0f
-            );
-            params.setMargins(4, 0, 4, 0);
-            imageView.setLayoutParams(params);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            LinearLayout.LayoutParams params;
 
-            // Load image from URL using Glide
+            // Check orientation dynamically if needed
+            if (holder.imagesContainer.getOrientation() == LinearLayout.VERTICAL) {
+                params = new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        0,
+                        1.0f
+                );
+            } else {
+                params = new LinearLayout.LayoutParams(
+                        0,
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        1.0f
+                );
+            }
+
+            params.setMargins(4, 4, 4, 4);
+            imageView.setLayoutParams(params);
+            //imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
+            // If using Glide for Firestore URLs
             Glide.with(holder.imagesContainer.getContext())
                     .load(imageUrl)
                     .into(imageView);
 
             holder.imagesContainer.addView(imageView);
         }
+
 
     }
 

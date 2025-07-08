@@ -2,7 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="240dp"
-    android:layout_height="wrap_content"
+    android:layout_height="450dp"
     card_view:cardCornerRadius="12dp"
     android:layout_marginTop="15dp"
     android:layout_marginBottom="15dp"
@@ -10,15 +10,15 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="12dp">
 
         <LinearLayout
             android:id="@+id/imagesContainer"
             android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:orientation="horizontal"
+            android:layout_height="350dp"
+            android:orientation="vertical"
             android:gravity="center"
             android:weightSum="3">
             <!-- Images will be added programmatically -->
