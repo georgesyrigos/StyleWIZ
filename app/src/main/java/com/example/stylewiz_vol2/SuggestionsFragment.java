@@ -90,7 +90,6 @@ public class SuggestionsFragment extends Fragment {
 
         btnApplyFilters.setOnClickListener(v -> {
             logUserPreferences();
-            btnApplyFilters.setVisibility(View.GONE);
 
 
             Log.d("DEBUG", "Apply Filters clicked");
@@ -120,7 +119,7 @@ public class SuggestionsFragment extends Fragment {
                         db.collection("users")
                                 .document(userId)
                                 .collection("wardrobe")
-                                .document(itemId) // 🔑 specify the document ID here
+                                .document(itemId)
                                 .get()
                                 .addOnSuccessListener(documentSnapshot -> {
                                     if (documentSnapshot.exists()) {
@@ -152,7 +151,16 @@ public class SuggestionsFragment extends Fragment {
                     }
 
 
-                    String title = "Outfit " + (i + 1);
+                    String title;
+                    if (i == 0) {
+                        title = "Best outfit";
+                    } else if (i == 1) {
+                        title = "Second best outfit";
+                    } else if (i == 2) {
+                        title = "Third best outfit";
+                    } else {
+                        title = "Outfit " + (i + 1);
+                    }
 
                     String desc = String.format(
                             "%s %s outfit %s",
@@ -183,7 +191,13 @@ public class SuggestionsFragment extends Fragment {
 
         closeButton.setOnClickListener(v -> {
             overlayContainer.setVisibility(View.GONE);
-            btnApplyFilters.setVisibility(View.VISIBLE);
+
+            // Reset contentContainer layout params if needed
+            contentContainer.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+            contentContainer.requestLayout();
+
+            // Re-display season selector or other content as appropriate
+            displaySeasonSelector();
 
         });
 

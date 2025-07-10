@@ -59,8 +59,8 @@ public class SuggestionAdapter extends RecyclerView.Adapter<SuggestionAdapter.Su
 
             params.setMargins(4, 4, 4, 4);
             imageView.setLayoutParams(params);
-            //imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            //imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
 
             // If using Glide for Firestore URLs
             Glide.with(holder.imagesContainer.getContext())
