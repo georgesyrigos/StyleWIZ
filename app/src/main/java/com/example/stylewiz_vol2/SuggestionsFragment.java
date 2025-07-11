@@ -50,7 +50,7 @@ public class SuggestionsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_suggestions, container, false);
 
         //loadUserPreferences(); //Load and store default values
-
+        resetUserPreferencesToDefaults();
 
         optionSeason = view.findViewById(R.id.optionSeason);
         optionOccasion = view.findViewById(R.id.optionOccasion);
@@ -70,23 +70,7 @@ public class SuggestionsFragment extends Fragment {
         LinearLayout overlayContainer = view.findViewById(R.id.overlayCarouselContainer);
         RecyclerView suggestionsRecycler = view.findViewById(R.id.suggestionsRecycler);
         Button closeButton = view.findViewById(R.id.btnCloseCarousel);
-        /*
 
-        // Prepare repeated suggestions (simulate infinite scroll)
-        List<OutfitSuggestion> baseSuggestions = Arrays.asList(
-                new OutfitSuggestion("Sporty Spring", "Light and comfy", R.drawable.baseline_arrow_left_24),
-                new OutfitSuggestion("Summer Casual", "Stay cool", R.drawable.baseline_arrow_left_24),
-                new OutfitSuggestion("Chic Fall", "Warm layers", R.drawable.baseline_arrow_left_24)
-        );
-
-        infiniteSuggestions = new ArrayList<>();
-        for (int i = 0; i < 10; i++) { // Repeat 10 times
-            infiniteSuggestions.addAll(baseSuggestions);
-        }
-        middleIndex = infiniteSuggestions.size() / 2;
-
-        // Setup carousel once
-        setupCarouselRecycler(suggestionsRecycler, middleIndex);*/
 
         btnApplyFilters.setOnClickListener(v -> {
             logUserPreferences();
@@ -196,7 +180,10 @@ public class SuggestionsFragment extends Fragment {
             contentContainer.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
             contentContainer.requestLayout();
 
+            optionOccasion.setBackgroundColor(Color.TRANSPARENT);
+            optionType.setBackgroundColor(Color.TRANSPARENT);
             // Re-display season selector or other content as appropriate
+            optionSeason.setBackgroundResource(R.drawable.selected_background);
             displaySeasonSelector();
 
         });
@@ -376,6 +363,19 @@ public class SuggestionsFragment extends Fragment {
 
         // Save these back in case this is the first run (harmless if already exists)
         saveUserPreferences();
+    }
+
+    private void resetUserPreferencesToDefaults() {
+        if (getContext() == null) return;
+
+        SharedPreferences prefs = getContext().getSharedPreferences("user_filters", getContext().MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("season", "spring");
+        editor.putString("occasion", "sport");
+        editor.putString("outfit_type", "one_piece");
+        editor.putString("accessories", "no");
+        editor.putString("outerwear", "no");
+        editor.apply();
     }
 
     //save user preferences
