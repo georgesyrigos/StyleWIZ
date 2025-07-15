@@ -19,8 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="350dp"
             android:orientation="vertical"
-            android:gravity="center"
-            android:weightSum="3">
+            android:gravity="center">
             <!-- Images will be added programmatically -->
         </LinearLayout>
 

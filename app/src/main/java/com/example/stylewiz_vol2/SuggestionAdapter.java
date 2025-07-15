@@ -12,7 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SuggestionAdapter extends RecyclerView.Adapter<SuggestionAdapter.SuggestionViewHolder> {
 
@@ -38,6 +44,10 @@ public class SuggestionAdapter extends RecyclerView.Adapter<SuggestionAdapter.Su
 
         // Populate images dynamically
         holder.imagesContainer.removeAllViews();
+
+        int numImages = suggestion.getImageUrls().size();
+        holder.imagesContainer.setWeightSum(numImages);
+
         for (String imageUrl : suggestion.getImageUrls()) {
             ImageView imageView = new ImageView(holder.imagesContainer.getContext());
             LinearLayout.LayoutParams params;
@@ -68,9 +78,8 @@ public class SuggestionAdapter extends RecyclerView.Adapter<SuggestionAdapter.Su
                     .into(imageView);
 
             holder.imagesContainer.addView(imageView);
+
         }
-
-
     }
 
     @Override

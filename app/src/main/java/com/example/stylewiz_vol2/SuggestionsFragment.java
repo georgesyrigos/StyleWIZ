@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -28,6 +29,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public class SuggestionsFragment extends Fragment {
@@ -69,21 +71,13 @@ public class SuggestionsFragment extends Fragment {
         Button btnApplyFilters = view.findViewById(R.id.btnApplyFilters);
         LinearLayout overlayContainer = view.findViewById(R.id.overlayCarouselContainer);
         RecyclerView suggestionsRecycler = view.findViewById(R.id.suggestionsRecycler);
-        Button closeButton = view.findViewById(R.id.btnCloseCarousel);
+        ImageView closeSuggestions = view.findViewById(R.id.closeSuggestions);
 
 
         btnApplyFilters.setOnClickListener(v -> {
             logUserPreferences();
-
-
             Log.d("DEBUG", "Apply Filters clicked");
 
-            /*OutfitGenerator.generateOutfits(requireContext(), outfits -> {
-                for (int i = 0; i < outfits.size(); i++) {
-                    List<String> outfit = outfits.get(i);
-                    Log.d("OUTFIT_" + (i + 1), outfit.toString());
-                }
-            });*/
             OutfitGenerator.generateOutfits(requireContext(), outfits -> {
                 List<OutfitSuggestion> baseSuggestions = new ArrayList<>();
 
@@ -170,10 +164,9 @@ public class SuggestionsFragment extends Fragment {
                 // Setup carousel here with the new data
                 setupCarouselRecycler(suggestionsRecycler, middleIndex);
             });
-
         });
 
-        closeButton.setOnClickListener(v -> {
+        closeSuggestions.setOnClickListener(v -> {
             overlayContainer.setVisibility(View.GONE);
 
             // Reset contentContainer layout params if needed
@@ -428,7 +421,7 @@ public class SuggestionsFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         //new LinearSnapHelper().attachToRecyclerView(recyclerView);
-        // ✅ Prevent multiple SnapHelpers attached
+        // Prevent multiple SnapHelpers attached
         if (recyclerView.getOnFlingListener() != null) {
             recyclerView.setOnFlingListener(null);
         }

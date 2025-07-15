@@ -152,12 +152,17 @@
                 android:textStyle="bold"
                 android:textColor="#000000" />
 
-            <Button
-                android:id="@+id/btnCloseCarousel"
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Close"
-                android:layout_gravity="end" />
+                android:id="@+id/closeSuggestions"
+                android:layout_margin="10dp"
+                android:elevation="5dp"
+                android:padding="5dp"
+                android:layout_gravity="center"
+                android:background="@drawable/circle_shape"
+                android:src="@drawable/round_clear_24"
+                app:tint="@color/red"/>
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView

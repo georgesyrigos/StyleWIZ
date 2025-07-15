@@ -5,7 +5,7 @@ import java.util.List;
 public class OutfitSuggestion {
     private String title;
     private String description;
-    private List<String> imageUrls; // or List<String> if using URIs/URLs
+    private List<String> imageUrls;
 
     public OutfitSuggestion(String title, String description, List<String> imageUrls) {
         this.title = title;
