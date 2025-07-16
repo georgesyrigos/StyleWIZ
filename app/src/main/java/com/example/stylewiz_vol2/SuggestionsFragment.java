@@ -43,6 +43,10 @@ public class SuggestionsFragment extends Fragment {
     private List<OutfitSuggestion> infiniteSuggestions;
     private int middleIndex;
     FirebaseFirestore db;
+    private RecyclerView suggestionsRecycler;
+    private LinearLayout overlayContainer;
+    private TextView noSuggestionsText;
+
 
 
     @Override
@@ -69,16 +73,87 @@ public class SuggestionsFragment extends Fragment {
 
         //Additions for the carousel
         Button btnApplyFilters = view.findViewById(R.id.btnApplyFilters);
-        LinearLayout overlayContainer = view.findViewById(R.id.overlayCarouselContainer);
-        RecyclerView suggestionsRecycler = view.findViewById(R.id.suggestionsRecycler);
+        overlayContainer = view.findViewById(R.id.overlayCarouselContainer);
+        suggestionsRecycler = view.findViewById(R.id.suggestionsRecycler);
         ImageView closeSuggestions = view.findViewById(R.id.closeSuggestions);
+        noSuggestionsText = view.findViewById(R.id.noSuggestionsText);
 
 
         btnApplyFilters.setOnClickListener(v -> {
             logUserPreferences();
             Log.d("DEBUG", "Apply Filters clicked");
 
+
             OutfitGenerator.generateOutfits(requireContext(), outfits -> {
+                List<OutfitSuggestion> baseSuggestions = new ArrayList<>();
+
+                String outerwearText = selectedOuterwearTag.equals("no") ? "without outerwear" : "with outerwear";
+
+                db = FirebaseFirestore.getInstance();
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                for (int i = 0; i < outfits.size(); i++) {
+                    final int outfitIndex = i;
+                    List<String> outfitItemIds = outfits.get(outfitIndex);
+
+                    List<ImageItem> imageItems = new ArrayList<>();
+                    AtomicInteger fetchedCount = new AtomicInteger(0);
+
+                    for (String itemId : outfitItemIds) {
+                        db.collection("users")
+                                .document(user.getUid())
+                                .collection("wardrobe")
+                                .document(itemId)
+                                .get()
+                                .addOnSuccessListener(documentSnapshot -> {
+                                    if (documentSnapshot.exists()) {
+                                        DataClass item = documentSnapshot.toObject(DataClass.class);
+                                        if (item != null && item.getPhotoUrl() != null && item.getCategory() != null) {
+                                            imageItems.add(new ImageItem(item.getPhotoUrl(), item.getCategory()));
+                                        }
+                                    }
+
+                                    if (fetchedCount.incrementAndGet() == outfitItemIds.size()) {
+                                        //All items fetched for this outfit
+                                        String title;
+                                        if (outfitIndex == 0) {
+                                            title = "Best outfit";
+                                        } else if (outfitIndex == 1) {
+                                            title = "Second best outfit";
+                                        } else if (outfitIndex == 2) {
+                                            title = "Third best outfit";
+                                        } else {
+                                            title = "Outfit " + (outfitIndex + 1);
+                                        }
+
+                                        String desc = String.format(
+                                                "%s %s outfit %s",
+                                                capitalize(selectedStyleTag),
+                                                capitalize(selectedSeasonTag),
+                                                outerwearText
+                                        );
+
+                                        baseSuggestions.add(new OutfitSuggestion(title, desc, imageItems));
+
+                                        // ✅ Check if all outfits are built
+                                        if (baseSuggestions.size() == outfits.size()) {
+                                            buildInfiniteSuggestionsAndSetupAdapter(baseSuggestions);
+                                            Log.d("DEBUG", "All outfits built");
+
+                                        }
+                                    }
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("FirestoreError", "Failed to fetch item " + itemId, e);
+                                });
+                    }
+                }
+            });
+
+
+
+
+            /*OutfitGenerator.generateOutfits(requireContext(), outfits -> {
                 List<OutfitSuggestion> baseSuggestions = new ArrayList<>();
 
                 String outerwearText = selectedOuterwearTag.equals("no") ? "without outerwear" : "with outerwear";
@@ -163,7 +238,7 @@ public class SuggestionsFragment extends Fragment {
 
                 // Setup carousel here with the new data
                 setupCarouselRecycler(suggestionsRecycler, middleIndex);
-            });
+            });*/
         });
 
         closeSuggestions.setOnClickListener(v -> {
@@ -184,6 +259,43 @@ public class SuggestionsFragment extends Fragment {
 
         return view;
     }
+
+    private void buildInfiniteSuggestionsAndSetupAdapter(List<OutfitSuggestion> baseSuggestions) {
+        overlayContainer.setVisibility(View.VISIBLE);
+
+        if (baseSuggestions.isEmpty()) {
+            noSuggestionsText.setVisibility(View.VISIBLE);
+            suggestionsRecycler.setVisibility(View.GONE);
+        } else {
+            noSuggestionsText.setVisibility(View.GONE);
+            suggestionsRecycler.setVisibility(View.VISIBLE);
+
+            List<OutfitSuggestion> infiniteSuggestions = new ArrayList<>();
+            for (int i = 0; i < 10; i++) {
+                infiniteSuggestions.addAll(baseSuggestions);
+            }
+
+            int middleIndex = infiniteSuggestions.size() / 2;
+
+            SuggestionAdapter adapter = new SuggestionAdapter(infiniteSuggestions);
+            suggestionsRecycler.setAdapter(adapter);
+
+            // ✅ Setup carousel with middle index
+            setupCarouselRecycler(suggestionsRecycler, middleIndex);
+
+            // ✅ Scroll to middle index after layout is ready
+            suggestionsRecycler.post(() -> {
+                RecyclerView.LayoutManager layoutManager = suggestionsRecycler.getLayoutManager();
+                if (layoutManager instanceof LinearLayoutManager) {
+                    ((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(middleIndex, 0);
+                }
+            });
+        }
+
+    }
+
+
+
 
     private void selectOption(LinearLayout selectedOption, String type) {
         // Reset backgrounds

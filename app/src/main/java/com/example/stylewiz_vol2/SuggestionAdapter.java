@@ -1,5 +1,6 @@
 package com.example.stylewiz_vol2;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +39,7 @@ public class SuggestionAdapter extends RecyclerView.Adapter<SuggestionAdapter.Su
 
     @Override
     public void onBindViewHolder(@NonNull SuggestionViewHolder holder, int position) {
-        OutfitSuggestion suggestion = suggestions.get(position);
+        /*OutfitSuggestion suggestion = suggestions.get(position);
         holder.title.setText(suggestion.getTitle());
         holder.description.setText(suggestion.getDescription());
 
@@ -79,7 +80,71 @@ public class SuggestionAdapter extends RecyclerView.Adapter<SuggestionAdapter.Su
 
             holder.imagesContainer.addView(imageView);
 
+        }*/
+
+        OutfitSuggestion suggestion = suggestions.get(position);
+        holder.title.setText(suggestion.getTitle());
+        holder.description.setText(suggestion.getDescription());
+
+        holder.imagesContainer.removeAllViews();
+
+        List<ImageItem> images = suggestion.getImages();
+
+
+        // Define desired category order
+        List<String> desiredOrder = Arrays.asList(
+                "one-piece", "top", "bottom", "shoes", "outerwear", "accessory"
+        );
+
+        // Sort images by category according to desiredOrder
+        Collections.sort(images, (img1, img2) -> {
+            String cat1 = img1.getCategory() != null ? img1.getCategory().toLowerCase() : "";
+            String cat2 = img2.getCategory() != null ? img2.getCategory().toLowerCase() : "";
+
+            int index1 = desiredOrder.indexOf(cat1);
+            int index2 = desiredOrder.indexOf(cat2);
+
+
+            // If category not found, put at end
+            if (index1 == -1) index1 = desiredOrder.size();
+            if (index2 == -1) index2 = desiredOrder.size();
+
+            return Integer.compare(index1, index2);
+        });
+
+
+
+        holder.imagesContainer.setWeightSum(images.size());
+
+        for (ImageItem imageItem : images) {
+            ImageView imageView = new ImageView(holder.imagesContainer.getContext());
+            LinearLayout.LayoutParams params;
+
+            if (holder.imagesContainer.getOrientation() == LinearLayout.VERTICAL) {
+                params = new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        0,
+                        1.0f
+                );
+            } else {
+                params = new LinearLayout.LayoutParams(
+                        0,
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        1.0f
+                );
+            }
+
+            params.setMargins(4, 4, 4, 4);
+            imageView.setLayoutParams(params);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+            Glide.with(holder.imagesContainer.getContext())
+                    .load(imageItem.getUrl())
+                    .into(imageView);
+
+            holder.imagesContainer.addView(imageView);
         }
+
     }
 
     @Override
