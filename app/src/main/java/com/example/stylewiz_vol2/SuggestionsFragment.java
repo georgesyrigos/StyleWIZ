@@ -85,6 +85,14 @@ public class SuggestionsFragment extends Fragment {
 
 
             OutfitGenerator.generateOutfits(requireContext(), outfits -> {
+                if (outfits.isEmpty()) {
+                    // ✅ No outfits generated at all
+                    overlayContainer.setVisibility(View.VISIBLE);
+                    noSuggestionsText.setVisibility(View.VISIBLE);
+                    suggestionsRecycler.setVisibility(View.GONE);
+                    return;
+                }
+
                 List<OutfitSuggestion> baseSuggestions = new ArrayList<>();
 
                 String outerwearText = selectedOuterwearTag.equals("no") ? "without outerwear" : "with outerwear";
@@ -134,7 +142,6 @@ public class SuggestionsFragment extends Fragment {
                                         );
 
                                         baseSuggestions.add(new OutfitSuggestion(title, desc, imageItems));
-
                                         // ✅ Check if all outfits are built
                                         if (baseSuggestions.size() == outfits.size()) {
                                             buildInfiniteSuggestionsAndSetupAdapter(baseSuggestions);
