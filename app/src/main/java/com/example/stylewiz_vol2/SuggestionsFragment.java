@@ -77,6 +77,7 @@ public class SuggestionsFragment extends Fragment {
         suggestionsRecycler = view.findViewById(R.id.suggestionsRecycler);
         ImageView closeSuggestions = view.findViewById(R.id.closeSuggestions);
         noSuggestionsText = view.findViewById(R.id.noSuggestionsText);
+        ImageView favSuggestions = view.findViewById(R.id.favSuggestions);
 
 
         btnApplyFilters.setOnClickListener(v -> {

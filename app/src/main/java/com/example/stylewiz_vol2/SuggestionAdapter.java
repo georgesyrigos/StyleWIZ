@@ -1,17 +1,26 @@
 package com.example.stylewiz_vol2;
 
+import android.content.res.ColorStateList;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -93,7 +102,7 @@ public class SuggestionAdapter extends RecyclerView.Adapter<SuggestionAdapter.Su
 
         // Define desired category order
         List<String> desiredOrder = Arrays.asList(
-                "one-piece", "top", "bottom", "shoes", "outerwear", "accessory"
+                "accessory", "outerwear", "one-piece", "top", "bottom", "shoes"
         );
 
         // Sort images by category according to desiredOrder
@@ -116,7 +125,13 @@ public class SuggestionAdapter extends RecyclerView.Adapter<SuggestionAdapter.Su
 
         holder.imagesContainer.setWeightSum(images.size());
 
+        List<String> imageUrls = new ArrayList<>();
+        List<String> categories = new ArrayList<>();
+
         for (ImageItem imageItem : images) {
+            imageUrls.add(imageItem.getUrl());
+            categories.add(imageItem.getCategory());
+
             ImageView imageView = new ImageView(holder.imagesContainer.getContext());
             LinearLayout.LayoutParams params;
 
@@ -145,6 +160,57 @@ public class SuggestionAdapter extends RecyclerView.Adapter<SuggestionAdapter.Su
             holder.imagesContainer.addView(imageView);
         }
 
+        //Setup select button click logic here
+        holder.selectButton.setOnClickListener(v -> {
+            // Sort imageUrls for consistent hashing
+            Collections.sort(imageUrls);
+            String outfitHash = TextUtils.join("_", imageUrls);
+
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+            if (user != null) {
+                db.collection("users")
+                        .document(user.getUid())
+                        .collection("selectedOutfits")
+                        .whereEqualTo("outfitHash", outfitHash)
+                        .get()
+                        .addOnSuccessListener(queryDocumentSnapshots -> {
+                            if (!queryDocumentSnapshots.isEmpty()) {
+                                Toast.makeText(holder.itemView.getContext(), "This outfit is already saved!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Map<String, Object> outfitData = new HashMap<>();
+                                outfitData.put("description", suggestion.getDescription());
+                                outfitData.put("timestamp", FieldValue.serverTimestamp());
+                                outfitData.put("imageUrls", imageUrls);
+                                outfitData.put("categories", categories);
+                                outfitData.put("outfitHash", outfitHash);
+
+                                db.collection("users")
+                                        .document(user.getUid())
+                                        .collection("selectedOutfits")
+                                        .add(outfitData)
+                                        .addOnSuccessListener(documentReference -> {
+                                            Toast.makeText(holder.itemView.getContext(), "Outfit saved!", Toast.LENGTH_SHORT).show();
+                                            holder.selectButton.setText("Selected");
+                                            holder.selectButton.setEnabled(false);
+                                            holder.selectButton.setBackgroundTintList(ColorStateList.valueOf(
+                                                    ContextCompat.getColor(holder.itemView.getContext(), R.color.gray)
+                                            ));
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Toast.makeText(holder.itemView.getContext(), "Failed to save outfit", Toast.LENGTH_SHORT).show();
+                                            Log.e("FirestoreSave", "Error saving outfit", e);
+                                        });
+                            }
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(holder.itemView.getContext(), "Error checking existing outfits", Toast.LENGTH_SHORT).show();
+                            Log.e("FirestoreQuery", "Error querying for duplicates", e);
+                        });
+            }
+        });
+
     }
 
     @Override
@@ -155,12 +221,15 @@ public class SuggestionAdapter extends RecyclerView.Adapter<SuggestionAdapter.Su
     public static class SuggestionViewHolder extends RecyclerView.ViewHolder {
         TextView title, description;
         LinearLayout imagesContainer;
+        Button selectButton;
 
         public SuggestionViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.suggestionTitle);
             description = itemView.findViewById(R.id.suggestionDescription);
             imagesContainer = itemView.findViewById(R.id.imagesContainer);
+            selectButton = itemView.findViewById(R.id.selectButton);
+
         }
     }
 
