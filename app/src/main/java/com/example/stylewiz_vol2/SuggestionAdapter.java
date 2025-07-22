@@ -33,6 +33,7 @@ import java.util.Map;
 public class SuggestionAdapter extends RecyclerView.Adapter<SuggestionAdapter.SuggestionViewHolder> {
 
     private List<OutfitSuggestion> suggestions;
+    private String selectedOutfitHash = null; // Tracks currently selected
 
     public SuggestionAdapter(List<OutfitSuggestion> suggestions) {
         this.suggestions = suggestions;
@@ -49,49 +50,6 @@ public class SuggestionAdapter extends RecyclerView.Adapter<SuggestionAdapter.Su
     @Override
     public void onBindViewHolder(@NonNull SuggestionViewHolder holder, int position) {
         /*OutfitSuggestion suggestion = suggestions.get(position);
-        holder.title.setText(suggestion.getTitle());
-        holder.description.setText(suggestion.getDescription());
-
-        // Populate images dynamically
-        holder.imagesContainer.removeAllViews();
-
-        int numImages = suggestion.getImageUrls().size();
-        holder.imagesContainer.setWeightSum(numImages);
-
-        for (String imageUrl : suggestion.getImageUrls()) {
-            ImageView imageView = new ImageView(holder.imagesContainer.getContext());
-            LinearLayout.LayoutParams params;
-
-            // Check orientation dynamically if needed
-            if (holder.imagesContainer.getOrientation() == LinearLayout.VERTICAL) {
-                params = new LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        0,
-                        1.0f
-                );
-            } else {
-                params = new LinearLayout.LayoutParams(
-                        0,
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        1.0f
-                );
-            }
-
-            params.setMargins(4, 4, 4, 4);
-            imageView.setLayoutParams(params);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            //imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-
-            // If using Glide for Firestore URLs
-            Glide.with(holder.imagesContainer.getContext())
-                    .load(imageUrl)
-                    .into(imageView);
-
-            holder.imagesContainer.addView(imageView);
-
-        }*/
-
-        OutfitSuggestion suggestion = suggestions.get(position);
         holder.title.setText(suggestion.getTitle());
         holder.description.setText(suggestion.getDescription());
 
@@ -197,6 +155,154 @@ public class SuggestionAdapter extends RecyclerView.Adapter<SuggestionAdapter.Su
                                             holder.selectButton.setBackgroundTintList(ColorStateList.valueOf(
                                                     ContextCompat.getColor(holder.itemView.getContext(), R.color.gray)
                                             ));
+
+                                            int previousSize = suggestions.size();
+
+                                            suggestions.clear();
+                                            suggestions.add(suggestion);
+
+                                            // Notify RecyclerView efficiently
+                                            notifyItemRangeRemoved(0, previousSize); // Remove all old items
+                                            notifyItemInserted(0);                   // Insert new single item
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Toast.makeText(holder.itemView.getContext(), "Failed to save outfit", Toast.LENGTH_SHORT).show();
+                                            Log.e("FirestoreSave", "Error saving outfit", e);
+                                        });
+                            }
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(holder.itemView.getContext(), "Error checking existing outfits", Toast.LENGTH_SHORT).show();
+                            Log.e("FirestoreQuery", "Error querying for duplicates", e);
+                        });
+            }
+        });*/
+
+
+        OutfitSuggestion suggestion = suggestions.get(position);
+
+        holder.title.setText(suggestion.getTitle());
+        holder.description.setText(suggestion.getDescription());
+
+        List<ImageItem> images = suggestion.getImages();
+        holder.imagesContainer.removeAllViews();
+
+
+        // Define desired category order
+        List<String> desiredOrder = Arrays.asList(
+                "accessory", "outerwear", "one-piece", "top", "bottom", "shoes"
+        );
+
+        // Sort images by category according to desiredOrder
+        Collections.sort(images, (img1, img2) -> {
+            String cat1 = img1.getCategory() != null ? img1.getCategory().toLowerCase() : "";
+            String cat2 = img2.getCategory() != null ? img2.getCategory().toLowerCase() : "";
+
+            int index1 = desiredOrder.indexOf(cat1);
+            int index2 = desiredOrder.indexOf(cat2);
+
+
+            // If category not found, put at end
+            if (index1 == -1) index1 = desiredOrder.size();
+            if (index2 == -1) index2 = desiredOrder.size();
+
+            return Integer.compare(index1, index2);
+        });
+
+        // Build outfit hash for this item
+        List<String> imageUrls = new ArrayList<>();
+        List<String> categories = new ArrayList<>();
+        for (ImageItem img : images) {
+            imageUrls.add(img.getUrl());
+            categories.add(img.getCategory());
+        }
+        Collections.sort(imageUrls);
+        String currentHash = TextUtils.join("_", imageUrls);
+
+        // Populate images dynamically
+        holder.imagesContainer.setWeightSum(images.size());
+        for (ImageItem imageItem : images) {
+            ImageView imageView = new ImageView(holder.imagesContainer.getContext());
+            LinearLayout.LayoutParams params;
+
+            if (holder.imagesContainer.getOrientation() == LinearLayout.VERTICAL) {
+                params = new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        0,
+                        1.0f
+                );
+            } else {
+                params = new LinearLayout.LayoutParams(
+                        0,
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        1.0f
+                );
+            }
+
+            params.setMargins(4, 4, 4, 4);
+            imageView.setLayoutParams(params);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+            Glide.with(holder.imagesContainer.getContext())
+                    .load(imageItem.getUrl())
+                    .into(imageView);
+
+            holder.imagesContainer.addView(imageView);
+        }
+
+        // Update button state based on selectedOutfitHash
+        if (currentHash.equals(selectedOutfitHash)) {
+            holder.selectButton.setText("Selected");
+            holder.selectButton.setEnabled(false);
+            holder.selectButton.setBackgroundTintList(ColorStateList.valueOf(
+                    ContextCompat.getColor(holder.itemView.getContext(), R.color.gray)
+            ));
+        } else {
+            holder.selectButton.setText("Select");
+            holder.selectButton.setEnabled(true);
+            holder.selectButton.setBackgroundTintList(ColorStateList.valueOf(
+                    ContextCompat.getColor(holder.itemView.getContext(), R.color.blue)
+            ));
+        }
+
+        // Select button click listener
+        holder.selectButton.setOnClickListener(v -> {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+            if (user != null) {
+                db.collection("users")
+                        .document(user.getUid())
+                        .collection("selectedOutfits")
+                        .whereEqualTo("outfitHash", currentHash)
+                        .get()
+                        .addOnSuccessListener(queryDocumentSnapshots -> {
+                            if (!queryDocumentSnapshots.isEmpty()) {
+                                Toast.makeText(holder.itemView.getContext(), "This outfit is already saved!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Map<String, Object> outfitData = new HashMap<>();
+                                outfitData.put("description", suggestion.getDescription());
+                                outfitData.put("timestamp", FieldValue.serverTimestamp());
+                                outfitData.put("imageUrls", imageUrls);
+                                outfitData.put("categories", categories);
+                                outfitData.put("outfitHash", currentHash);
+
+                                db.collection("users")
+                                        .document(user.getUid())
+                                        .collection("selectedOutfits")
+                                        .add(outfitData)
+                                        .addOnSuccessListener(documentReference -> {
+                                            Toast.makeText(holder.itemView.getContext(), "Outfit saved!", Toast.LENGTH_SHORT).show();
+
+                                            // Update selected hash and dataset efficiently
+                                            selectedOutfitHash = currentHash;
+
+                                            int previousSize = suggestions.size();
+                                            suggestions.clear();
+                                            suggestions.add(suggestion);
+
+                                            notifyItemRangeRemoved(0, previousSize);
+                                            notifyItemInserted(0);
                                         })
                                         .addOnFailureListener(e -> {
                                             Toast.makeText(holder.itemView.getContext(), "Failed to save outfit", Toast.LENGTH_SHORT).show();

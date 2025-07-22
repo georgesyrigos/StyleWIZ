@@ -28,6 +28,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -94,7 +95,9 @@ public class SuggestionsFragment extends Fragment {
                     return;
                 }
 
-                List<OutfitSuggestion> baseSuggestions = new ArrayList<>();
+                //List<OutfitSuggestion> baseSuggestions = new ArrayList<>();
+                List<OutfitSuggestion> baseSuggestions = new ArrayList<>(Collections.nCopies(outfits.size(), null));
+
 
                 String outerwearText = selectedOuterwearTag.equals("no") ? "without outerwear" : "with outerwear";
 
@@ -142,9 +145,12 @@ public class SuggestionsFragment extends Fragment {
                                                 outerwearText
                                         );
 
-                                        baseSuggestions.add(new OutfitSuggestion(title, desc, imageItems));
+                                        //baseSuggestions.add(new OutfitSuggestion(title, desc, imageItems));
+                                        baseSuggestions.set(outfitIndex, new OutfitSuggestion(title, desc, imageItems));
+
                                         // ✅ Check if all outfits are built
-                                        if (baseSuggestions.size() == outfits.size()) {
+                                        //if (baseSuggestions.size() == outfits.size()) {
+                                        if (!baseSuggestions.contains(null)) {
                                             buildInfiniteSuggestionsAndSetupAdapter(baseSuggestions);
                                             Log.d("DEBUG", "All outfits built");
 
@@ -283,6 +289,7 @@ public class SuggestionsFragment extends Fragment {
                 infiniteSuggestions.addAll(baseSuggestions);
             }
 
+            //List<OutfitSuggestion> limitedSuggestions = new ArrayList<>(baseSuggestions);
             int middleIndex = infiniteSuggestions.size() / 2;
 
             SuggestionAdapter adapter = new SuggestionAdapter(infiniteSuggestions);
