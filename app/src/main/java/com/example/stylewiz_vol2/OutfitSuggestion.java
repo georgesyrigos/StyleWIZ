@@ -5,15 +5,7 @@ import java.util.List;
 public class OutfitSuggestion {
     private String title;
     private String description;
-    //private List<String> imageUrls;
     private List<ImageItem> images;
-
-
-    /*public OutfitSuggestion(String title, String description, List<String> imageUrls) {
-        this.title = title;
-        this.description = description;
-        this.imageUrls = imageUrls;
-    }*/
 
     public OutfitSuggestion() {}
 
@@ -47,8 +39,5 @@ public class OutfitSuggestion {
         this.images = images;
     }
 
-    /*public List<String> getImageUrls() {
-        return imageUrls;
-    }*/
 }
 

@@ -6,6 +6,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -253,6 +255,34 @@ public class SuggestionsFragment extends Fragment {
                 // Setup carousel here with the new data
                 setupCarouselRecycler(suggestionsRecycler, middleIndex);
             });*/
+        });
+
+        favSuggestions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FavoriteSuggestionsFragment favoriteSuggestionsFragment = new FavoriteSuggestionsFragment();
+
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+                // Find the currently visible fragment and hide it
+                Fragment currentFragment = null;
+                for (Fragment fragment : fragmentManager.getFragments()) {
+                    if (fragment.isVisible()) {
+                        currentFragment = fragment;
+                        break;
+                    }
+                }
+                if (currentFragment != null) {
+                    transaction.hide(currentFragment);
+                }
+
+                // Add DetailsFragment or show if already added
+                transaction.add(R.id.frameLayout, favoriteSuggestionsFragment, "FAVORITE_SUGGESTION")
+                        .addToBackStack("FAVORITE_SUGGESTION")
+                        .commit();
+
+            }
         });
 
         closeSuggestions.setOnClickListener(v -> {

@@ -60,6 +60,7 @@ public class UserActivity extends AppCompatActivity{
         EditDetailsFragment editDetailsFragment = new EditDetailsFragment();
         NewOutfitFragment newOutfitFragment = new NewOutfitFragment();
         SelectedOutfitFragment selectedOutfitFragment = new SelectedOutfitFragment();
+        FavoriteSuggestionsFragment favoriteSuggestionsFragment = new FavoriteSuggestionsFragment();
 
 
 
@@ -77,6 +78,7 @@ public class UserActivity extends AppCompatActivity{
                 .add(R.id.frameLayout, editDetailsFragment, "EDIT_DETAILS").hide(editDetailsFragment)
                 .add(R.id.frameLayout, newOutfitFragment, "NEW_OUTFIT").hide(newOutfitFragment)
                 .add(R.id.frameLayout, selectedOutfitFragment, "SELECTED_OUTFIT").hide(selectedOutfitFragment)
+                .add(R.id.frameLayout, favoriteSuggestionsFragment, "FAVORITE_SUGGESTION").hide(favoriteSuggestionsFragment)
                 .commit();
 
 
@@ -97,7 +99,9 @@ public class UserActivity extends AppCompatActivity{
                     .hide(detailsFragment)
                     .hide(editDetailsFragment)
                     .hide(newOutfitFragment)
-                    .hide(selectedOutfitFragment);
+                    .hide(selectedOutfitFragment)
+                    .hide(favoriteSuggestionsFragment);
+
 
 
 
