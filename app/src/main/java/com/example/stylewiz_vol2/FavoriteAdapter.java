@@ -38,71 +38,47 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
 
     @Override
     public void onBindViewHolder(@NonNull FavoriteViewHolder holder, int position) {
-        /*FavoriteSuggestion suggestion = favorites.get(position);
-        holder.description.setText(suggestion.getDescription());
-
-        // Clear previous images
-        holder.imagesContainer.removeAllViews();
-
-        List<String> imageUrls = suggestion.getImageUrls();
-
-        for (String url : imageUrls) {
-            ImageView imageView = new ImageView(holder.imagesContainer.getContext());
-
-            int sizeInDp = 64; // or your preferred size
-            int sizeInPx = (int) TypedValue.applyDimension(
-                    TypedValue.COMPLEX_UNIT_DIP, sizeInDp,
-                    holder.imagesContainer.getResources().getDisplayMetrics()
-            );
-
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(sizeInPx, sizeInPx);
-            params.setMargins(8, 8, 8, 8);
-
-            imageView.setLayoutParams(params);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
-            Glide.with(holder.imagesContainer.getContext())
-                    .load(url)
-                    .into(imageView);
-
-            holder.imagesContainer.addView(imageView);
-        }*/
-
         FavoriteSuggestion suggestion = favorites.get(position);
 
         holder.description.setText(suggestion.getDescription());
-
         holder.imagesContainer.removeAllViews();
 
         List<String> imageUrls = suggestion.getImageUrls();
         List<String> categories = suggestion.getCategories();
 
-        if (imageUrls == null || categories == null || imageUrls.size() != categories.size()) {
-            // fallback: just add images without sorting
-            for (String url : imageUrls) {
-                addImageView(holder, url);
-            }
-            return;
-        }
-
         List<String> desiredOrder = Arrays.asList(
                 "accessory", "outerwear", "one-piece", "top", "bottom", "shoes"
         );
 
-        List<Pair<String, String>> pairedList = new ArrayList<>();
-        for (int i = 0; i < imageUrls.size(); i++) {
-            pairedList.add(new Pair<>(imageUrls.get(i), categories.get(i).toLowerCase().trim()));
+        if (imageUrls == null || imageUrls.isEmpty()) {
+            return; // No images to show
         }
 
-        Collections.sort(pairedList, (p1, p2) -> {
-            int index1 = desiredOrder.indexOf(p1.second);
-            int index2 = desiredOrder.indexOf(p2.second);
-            if (index1 == -1) index1 = desiredOrder.size();
-            if (index2 == -1) index2 = desiredOrder.size();
-            return Integer.compare(index1, index2);
-        });
+        List<Pair<String, String>> pairedList = new ArrayList<>();
 
-        // Now add images in sorted order:
+        if (categories != null && categories.size() == imageUrls.size()) {
+            // ✅ Pair each URL with its category
+            for (int i = 0; i < imageUrls.size(); i++) {
+                String category = categories.get(i) != null ? categories.get(i).toLowerCase().trim() : "";
+                pairedList.add(new Pair<>(imageUrls.get(i), category));
+            }
+
+            // ✅ Sort by desired category order
+            Collections.sort(pairedList, (p1, p2) -> {
+                int index1 = desiredOrder.indexOf(p1.second);
+                int index2 = desiredOrder.indexOf(p2.second);
+                if (index1 == -1) index1 = desiredOrder.size();
+                if (index2 == -1) index2 = desiredOrder.size();
+                return Integer.compare(index1, index2);
+            });
+        } else {
+            // 🔴 Fallback: categories missing or mismatched
+            for (String url : imageUrls) {
+                pairedList.add(new Pair<>(url, "")); // empty category
+            }
+        }
+
+        // ✅ Populate images in sorted order
         for (Pair<String, String> pair : pairedList) {
             addImageView(holder, pair.first);
         }
@@ -111,7 +87,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
     private void addImageView(@NonNull FavoriteViewHolder holder, @NonNull String imageUrl) {
         ImageView imageView = new ImageView(holder.imagesContainer.getContext());
 
-        int sizeInDp = 70; // size for imageview
+        int sizeInDp = 70;
         int sizeInPx = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, sizeInDp,
                 holder.imagesContainer.getResources().getDisplayMetrics()

@@ -1,16 +1,22 @@
 package com.example.stylewiz_vol2;
 
+import static android.view.View.GONE;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,12 +34,20 @@ public class FavoriteSuggestionsFragment extends Fragment {
     private RecyclerView favoritesRecycler;
     private FavoriteAdapter adapter;
     private List<FavoriteSuggestion> favoriteSuggestions;
+    ImageView backButton;
+    private LinearLayout emptyStateLayout, favoritesLinearLayout;
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_favorite_suggestions, container, false);
+
+        backButton = view.findViewById(R.id.back);
+        emptyStateLayout = view.findViewById(R.id.emptyStateLayout);
+        favoritesLinearLayout = view.findViewById(R.id.favoritesLinearLayout);
+
 
         favoritesRecycler = view.findViewById(R.id.favoritesRecycler);
         favoritesRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -43,6 +57,32 @@ public class FavoriteSuggestionsFragment extends Fragment {
         favoritesRecycler.setAdapter(adapter);
 
         fetchFavoriteSuggestions();
+
+
+        // Set up the click listener for back
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+                // Find the existing SuggestionsFragment
+                Fragment suggestionsFragment = fragmentManager.findFragmentByTag("SUGGESTIONS");
+
+                if (suggestionsFragment != null) {
+                    // Just show the existing fragment instead of recreating it
+                    transaction.show(suggestionsFragment);
+                }
+
+                // Remove FavoriteSuggestionsFragment to ensure it's cleared
+                transaction.remove(FavoriteSuggestionsFragment.this).commit();
+
+                // Pop from the back stack to ensure proper navigation
+                fragmentManager.popBackStack();
+
+            }
+        });
 
         return view;
     }
@@ -56,7 +96,7 @@ public class FavoriteSuggestionsFragment extends Fragment {
         db.collection("users")
                 .document(user.getUid())
                 .collection("selectedOutfits")
-                .orderBy("timestamp", Query.Direction.ASCENDING)
+                .orderBy("timestamp", Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     int previousSize = favoriteSuggestions.size();
@@ -81,6 +121,18 @@ public class FavoriteSuggestionsFragment extends Fragment {
 
                     favoriteSuggestions.addAll(fetchedList);
                     adapter.notifyItemRangeInserted(0, fetchedList.size());
+
+                    // Toggle empty state visibility
+                    if (fetchedList.isEmpty()) {
+                        emptyStateLayout.setVisibility(View.VISIBLE);
+                        favoritesRecycler.setVisibility(View.GONE);
+                        favoritesLinearLayout.setVisibility(View.GONE);
+                    } else {
+                        emptyStateLayout.setVisibility(View.GONE);
+                        favoritesRecycler.setVisibility(View.VISIBLE);
+                        favoritesLinearLayout.setVisibility(View.VISIBLE);
+                    }
+
                 })
                 .addOnFailureListener(Throwable::printStackTrace);
     }

@@ -19,7 +19,7 @@ public class FavoriteSuggestion {
         this.timestamp = timestamp;
     }
 
-    // 🔷 Getters
+
     public String getDescription() {
         return description;
     }
@@ -36,6 +36,7 @@ public class FavoriteSuggestion {
     public void setDescription(String description) {
         this.description = description;
     }
+
 
     public void setImageUrls(List<String> imageUrls) {
         this.imageUrls = imageUrls;

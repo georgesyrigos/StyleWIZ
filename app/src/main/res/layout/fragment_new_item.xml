@@ -75,6 +75,7 @@
                 android:id="@+id/textCategory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:dropDownHeight="200dp"
                 android:background="@drawable/edittextshape"
                 android:inputType="none"/>
 
@@ -93,6 +94,7 @@
                 android:id="@+id/textStyleTag"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:dropDownHeight="200dp"
                 android:background="@drawable/edittextshape"
                 android:inputType="none"/>
 
@@ -105,21 +107,18 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:hint="Enter color"
+            android:hint="Select color"
             android:textColorHint="@color/gray"
-            app:hintAnimationEnabled="true">
+            android:layout_marginTop="20dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
-            <com.google.android.material.textfield.TextInputEditText
+            <AutoCompleteTextView
                 android:id="@+id/textColor"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:paddingStart="20dp"
-                android:paddingEnd="15dp"
+                android:layout_height="wrap_content"
+                android:dropDownHeight="200dp"
                 android:background="@drawable/edittextshape"
-                android:fontFamily="@font/roboto"
-                android:singleLine="true"
-                android:inputType="text" />
+                android:inputType="none"/>
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -135,6 +134,7 @@
                 android:id="@+id/textSeasonality"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:dropDownHeight="200dp"
                 android:background="@drawable/edittextshape"
                 android:inputType="none"/>
 

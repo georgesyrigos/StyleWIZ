@@ -61,8 +61,8 @@ public class NewItemFragment extends Fragment {
 
     private FirestoreHelper firestoreHelper;
     private String user; // Store username as a class-level variable
-    EditText mDes, mCol;
-    String item_Category, item_StyleTag, item_Seasonality;
+    EditText mDes;
+    String item_Category, item_StyleTag, item_Color, item_Seasonality;
     AppCompatButton addItem;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
@@ -77,7 +77,9 @@ public class NewItemFragment extends Fragment {
     String[] category = {"Top", "One-Piece", "Bottom", "Outerwear", "Shoes", "Accessory"};
     String[] styleTag = {"Sport", "Casual", "Formal", "Seasonal", "Streetwear", "Work"};
     String[] seasonality = {"Autumn/Winter", "Spring/Summer", "All season"};
-    AutoCompleteTextView categoryDropdown, styleTagDropdown, seasonalityDropdown;
+    String[] color = {"Black", "White", "Gray", "Red", "Blue", "Green", "Yellow", "Brown", "Beige", "Pink", "Gold"};
+
+    AutoCompleteTextView categoryDropdown, styleTagDropdown, colorDropdown, seasonalityDropdown;
     private ProgressDialogHelper progressDialogHelper;
 
 
@@ -153,6 +155,17 @@ public class NewItemFragment extends Fragment {
             }
         });
 
+        //dropdown select color
+        colorDropdown = view.findViewById(R.id.textColor);
+        ArrayAdapter<String> colorAdapter = new ArrayAdapter<>(getActivity(), R.layout.list_item, color);
+        colorDropdown.setAdapter(colorAdapter);
+        colorDropdown.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                item_Color = adapterView.getItemAtPosition(i).toString();
+            }
+        });
+
 
         //dropdown select seasonality
         seasonalityDropdown= view.findViewById(R.id.textSeasonality);
@@ -220,7 +233,6 @@ public class NewItemFragment extends Fragment {
         //add item button app compat
         addItem = view.findViewById(R.id.AddItemBtn);
         mDes = view.findViewById(R.id.textDescription);
-        mCol = view.findViewById(R.id.textColor);
 
         addItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -228,7 +240,7 @@ public class NewItemFragment extends Fragment {
                 String cat = item_Category;
                 String tag = item_StyleTag;
                 String des = mDes.getText().toString().trim();
-                String col = mCol.getText().toString().trim();
+                String col = item_Color;
                 String sea = item_Seasonality;
                 boolean liked = false;
 
@@ -369,17 +381,18 @@ public class NewItemFragment extends Fragment {
     private void resetFields() {
         // Reset the input fields
         mDes.setText("");  // Clear description
-        mCol.setText("");  // Clear color
 
         // Clear the AutoCompleteTextViews
         categoryDropdown.setText("");  // Clear the selected category
         styleTagDropdown.setText("");  // Clear the selected style tag
+        colorDropdown.setText(""); //Clear the selected color
         seasonalityDropdown.setText("");  // Clear the selected seasonality
 
 
         // Clear the corresponding variables
         item_Category = "";  // Clear the category variable
         item_StyleTag = "";  // Clear the style tag variable
+        item_Color = ""; //Clear the color variable
         item_Seasonality = "";  // Clear the seasonality variable
 
 
