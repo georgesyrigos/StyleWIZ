@@ -43,44 +43,27 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
         holder.description.setText(suggestion.getDescription());
         holder.imagesContainer.removeAllViews();
 
-        List<String> imageUrls = suggestion.getImageUrls();
-        List<String> categories = suggestion.getCategories();
+        List<FavoriteImageItem> images = suggestion.getImages();
 
-        List<String> desiredOrder = Arrays.asList(
-                "accessory", "outerwear", "one-piece", "top", "bottom", "shoes"
-        );
-
-        if (imageUrls == null || imageUrls.isEmpty()) {
-            return; // No images to show
+        if (images == null || images.isEmpty()) {
+            return;
         }
 
-        List<Pair<String, String>> pairedList = new ArrayList<>();
+// 🔷 Desired order
+        List<String> desiredOrder = Arrays.asList("accessory", "outerwear", "one-piece", "top", "bottom", "shoes");
 
-        if (categories != null && categories.size() == imageUrls.size()) {
-            // ✅ Pair each URL with its category
-            for (int i = 0; i < imageUrls.size(); i++) {
-                String category = categories.get(i) != null ? categories.get(i).toLowerCase().trim() : "";
-                pairedList.add(new Pair<>(imageUrls.get(i), category));
-            }
+// 🔷 Sort by category order
+        Collections.sort(images, (i1, i2) -> {
+            int index1 = desiredOrder.indexOf(i1.getCategory());
+            int index2 = desiredOrder.indexOf(i2.getCategory());
+            if (index1 == -1) index1 = desiredOrder.size();
+            if (index2 == -1) index2 = desiredOrder.size();
+            return Integer.compare(index1, index2);
+        });
 
-            // ✅ Sort by desired category order
-            Collections.sort(pairedList, (p1, p2) -> {
-                int index1 = desiredOrder.indexOf(p1.second);
-                int index2 = desiredOrder.indexOf(p2.second);
-                if (index1 == -1) index1 = desiredOrder.size();
-                if (index2 == -1) index2 = desiredOrder.size();
-                return Integer.compare(index1, index2);
-            });
-        } else {
-            // 🔴 Fallback: categories missing or mismatched
-            for (String url : imageUrls) {
-                pairedList.add(new Pair<>(url, "")); // empty category
-            }
-        }
-
-        // ✅ Populate images in sorted order
-        for (Pair<String, String> pair : pairedList) {
-            addImageView(holder, pair.first);
+        // 🔷 Add ImageViews
+        for (FavoriteImageItem imageItem : images) {
+            addImageView(holder, imageItem.getUrl());
         }
     }
 

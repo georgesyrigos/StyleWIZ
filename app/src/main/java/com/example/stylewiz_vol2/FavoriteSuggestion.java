@@ -5,45 +5,46 @@ import java.util.List;
 
 public class FavoriteSuggestion {
     private String description;
-    private List<String> imageUrls;
-    private List<String> categories;
-
+    private List<FavoriteImageItem> images;
+    private String outfitHash;
     private Timestamp timestamp;
 
     public FavoriteSuggestion() {}
 
-    public FavoriteSuggestion(String description, List<String> imageUrls, List<String> categories, Timestamp timestamp) {
+    public FavoriteSuggestion(String description, List<FavoriteImageItem> images, Timestamp timestamp, String outfitHash) {
         this.description = description;
-        this.imageUrls = imageUrls;
-        this.categories = categories;
+        this.images = images;
         this.timestamp = timestamp;
+        this.outfitHash = outfitHash;
     }
-
 
     public String getDescription() {
         return description;
     }
 
-    public List<String> getImageUrls() {
-        return imageUrls;
+    public List<FavoriteImageItem> getImages() {
+        return images;
     }
-    public List<String> getCategories() { return categories; }
 
     public Timestamp getTimestamp() {
         return timestamp;
+    }
+
+    public String getOutfitHash() {
+        return outfitHash;
     }
 
     public void setDescription(String description) {
         this.description = description;
     }
 
-
-    public void setImageUrls(List<String> imageUrls) {
-        this.imageUrls = imageUrls;
+    public void setImages(List<FavoriteImageItem> images) {
+        this.images = images;
     }
-    public void setCategories(List<String> categories) { this.categories = categories; }
 
     public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
     }
+    public void setOutfitHash(String outfitHash) { this.outfitHash = outfitHash; }
+
 }

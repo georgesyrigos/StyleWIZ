@@ -24,9 +24,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-import java.security.Timestamp;
+import com.google.firebase.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 public class FavoriteSuggestionsFragment extends Fragment {
@@ -104,24 +105,31 @@ public class FavoriteSuggestionsFragment extends Fragment {
                     List<FavoriteSuggestion> fetchedList = new ArrayList<>();
 
                     for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
-                        FavoriteSuggestion suggestion = doc.toObject(FavoriteSuggestion.class);
+                        String description = doc.getString("description");
+                        String outfitHash = doc.getString("outfitHash");
+                        Timestamp timestamp = doc.getTimestamp("timestamp");
 
-                        if (suggestion != null
-                                && suggestion.getDescription() != null
-                                && suggestion.getImageUrls() != null
-                                && !suggestion.getImageUrls().isEmpty()) {
+                        List<Map<String, String>> imagesMapList = (List<Map<String, String>>) doc.get("images");
+                        List<FavoriteImageItem> images = new ArrayList<>();
 
-                            fetchedList.add(suggestion);
+                        if (imagesMapList != null) {
+                            for (Map<String, String> map : imagesMapList) {
+                                String category = map.get("category");
+                                String url = map.get("url");
+                                images.add(new FavoriteImageItem(category, url));
+                            }
                         }
+
+                        FavoriteSuggestion suggestion = new FavoriteSuggestion(description, images, timestamp, outfitHash);
+                        fetchedList.add(suggestion);
                     }
 
-                    // Notify precise changes
+                    // Update adapter
                     favoriteSuggestions.clear();
                     adapter.notifyItemRangeRemoved(0, previousSize);
 
                     favoriteSuggestions.addAll(fetchedList);
                     adapter.notifyItemRangeInserted(0, fetchedList.size());
-
                     // Toggle empty state visibility
                     if (fetchedList.isEmpty()) {
                         emptyStateLayout.setVisibility(View.VISIBLE);
@@ -132,7 +140,6 @@ public class FavoriteSuggestionsFragment extends Fragment {
                         favoritesRecycler.setVisibility(View.VISIBLE);
                         favoritesLinearLayout.setVisibility(View.VISIBLE);
                     }
-
                 })
                 .addOnFailureListener(Throwable::printStackTrace);
     }

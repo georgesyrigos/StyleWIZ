@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Choose Your Preferences"
-                android:textSize="20sp"
+                android:textSize="24sp"
                 android:textStyle="bold"/>
 
             <ImageView
