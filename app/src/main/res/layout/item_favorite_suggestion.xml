@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:text="This is the description!"
             android:textSize="16sp"
-            android:padding="8dp"/>
+            android:padding="5dp"/>
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>
