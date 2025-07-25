@@ -1,6 +1,7 @@
 package com.example.stylewiz_vol2;
 
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -46,29 +47,33 @@ public class EditDetailsFragment extends Fragment {
 
     Button cancelBtn, saveBtn;
     private ImageView editDetailsImage, backButton, deleteButton;
-    String edit_Category, item_StyleTag, item_Seasonality;
+    String edit_Category, edit_StyleTag, edit_Color, edit_Seasonality;
 
     String[] category = {"Top", "One-Piece", "Bottom", "Outerwear", "Shoes", "Accessory"};
-    AutoCompleteTextView categoryDropdown, styleTagDropdown, seasonalityDropdown;
+    String[] styleTag = {"Sport", "Casual", "Formal", "Seasonal", "Streetwear", "Work"};
+    String[] seasonality = {"Autumn/Winter", "Spring/Summer", "All season"};
+    String[] color = {"Black", "White", "Gray", "Red", "Blue", "Green", "Yellow", "Brown", "Beige", "Pink", "Gold"};
+    AutoCompleteTextView categoryDropdown, styleTagDropdown, colorDropdown, seasonalityDropdown;
 
 
 
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // Initialize dropdown
         categoryDropdown = view.findViewById(R.id.categoryDropdown);
 
-// Setup the adapter for the AutoCompleteTextView
+        // Setup the adapter for the AutoCompleteTextView
         ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(getActivity(), R.layout.list_item, category);
         categoryDropdown.setAdapter(categoryAdapter);
 
-// Allow the AutoCompleteTextView to remain focusable
+        // Allow the AutoCompleteTextView to remain focusable
         categoryDropdown.setFocusable(true);
         categoryDropdown.setClickable(true);
 
-// Handle touch events to open the dropdown without opening the keyboard
+        // Handle touch events to open the dropdown without opening the keyboard
         categoryDropdown.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -88,12 +93,12 @@ public class EditDetailsFragment extends Fragment {
             }
         });
 
-// Set the selected category if it exists
+        // Set the selected category if it exists
         if (!TextUtils.isEmpty(edit_Category)) {
             categoryDropdown.setText(edit_Category, false);
         }
 
-// Handle selection from the dropdown
+        // Handle selection from the dropdown
         categoryDropdown.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
@@ -104,6 +109,195 @@ public class EditDetailsFragment extends Fragment {
                 categoryDropdown.setText(edit_Category, false);
             }
         });
+
+
+        // Initialize dropdown styleTag
+        styleTagDropdown = view.findViewById(R.id.styleTagDropdown);
+
+        // Setup the adapter for the AutoCompleteTextView
+        ArrayAdapter<String> styleTagAdapter = new ArrayAdapter<>(getActivity(), R.layout.list_item, styleTag);
+        styleTagDropdown.setAdapter(styleTagAdapter);
+
+        // Allow the AutoCompleteTextView to remain focusable and clickable
+        styleTagDropdown.setFocusable(true);
+        styleTagDropdown.setClickable(true);
+
+        // Handle touch events to open the dropdown without opening the keyboard
+        styleTagDropdown.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    // Open the dropdown if it's not already showing
+                    if (!styleTagDropdown.isPopupShowing()) {
+                        styleTagDropdown.showDropDown();
+                    }
+
+                    // Hide the keyboard if it's showing
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (imm != null) {
+                        imm.hideSoftInputFromWindow(styleTagDropdown.getWindowToken(), 0);
+                    }
+
+                    // Call performClick for accessibility compliance
+                    v.performClick();
+                }
+                return false; // Return false to allow normal touch behavior
+            }
+        });
+
+        // Override performClick to remove lint warning and support accessibility
+        styleTagDropdown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Open the dropdown on click as well
+                if (!styleTagDropdown.isPopupShowing()) {
+                    styleTagDropdown.showDropDown();
+                }
+            }
+        });
+
+        // Set the selected style if it exists
+        if (!TextUtils.isEmpty(edit_StyleTag)) {
+            styleTagDropdown.setText(edit_StyleTag, false);
+        }
+
+        // Handle selection from the dropdown
+        styleTagDropdown.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
+                // Update the selected style tag
+                edit_StyleTag = adapterView.getItemAtPosition(i).toString();
+
+                // After selecting an item, set the text without opening keyboard
+                styleTagDropdown.setText(edit_StyleTag, false);
+            }
+        });
+
+
+        // Initialize dropdown color
+        colorDropdown = view.findViewById(R.id.colorDropdown);
+
+        // Setup the adapter for the AutoCompleteTextView
+        ArrayAdapter<String> colorAdapter = new ArrayAdapter<>(getActivity(), R.layout.list_item, color);
+        colorDropdown.setAdapter(colorAdapter);
+
+        // Allow the AutoCompleteTextView to remain focusable and clickable
+        colorDropdown.setFocusable(true);
+        colorDropdown.setClickable(true);
+
+        // Handle touch events to open the dropdown without opening the keyboard
+        colorDropdown.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    // Open the dropdown if it's not already showing
+                    if (!colorDropdown.isPopupShowing()) {
+                        colorDropdown.showDropDown();
+                    }
+
+                    // Hide the keyboard if it's showing
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (imm != null) {
+                        imm.hideSoftInputFromWindow(colorDropdown.getWindowToken(), 0);
+                    }
+
+                    // Call performClick for accessibility compliance
+                    v.performClick();
+                }
+                return false; // Return false to allow normal touch behavior
+            }
+        });
+
+        // Override performClick to remove lint warning and support accessibility
+        colorDropdown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Open the dropdown on click as well
+                if (!colorDropdown.isPopupShowing()) {
+                    colorDropdown.showDropDown();
+                }
+            }
+        });
+
+        // Set the selected style if it exists
+        if (!TextUtils.isEmpty(edit_Color)) {
+            colorDropdown.setText(edit_Color, false);
+        }
+
+        // Handle selection from the dropdown
+        colorDropdown.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
+                // Update the selected style tag
+                edit_Color = adapterView.getItemAtPosition(i).toString();
+
+                // After selecting an item, set the text without opening keyboard
+                colorDropdown.setText(edit_Color, false);
+            }
+        });
+
+        // Initialize dropdown seasonality
+        seasonalityDropdown = view.findViewById(R.id.seasonalityDropdown);
+
+        // Setup the adapter for the AutoCompleteTextView
+        ArrayAdapter<String> seasonalityAdapter = new ArrayAdapter<>(getActivity(), R.layout.list_item, seasonality);
+        seasonalityDropdown.setAdapter(seasonalityAdapter);
+
+        // Allow the AutoCompleteTextView to remain focusable and clickable
+        seasonalityDropdown.setFocusable(true);
+        seasonalityDropdown.setClickable(true);
+
+        // Handle touch events to open the dropdown without opening the keyboard
+        seasonalityDropdown.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    // Open the dropdown if it's not already showing
+                    if (!seasonalityDropdown.isPopupShowing()) {
+                        seasonalityDropdown.showDropDown();
+                    }
+
+                    // Hide the keyboard if it's showing
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (imm != null) {
+                        imm.hideSoftInputFromWindow(seasonalityDropdown.getWindowToken(), 0);
+                    }
+
+                    // Call performClick for accessibility compliance
+                    v.performClick();
+                }
+                return false; // Return false to allow normal touch behavior
+            }
+        });
+
+        // Override performClick to remove lint warning and support accessibility
+        seasonalityDropdown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Open the dropdown on click as well
+                if (!seasonalityDropdown.isPopupShowing()) {
+                    seasonalityDropdown.showDropDown();
+                }
+            }
+        });
+
+        // Set the selected style if it exists
+        if (!TextUtils.isEmpty(edit_Seasonality)) {
+            seasonalityDropdown.setText(edit_Seasonality, false);
+        }
+
+        // Handle selection from the dropdown
+        seasonalityDropdown.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
+                // Update the selected style tag
+                edit_Seasonality = adapterView.getItemAtPosition(i).toString();
+
+                // After selecting an item, set the text without opening keyboard
+                seasonalityDropdown.setText(edit_Seasonality, false);
+            }
+        });
+
 
 
     }
@@ -202,9 +396,9 @@ public class EditDetailsFragment extends Fragment {
 
         // Access the TextInputEditTexts inside the TextInputLayouts
         AutoCompleteTextView categoryEditDetails = (AutoCompleteTextView) categoryInputLayout.getEditText();
-        TextInputEditText styleTagEditDetails = (TextInputEditText) styleTagInputLayout.getEditText();
-        TextInputEditText colorEditDetails = (TextInputEditText) colorInputLayout.getEditText();
-        TextInputEditText seasonalityEditDetails = (TextInputEditText) seasonalityInputLayout.getEditText();
+        AutoCompleteTextView styleTagEditDetails = (AutoCompleteTextView) styleTagInputLayout.getEditText();
+        AutoCompleteTextView colorEditDetails = (AutoCompleteTextView) colorInputLayout.getEditText();
+        AutoCompleteTextView seasonalityEditDetails = (AutoCompleteTextView) seasonalityInputLayout.getEditText();
         TextInputEditText descriptionEditDetails = (TextInputEditText) descriptionInputLayout.getEditText();
 
         FirestoreHelper firestoreHelper = new FirestoreHelper();
@@ -220,10 +414,27 @@ public class EditDetailsFragment extends Fragment {
 
                     });
                 }
+                if (styleTagEditDetails != null) {
+                    styleTagEditDetails.post(() -> {
+                        styleTagEditDetails.setText(styleTag, false); // Prevent filtering
+                        styleTagEditDetails.clearFocus(); // Optional: Prevents unwanted keyboard popup
 
-                if (styleTagEditDetails != null) styleTagEditDetails.setText(styleTag);
-                if (colorEditDetails != null) colorEditDetails.setText(color);
-                if (seasonalityEditDetails != null) seasonalityEditDetails.setText(season);
+                    });
+                }
+                if (colorEditDetails != null) {
+                    colorEditDetails.post(() -> {
+                        colorEditDetails.setText(color, false); // Prevent filtering
+                        colorEditDetails.clearFocus(); // Optional: Prevents unwanted keyboard popup
+
+                    });
+                }
+                if (seasonalityEditDetails != null) {
+                    seasonalityEditDetails.post(() -> {
+                        seasonalityEditDetails.setText(season, false); // Prevent filtering
+                        seasonalityEditDetails.clearFocus(); // Optional: Prevents unwanted keyboard popup
+
+                    });
+                }
                 if (descriptionEditDetails != null) descriptionEditDetails.setText(description);
 
                 //save the changes to firestore
@@ -237,6 +448,27 @@ public class EditDetailsFragment extends Fragment {
                         String updatedDescription = descriptionEditDetails.getText().toString().trim();
                         // Call the update function with the new values
                         saveDetailsChanges(userId, documentId, updatedCategory, updatedStyleTag, updatedDescription, updatedColor, updatedSeason);
+
+                        //remove the current fragment and return to home
+                        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+
+                        // Clear the back stack completely before navigating
+                        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+                        // Ensure only the HomeFragment is visible
+                        FragmentTransaction transaction = fragmentManager.beginTransaction();
+                        Fragment homeFragment = fragmentManager.findFragmentByTag("HOME");
+                        if (homeFragment == null) {
+                            // Add the HomeFragment if it doesn't exist
+                            homeFragment = new HomeFragment();
+                            transaction.add(R.id.frameLayout, homeFragment, "HOME");
+                        } else {
+                            // Show the HomeFragment if it exists
+                            transaction.show(homeFragment);
+                        }
+
+                        // Remove EditDetailsFragment explicitly to avoid stacking
+                        transaction.remove(EditDetailsFragment.this).commit();
                     }
                     else {
                         Toast.makeText(getContext(), "All fields are required!", Toast.LENGTH_SHORT).show();

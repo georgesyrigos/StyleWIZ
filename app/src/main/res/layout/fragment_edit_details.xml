@@ -150,8 +150,9 @@
                             android:layout_height="wrap_content"
                             android:paddingStart="20dp"
                             android:minHeight="55dp"
+                            android:dropDownHeight="180dp"
                             android:clickable="true"
-                            android:hint="Select Category"
+                            android:hint="Category"
                             android:inputType="none"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -174,7 +175,6 @@
                         android:id="@+id/editStyleTagDetails"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Style Tag"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         app:boxBackgroundMode="outline"
                         app:boxStrokeWidth="2dp"
@@ -184,17 +184,18 @@
                         app:boxCornerRadiusBottomStart="30dp"
                         app:boxCornerRadiusBottomEnd="30dp"
                         app:hintTextColor="@color/blue"
-                        app:cursorColor="@color/blue"
-                        app:hintTextAppearance="@style/FloatingHintStyle">
+                        app:cursorColor="@color/blue">
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/black"
-                            android:paddingStart="20dp"
-                            android:drawableLeft="@drawable/outline_info_24"
-                            android:drawablePadding="10dp"
-                            android:gravity="start"/>
+                    <AutoCompleteTextView
+                        android:id="@+id/styleTagDropdown"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="20dp"
+                        android:minHeight="55dp"
+                        android:dropDownHeight="180dp"
+                        android:clickable="true"
+                        android:hint="Style Tag"
+                        android:inputType="none"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -214,7 +215,6 @@
                         android:id="@+id/editColorDetails"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Color"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         app:boxBackgroundMode="outline"
                         app:boxStrokeWidth="2dp"
@@ -224,16 +224,18 @@
                         app:boxCornerRadiusBottomStart="30dp"
                         app:boxCornerRadiusBottomEnd="30dp"
                         app:hintTextColor="@color/blue"
-                        app:hintTextAppearance="@style/FloatingHintStyle">
+                        app:cursorColor="@color/blue">
 
-                        <com.google.android.material.textfield.TextInputEditText
+                        <AutoCompleteTextView
+                            android:id="@+id/colorDropdown"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/black"
                             android:paddingStart="20dp"
-                            android:drawableLeft="@drawable/outline_info_24"
-                            android:drawablePadding="10dp"
-                            android:gravity="start"/>
+                            android:minHeight="55dp"
+                            android:dropDownHeight="180dp"
+                            android:clickable="true"
+                            android:hint="Color"
+                            android:inputType="none"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -254,7 +256,6 @@
                         android:id="@+id/editSeasonalityDetails"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Seasonality"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         app:boxBackgroundMode="outline"
                         app:boxStrokeWidth="2dp"
@@ -264,16 +265,18 @@
                         app:boxCornerRadiusBottomStart="30dp"
                         app:boxCornerRadiusBottomEnd="30dp"
                         app:hintTextColor="@color/blue"
-                        app:hintTextAppearance="@style/FloatingHintStyle">
+                        app:cursorColor="@color/blue">
 
-                        <com.google.android.material.textfield.TextInputEditText
+                        <AutoCompleteTextView
+                            android:id="@+id/seasonalityDropdown"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/black"
                             android:paddingStart="20dp"
-                            android:drawableLeft="@drawable/outline_info_24"
-                            android:drawablePadding="10dp"
-                            android:gravity="start"/>
+                            android:minHeight="55dp"
+                            android:dropDownHeight="180dp"
+                            android:clickable="true"
+                            android:hint="Seasonality"
+                            android:inputType="none"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -304,6 +307,7 @@
                         app:boxCornerRadiusBottomStart="30dp"
                         app:boxCornerRadiusBottomEnd="30dp"
                         app:hintTextColor="@color/blue"
+                        app:cursorColor="@color/blue"
                         app:hintTextAppearance="@style/FloatingHintStyle">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -311,7 +315,6 @@
                             android:layout_height="wrap_content"
                             android:textColor="@color/black"
                             android:paddingStart="20dp"
-                            android:drawableLeft="@drawable/outline_info_24"
                             android:drawablePadding="10dp"
                             android:gravity="start"/>
                     </com.google.android.material.textfield.TextInputLayout>

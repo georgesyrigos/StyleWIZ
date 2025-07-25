@@ -67,7 +67,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Select category"
-            android:textColorHint="@color/gray"
+            app:hintTextColor="@color/blue"
             android:layout_marginTop="15dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
@@ -75,7 +75,7 @@
                 android:id="@+id/textCategory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:dropDownHeight="200dp"
+                android:dropDownHeight="180dp"
                 android:background="@drawable/edittextshape"
                 android:inputType="none"/>
 
@@ -86,7 +86,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Select style tag"
-            android:textColorHint="@color/gray"
+            app:hintTextColor="@color/blue"
             android:layout_marginTop="20dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
@@ -94,7 +94,7 @@
                 android:id="@+id/textStyleTag"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:dropDownHeight="200dp"
+                android:dropDownHeight="180dp"
                 android:background="@drawable/edittextshape"
                 android:inputType="none"/>
 
@@ -108,7 +108,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Select color"
-            android:textColorHint="@color/gray"
+            app:hintTextColor="@color/blue"
             android:layout_marginTop="20dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
@@ -116,7 +116,7 @@
                 android:id="@+id/textColor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:dropDownHeight="200dp"
+                android:dropDownHeight="180dp"
                 android:background="@drawable/edittextshape"
                 android:inputType="none"/>
         </com.google.android.material.textfield.TextInputLayout>
@@ -126,7 +126,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Select seasonality"
-            android:textColorHint="@color/gray"
+            app:hintTextColor="@color/blue"
             android:layout_marginTop="20dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
@@ -134,7 +134,7 @@
                 android:id="@+id/textSeasonality"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:dropDownHeight="200dp"
+                android:dropDownHeight="180dp"
                 android:background="@drawable/edittextshape"
                 android:inputType="none"/>
 
@@ -146,7 +146,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:hint="Enter description"
-            android:textColorHint="@color/gray"
+            app:hintTextColor="@color/blue"
+            app:cursorColor="@color/blue"
             app:hintAnimationEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -167,6 +168,7 @@
             android:layout_height="50dp"
             android:background="@drawable/edittextshape"
             android:backgroundTint="@color/blue"
+            app:cursorColor="@color/blue"
             android:text="ADD ITEM"
             android:textColor="@color/white"
             android:fontFamily="@font/roboto"
