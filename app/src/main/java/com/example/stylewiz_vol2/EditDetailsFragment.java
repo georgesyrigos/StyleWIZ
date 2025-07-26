@@ -36,10 +36,12 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -525,44 +527,107 @@ public class EditDetailsFragment extends Fragment {
                 .show();
     }
 
-
     private void deleteSelectedItem(String userId, String itemId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+        // Get the photoUrl of the item being deleted
         db.collection("users")
                 .document(userId)
                 .collection("wardrobe")
                 .document(itemId)
-                .delete()
-                .addOnSuccessListener(aVoid -> {
-                    Log.e("EditDetailsFragment", "Item deleted successfully");
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String photoUrl = documentSnapshot.getString("photoUrl");
 
+                        //Delete the wardrobe item
+                        db.collection("users")
+                                .document(userId)
+                                .collection("wardrobe")
+                                .document(itemId)
+                                .delete()
+                                .addOnSuccessListener(aVoid -> {
+                                    Log.d("EditDetailsFragment", "Item deleted successfully");
 
-                    //remove the current fragment and return to home
-                    FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                                    // Clean up from outfits and selected outfits
+                                    deleteFromOutfits(userId, photoUrl);
+                                    deleteFromSelectedOutfits(userId, photoUrl);
 
-                    // Clear the back stack completely before navigating
-                    fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                    // Navigate back to Home
+                                    FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                                    fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
-                    // Ensure only the HomeFragment is visible
-                    FragmentTransaction transaction = fragmentManager.beginTransaction();
-                    Fragment homeFragment = fragmentManager.findFragmentByTag("HOME");
-                    if (homeFragment == null) {
-                        // Add the HomeFragment if it doesn't exist
-                        homeFragment = new HomeFragment();
-                        transaction.add(R.id.frameLayout, homeFragment, "HOME");
+                                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                                    Fragment homeFragment = fragmentManager.findFragmentByTag("HOME");
+                                    if (homeFragment == null) {
+                                        homeFragment = new HomeFragment();
+                                        transaction.add(R.id.frameLayout, homeFragment, "HOME");
+                                    } else {
+                                        transaction.show(homeFragment);
+                                    }
+                                    transaction.remove(EditDetailsFragment.this).commit();
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("EditDetailsFragment", "Failed to delete item: " + e.getMessage());
+                                });
                     } else {
-                        // Show the HomeFragment if it exists
-                        transaction.show(homeFragment);
+                        Log.e("EditDetailsFragment", "Item not found before deletion.");
                     }
-
-                    // Remove DetailsFragment explicitly to avoid stacking
-                    transaction.remove(EditDetailsFragment.this).commit();
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("EditDetailsFragment", "Failed to delete item: " + e.getMessage());
-
+                    Log.e("EditDetailsFragment", "Failed to fetch item for deletion: " + e.getMessage());
                 });
     }
+
+
+    private void deleteFromOutfits(String userId, String photoUrl) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users")
+                .document(userId)
+                .collection("outfits")
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    for (DocumentSnapshot doc : querySnapshot) {
+                        boolean shouldDelete = false;
+                        for (String field : doc.getData().keySet()) {
+                            Object value = doc.get(field);
+                            if (value instanceof String && photoUrl.equals(value)) {
+                                shouldDelete = true;
+                                break;
+                            }
+                        }
+                        if (shouldDelete) {
+                            doc.getReference().delete();
+                        }
+                    }
+                });
+    }
+
+    private void deleteFromSelectedOutfits(String userId, String photoUrl) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users")
+                .document(userId)
+                .collection("selectedOutfits")
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    for (DocumentSnapshot doc : querySnapshot) {
+                        Object imagesObj = doc.get("images");
+                        if (imagesObj instanceof List) {
+                            List<?> imageList = (List<?>) imagesObj;
+                            for (Object item : imageList) {
+                                if (item instanceof Map) {
+                                    Map<?, ?> imageItem = (Map<?, ?>) item;
+                                    Object url = imageItem.get("url");
+                                    if (photoUrl.equals(url)) {
+                                        doc.getReference().delete(); // Delete the outfit
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+    }
+
 
 }
