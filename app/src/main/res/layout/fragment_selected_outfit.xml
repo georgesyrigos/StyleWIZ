@@ -67,13 +67,44 @@ android:scrollbars="none">
 
     </LinearLayout>
 
+    <!-- Accessory -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="start"
+        android:padding="5dp">
+
+
+        <ImageView
+            android:id="@+id/imgAccessory1"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/round_add_24"
+            android:layout_margin="10dp"
+            android:background="@drawable/dashed_border"
+            android:scaleType="centerCrop"
+            android:contentDescription="Accessory 1"
+            android:clipToOutline="true"/>
+        <ImageView
+            android:id="@+id/imgAccessory2"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/round_add_24"
+            android:layout_margin="10dp"
+            android:background="@drawable/dashed_border"
+            android:scaleType="centerCrop"
+            android:contentDescription="Accessory 2"
+            android:clipToOutline="true"/>
+
+    </LinearLayout>
 
     <!-- Outerwear -->
     <ImageView
         android:id="@+id/imgOuterwear"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:src="@drawable/round_add_24"
         android:background="@drawable/dashed_border"
         android:scaleType="centerCrop"
@@ -86,7 +117,8 @@ android:scrollbars="none">
         android:layout_height="wrap_content"
         android:columnCount="2"
         android:rowCount="2"
-        android:layout_marginTop="10dp"
+        android:padding="5dp"
+        android:layout_marginTop="5dp"
         android:alignmentMode="alignMargins"
         android:rowOrderPreserved="false">
 
@@ -131,7 +163,7 @@ android:scrollbars="none">
             android:clipToOutline="true"/>
     </GridLayout>
 
-
+    <!-- One piece -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -169,42 +201,12 @@ android:scrollbars="none">
         android:id="@+id/imgShoes"
         android:layout_width="150dp"
         android:layout_height="150dp"
+        android:layout_margin="10dp"
         android:src="@drawable/round_add_24"
         android:background="@drawable/dashed_border"
         android:scaleType="centerCrop"
         android:contentDescription="Shoes"
         android:clipToOutline="true"/>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="start"
-        android:padding="5dp">
-
-
-        <ImageView
-            android:id="@+id/imgAccessory1"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:src="@drawable/round_add_24"
-            android:layout_margin="10dp"
-            android:background="@drawable/dashed_border"
-            android:scaleType="centerCrop"
-            android:contentDescription="Accessory 1"
-            android:clipToOutline="true"/>
-        <ImageView
-            android:id="@+id/imgAccessory2"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:src="@drawable/round_add_24"
-            android:layout_margin="10dp"
-            android:background="@drawable/dashed_border"
-            android:scaleType="centerCrop"
-            android:contentDescription="Accessory 2"
-            android:clipToOutline="true"/>
-
-    </LinearLayout>
 
 </LinearLayout>
 

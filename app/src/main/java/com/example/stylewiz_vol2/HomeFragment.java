@@ -32,12 +32,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class HomeFragment extends Fragment {
     TextView textViewUsername;
@@ -131,9 +133,6 @@ public class HomeFragment extends Fragment {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback(getContext(), adapter));
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
-        //Load user data for username
-        //showUserData(view);
-        //text size for username 0dp if needed to show
 
         // Fetch data from Firestore
         fetchDataFromFirestore();
@@ -143,67 +142,38 @@ public class HomeFragment extends Fragment {
     }
 
 
-    private void showUserData(View view) {
-        textViewUsername = view.findViewById(R.id.homeFragment);
-
-        // Get current user
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (user != null) {
-            String email = user.getEmail();
-
-            if (email != null) {
-
-                // Set up a listener for username changes
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                usernameListener = db.collection("users")
-                        .document(user.getUid()) // Use UID for unique identification
-                        .addSnapshotListener((snapshot, error) -> {
-                            if (error != null) {
-                                Toast.makeText(getActivity(), "Failed to listen for username changes: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-
-                            if (snapshot != null && snapshot.exists()) {
-                                String username = snapshot.getString("username");
-                                if (username != null) {
-                                    textViewUsername.setText("Welcome "+ username + "!");
-
-                                } else {
-                                    textViewUsername.setText("Unknown User");
-
-                                }
-                            } else {
-                                textViewUsername.setText("Unknown User");
-                            }
-                        });
-
-            } else {
-                Toast.makeText(getActivity(), "No email found", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            Toast.makeText(getActivity(), "User not authenticated", Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
     private void deleteItemFromFirestore(String documentId) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             String userId = user.getUid();
-            db.collection("users")
+            DocumentReference itemRef = db.collection("users")
                     .document(userId)
                     .collection("wardrobe")
-                    .document(documentId)
-                    .delete()
-                    .addOnSuccessListener(aVoid -> {
-                        Log.d("Firestore", "Document successfully deleted.");
-                        isManualUpdate = false; // Unlock updates
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e("Firestore", "Error deleting document", e);
-                        isManualUpdate = false; // Unlock updates even on failure
+                    .document(documentId);
+
+            // Get the document to retrieve the photoUrl
+            itemRef.get().addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    String photoUrl = documentSnapshot.getString("photoUrl");
+
+                    // Delete the wardrobe item
+                    itemRef.delete().addOnSuccessListener(aVoid -> {
+                        Log.d("Firestore", "Item deleted from wardrobe.");
+
+                        // Delete any related outfits or selectedOutfits
+                        deleteFromOutfits(userId, photoUrl);
+                        deleteFromSelectedOutfits(userId, photoUrl);
+
+                        isManualUpdate = false;
+                    }).addOnFailureListener(e -> {
+                        Log.e("Firestore", "Failed to delete item", e);
+                        isManualUpdate = false;
                     });
+                } else {
+                    Log.w("Firestore", "Wardrobe item not found.");
+                    isManualUpdate = false;
+                }
+            });
         }
     }
 
@@ -298,6 +268,58 @@ public class HomeFragment extends Fragment {
             }
         }
     }
+
+    private void deleteFromOutfits(String userId, String imageUrl) {
+        db.collection("users")
+                .document(userId)
+                .collection("outfits")
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    for (DocumentSnapshot doc : querySnapshot) {
+                        Map<String, Object> fields = doc.getData();
+                        if (fields != null) {
+                            for (Object value : fields.values()) {
+                                if (imageUrl.equals(value)) {
+                                    doc.getReference().delete(); // Delete the whole outfit
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                });
+    }
+
+    private void deleteFromSelectedOutfits(String userId, String imageUrl) {
+        db.collection("users")
+                .document(userId)
+                .collection("selectedOutfits")
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    for (DocumentSnapshot doc : querySnapshot) {
+                        Object imagesObj = doc.get("images");
+
+                        if (imagesObj instanceof List) {
+                            List<?> imagesList = (List<?>) imagesObj;
+
+                            for (Object item : imagesList) {
+                                if (item instanceof Map) {
+                                    Map<?, ?> imageMap = (Map<?, ?>) item;
+                                    Object urlObj = imageMap.get("url");
+
+                                    if (urlObj != null && imageUrl.equals(urlObj.toString())) {
+                                        doc.getReference().delete(); // Delete the matching selected outfit
+                                        break;
+                                    }
+                                }
+                            }
+                        } else {
+                            Log.w("Firestore", "Unexpected structure in 'images' field: " + doc.getId());
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("Firestore", "Failed to fetch selectedOutfits", e));
+    }
+
 
 
 

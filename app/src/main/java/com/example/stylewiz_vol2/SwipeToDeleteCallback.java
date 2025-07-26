@@ -51,7 +51,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
         // Confirm deletion with an alert dialog
         new AlertDialog.Builder(mContext)
                 .setTitle("Delete Item")
-                .setMessage("Are you sure you want to delete this item?")
+                .setMessage("This will permanently delete the item and remove it from any outfits or suggestions it's part of. Continue?")
                 .setPositiveButton("Yes", (dialog, which) -> {
                     isManualUpdate = true; // Lock snapshot updates
                     mAdapter.deleteItemAtPosition(position); // Notify adapter

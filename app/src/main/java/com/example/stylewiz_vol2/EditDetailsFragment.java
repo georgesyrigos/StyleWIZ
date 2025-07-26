@@ -514,7 +514,7 @@ public class EditDetailsFragment extends Fragment {
     private void showDeleteConfirmationDialog(String userId,String documentId) {
         new AlertDialog.Builder(getContext())
                 .setTitle("Delete Item")
-                .setMessage("Are you sure you want to delete this item?")
+                .setMessage("This will permanently delete the item and remove it from any outfits or suggestions it's part of. Continue?")
                 .setPositiveButton("Yes", (dialog, which) -> {
                     deleteSelectedItem(userId, documentId);
                 })
