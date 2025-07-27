@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="40dp"
+    android:background="@drawable/rounded_corners">
+
+    <!-- FrameLayout with weight -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:id="@+id/fullImagesContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center" />
+
+        <ImageView
+            android:id="@+id/closeBtn"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="top|end"
+            android:layout_margin="5dp"
+            android:padding="6dp"
+            android:elevation="5dp"
+            android:background="@drawable/circle_shape"
+            android:src="@drawable/round_clear_24"
+            android:contentDescription="Close"/>
+    </FrameLayout>
+
+
+    <TextView
+        android:id="@+id/outfitTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginTop="12dp"
+        android:text="Outfit Title"/>
+
+    <TextView
+        android:id="@+id/outfitDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_marginTop="8dp"
+        android:text="Outfit Description"/>
+
+</LinearLayout>

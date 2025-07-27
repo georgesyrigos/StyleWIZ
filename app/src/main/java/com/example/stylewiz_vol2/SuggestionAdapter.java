@@ -1,6 +1,8 @@
 package com.example.stylewiz_vol2;
 
+import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -199,6 +201,16 @@ public class SuggestionAdapter extends RecyclerView.Adapter<SuggestionAdapter.Su
             }
         });
 
+        holder.viewFullOutfit.setOnClickListener(v -> {
+            Context context = holder.itemView.getContext();
+            List<ImageItem> imageItems = new ArrayList<>(suggestion.getImages());
+            String title = suggestion.getTitle();
+            String desc = suggestion.getDescription();
+
+            FullSuggestedOutfitDialog dialog = new FullSuggestedOutfitDialog(context, imageItems, title, desc);
+            dialog.show();
+        });
+
     }
 
     @Override
@@ -210,6 +222,7 @@ public class SuggestionAdapter extends RecyclerView.Adapter<SuggestionAdapter.Su
         TextView title, description;
         LinearLayout imagesContainer;
         Button selectButton;
+        ImageView viewFullOutfit;
 
         public SuggestionViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -217,6 +230,7 @@ public class SuggestionAdapter extends RecyclerView.Adapter<SuggestionAdapter.Su
             description = itemView.findViewById(R.id.suggestionDescription);
             imagesContainer = itemView.findViewById(R.id.imagesContainer);
             selectButton = itemView.findViewById(R.id.selectButton);
+            viewFullOutfit = itemView.findViewById(R.id.viewFullOutfit);
 
         }
     }
