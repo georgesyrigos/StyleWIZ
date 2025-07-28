@@ -49,6 +49,7 @@ public class SuggestionsFragment extends Fragment {
     private RecyclerView suggestionsRecycler;
     private LinearLayout overlayContainer;
     private TextView noSuggestionsText;
+    private ProgressDialogHelper progressDialogHelper;
 
 
 
@@ -58,7 +59,8 @@ public class SuggestionsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_suggestions, container, false);
 
-        //loadUserPreferences(); //Load and store default values
+        progressDialogHelper = new ProgressDialogHelper(requireContext());
+
         resetUserPreferencesToDefaults();
 
         optionSeason = view.findViewById(R.id.optionSeason);
@@ -87,17 +89,22 @@ public class SuggestionsFragment extends Fragment {
             logUserPreferences();
             Log.d("DEBUG", "Apply Filters clicked");
 
+            progressDialogHelper.showProgressDialog(requireContext());
+
 
             OutfitGenerator.generateOutfits(requireContext(), outfits -> {
                 if (outfits.isEmpty()) {
-                    // ✅ No outfits generated at all
+                    // No outfits generated at all
                     overlayContainer.setVisibility(View.VISIBLE);
                     noSuggestionsText.setVisibility(View.VISIBLE);
                     suggestionsRecycler.setVisibility(View.GONE);
+                    // Dismiss the progress dialog
+                    if (progressDialogHelper != null) {
+                        progressDialogHelper.dismissProgressDialog();
+                    }
                     return;
                 }
 
-                //List<OutfitSuggestion> baseSuggestions = new ArrayList<>();
                 List<OutfitSuggestion> baseSuggestions = new ArrayList<>(Collections.nCopies(outfits.size(), null));
 
 
@@ -147,11 +154,9 @@ public class SuggestionsFragment extends Fragment {
                                                 outerwearText
                                         );
 
-                                        //baseSuggestions.add(new OutfitSuggestion(title, desc, imageItems));
                                         baseSuggestions.set(outfitIndex, new OutfitSuggestion(title, desc, imageItems));
 
-                                        // ✅ Check if all outfits are built
-                                        //if (baseSuggestions.size() == outfits.size()) {
+                                        // Check if all outfits are built
                                         if (!baseSuggestions.contains(null)) {
                                             buildInfiniteSuggestionsAndSetupAdapter(baseSuggestions);
                                             Log.d("DEBUG", "All outfits built");
@@ -188,7 +193,7 @@ public class SuggestionsFragment extends Fragment {
                     transaction.hide(currentFragment);
                 }
 
-                // Add DetailsFragment or show if already added
+                // Add FavoriteSuggestionsFragment or show if already added
                 transaction.add(R.id.frameLayout, favoriteSuggestionsFragment, "FAVORITE_SUGGESTION")
                         .addToBackStack("FAVORITE_SUGGESTION")
                         .commit();
@@ -216,6 +221,10 @@ public class SuggestionsFragment extends Fragment {
     }
 
     private void buildInfiniteSuggestionsAndSetupAdapter(List<OutfitSuggestion> baseSuggestions) {
+        if (progressDialogHelper != null) {
+            progressDialogHelper.dismissProgressDialog();
+        }
+
         overlayContainer.setVisibility(View.VISIBLE);
 
         if (baseSuggestions.isEmpty()) {
@@ -230,16 +239,15 @@ public class SuggestionsFragment extends Fragment {
                 infiniteSuggestions.addAll(baseSuggestions);
             }
 
-            //List<OutfitSuggestion> limitedSuggestions = new ArrayList<>(baseSuggestions);
             int middleIndex = infiniteSuggestions.size() / 2;
 
             SuggestionAdapter adapter = new SuggestionAdapter(infiniteSuggestions);
             suggestionsRecycler.setAdapter(adapter);
 
-            // ✅ Setup carousel with middle index
+            // Setup carousel with middle index
             setupCarouselRecycler(suggestionsRecycler, middleIndex);
 
-            // ✅ Scroll to middle index after layout is ready
+            // Scroll to middle index after layout is ready
             suggestionsRecycler.post(() -> {
                 RecyclerView.LayoutManager layoutManager = suggestionsRecycler.getLayoutManager();
                 if (layoutManager instanceof LinearLayoutManager) {
@@ -410,22 +418,6 @@ public class SuggestionsFragment extends Fragment {
         }
     }
 
-    private void loadUserPreferences() {
-        if (getContext() == null) return;
-
-        SharedPreferences prefs = getContext().getSharedPreferences("user_filters", getContext().MODE_PRIVATE);
-
-        // Load or fall back to default
-        selectedSeasonTag = prefs.getString("season", selectedSeasonTag); // "spring" by default
-        selectedStyleTag = prefs.getString("occasion", selectedStyleTag); // "sport" by default
-        selectedTypeTag = prefs.getString("outfit_type", selectedTypeTag); // "one_piece" by default
-        selectedAccessoriesTag = prefs.getString("accessories", selectedAccessoriesTag); // "no" by default
-        selectedOuterwearTag = prefs.getString("outerwear", selectedOuterwearTag); // "no" by default
-
-        // Save these back in case this is the first run (harmless if already exists)
-        saveUserPreferences();
-    }
-
     private void resetUserPreferencesToDefaults() {
         if (getContext() == null) return;
 
@@ -488,7 +480,6 @@ public class SuggestionsFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
-        //new LinearSnapHelper().attachToRecyclerView(recyclerView);
         // Prevent multiple SnapHelpers attached
         if (recyclerView.getOnFlingListener() != null) {
             recyclerView.setOnFlingListener(null);

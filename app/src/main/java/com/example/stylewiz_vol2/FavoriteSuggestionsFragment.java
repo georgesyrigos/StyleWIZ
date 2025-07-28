@@ -37,6 +37,7 @@ public class FavoriteSuggestionsFragment extends Fragment {
     private List<FavoriteSuggestion> favoriteSuggestions;
     ImageView backButton;
     private LinearLayout emptyStateLayout, favoritesLinearLayout;
+    private ProgressDialogHelper progressDialogHelper;
 
 
     @Nullable
@@ -56,6 +57,7 @@ public class FavoriteSuggestionsFragment extends Fragment {
         favoriteSuggestions = new ArrayList<>();
         adapter = new FavoriteAdapter(favoriteSuggestions);
         favoritesRecycler.setAdapter(adapter);
+        progressDialogHelper = new ProgressDialogHelper(requireContext());
 
         fetchFavoriteSuggestions();
 
@@ -92,6 +94,9 @@ public class FavoriteSuggestionsFragment extends Fragment {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) return;
 
+        // Show loading spinner
+        progressDialogHelper.showProgressDialog(requireContext());
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("users")
@@ -124,6 +129,9 @@ public class FavoriteSuggestionsFragment extends Fragment {
                         fetchedList.add(suggestion);
                     }
 
+                    // Dismiss spinner before updating UI
+                    progressDialogHelper.dismissProgressDialog();
+
                     // Update adapter
                     favoriteSuggestions.clear();
                     adapter.notifyItemRangeRemoved(0, previousSize);
@@ -133,11 +141,9 @@ public class FavoriteSuggestionsFragment extends Fragment {
                     // Toggle empty state visibility
                     if (fetchedList.isEmpty()) {
                         emptyStateLayout.setVisibility(View.VISIBLE);
-                        favoritesRecycler.setVisibility(View.GONE);
                         favoritesLinearLayout.setVisibility(View.GONE);
                     } else {
                         emptyStateLayout.setVisibility(View.GONE);
-                        favoritesRecycler.setVisibility(View.VISIBLE);
                         favoritesLinearLayout.setVisibility(View.VISIBLE);
                     }
                 })

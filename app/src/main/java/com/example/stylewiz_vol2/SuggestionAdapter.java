@@ -204,10 +204,8 @@ public class SuggestionAdapter extends RecyclerView.Adapter<SuggestionAdapter.Su
         holder.viewFullOutfit.setOnClickListener(v -> {
             Context context = holder.itemView.getContext();
             List<ImageItem> imageItems = new ArrayList<>(suggestion.getImages());
-            String title = suggestion.getTitle();
-            String desc = suggestion.getDescription();
 
-            FullSuggestedOutfitDialog dialog = new FullSuggestedOutfitDialog(context, imageItems, title, desc);
+            FullSuggestedOutfitDialog dialog = new FullSuggestedOutfitDialog(context, imageItems);
             dialog.show();
         });
 

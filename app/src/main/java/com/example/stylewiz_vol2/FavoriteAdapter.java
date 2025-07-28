@@ -14,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,19 +51,23 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
             return;
         }
 
-// 🔷 Desired order
+        // Desired order
         List<String> desiredOrder = Arrays.asList("accessory", "outerwear", "one-piece", "top", "bottom", "shoes");
 
-// 🔷 Sort by category order
+        // Sort by category order (null safe)
         Collections.sort(images, (i1, i2) -> {
-            int index1 = desiredOrder.indexOf(i1.getCategory());
-            int index2 = desiredOrder.indexOf(i2.getCategory());
+            String cat1 = i1.getCategory() != null ? i1.getCategory().toLowerCase() : "";
+            String cat2 = i2.getCategory() != null ? i2.getCategory().toLowerCase() : "";
+
+            int index1 = desiredOrder.indexOf(cat1);
+            int index2 = desiredOrder.indexOf(cat2);
+
             if (index1 == -1) index1 = desiredOrder.size();
             if (index2 == -1) index2 = desiredOrder.size();
             return Integer.compare(index1, index2);
         });
 
-        // 🔷 Add ImageViews
+        // Add ImageViews
         for (FavoriteImageItem imageItem : images) {
             addImageView(holder, imageItem.getUrl());
         }

@@ -17,21 +17,14 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 public class FullSuggestedOutfitDialog extends Dialog {
-    public FullSuggestedOutfitDialog(@NonNull Context context,
-                                     List<ImageItem> imageItems,
-                                     String title,
-                                     String description) {
+    public FullSuggestedOutfitDialog(@NonNull Context context, List<ImageItem> imageItems) {
         super(context);
         setContentView(R.layout.dialog_full_outfit);
 
 
         LinearLayout imagesContainer = findViewById(R.id.fullImagesContainer);
-        TextView titleText = findViewById(R.id.outfitTitle);
-        TextView descText = findViewById(R.id.outfitDesc);
         ImageView closeBtn = findViewById(R.id.closeBtn);
 
-        titleText.setText(title);
-        descText.setText(description);
 
         imagesContainer.removeAllViews();
         imagesContainer.setWeightSum(imageItems.size());
@@ -46,7 +39,7 @@ public class FullSuggestedOutfitDialog extends Dialog {
             );
             params.setMargins(4, 4, 4, 4);
             imageView.setLayoutParams(params);
-            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
             Glide.with(context)
                     .load(item.getUrl())
