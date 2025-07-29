@@ -54,7 +54,11 @@ public class EditDetailsFragment extends Fragment {
     String[] category = {"Top", "One-Piece", "Bottom", "Outerwear", "Shoes", "Accessory"};
     String[] styleTag = {"Sport", "Casual", "Formal", "Seasonal", "Streetwear", "Work"};
     String[] seasonality = {"Autumn/Winter", "Spring/Summer", "All season"};
-    String[] color = {"Black", "White", "Gray", "Red", "Blue", "Green", "Yellow", "Brown", "Beige", "Pink", "Gold"};
+    String[] color = {
+            "Beige", "Black", "Blue", "Brown", "Gold",
+            "Gray", "Green", "Navy", "Olive", "Orange",
+            "Pink", "Red", "Silver", "Violet", "White", "Yellow"
+    };
     AutoCompleteTextView categoryDropdown, styleTagDropdown, colorDropdown, seasonalityDropdown;
 
 
@@ -448,6 +452,12 @@ public class EditDetailsFragment extends Fragment {
                         String updatedColor = colorEditDetails.getText().toString().trim();
                         String updatedSeason = seasonalityEditDetails.getText().toString().trim();
                         String updatedDescription = descriptionEditDetails.getText().toString().trim();
+
+                        // Check description is not empty or just spaces
+                        if (updatedDescription.isEmpty()) {
+                            Toast.makeText(getContext(), "Description cannot be empty", Toast.LENGTH_SHORT).show();
+                            return;  // Stop here, don't save
+                        }
                         // Call the update function with the new values
                         saveDetailsChanges(userId, documentId, updatedCategory, updatedStyleTag, updatedDescription, updatedColor, updatedSeason);
 

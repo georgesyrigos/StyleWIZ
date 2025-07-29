@@ -77,8 +77,11 @@ public class NewItemFragment extends Fragment {
     String[] category = {"Top", "One-Piece", "Bottom", "Outerwear", "Shoes", "Accessory"};
     String[] styleTag = {"Sport", "Casual", "Formal", "Seasonal", "Streetwear", "Work"};
     String[] seasonality = {"Autumn/Winter", "Spring/Summer", "All season"};
-    String[] color = {"Black", "White", "Gray", "Red", "Blue", "Green", "Yellow", "Brown", "Beige", "Pink", "Gold"};
-
+    String[] color = {
+            "Beige", "Black", "Blue", "Brown", "Gold",
+            "Gray", "Green", "Navy", "Olive", "Orange",
+            "Pink", "Red", "Silver", "Violet", "White", "Yellow"
+    };
     AutoCompleteTextView categoryDropdown, styleTagDropdown, colorDropdown, seasonalityDropdown;
     private ProgressDialogHelper progressDialogHelper;
 

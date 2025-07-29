@@ -22,7 +22,11 @@ public class OutfitGenerator {
         void onResult(List<List<String>> outfits);
     }
 
-    private static final String[] COLORS = {"black", "white", "gray", "red", "blue", "green", "yellow", "brown", "beige", "pink", "gold"};
+    private static final String[] COLORS = {
+            "beige", "black", "blue", "brown", "gold",
+            "gray", "green", "navy", "olive", "orange",
+            "pink", "red", "silver", "violet", "white", "yellow"
+    };
 
     private static final Map<String, List<String>> rankedMatches = new HashMap<>();
 
@@ -41,6 +45,11 @@ public class OutfitGenerator {
         rankedMatches.put("beige", Arrays.asList("brown", "white", "green", "gray", "black", "gold"));
         rankedMatches.put("pink", Arrays.asList("gray", "white", "black", "blue", "red", "gold"));
         rankedMatches.put("gold", Arrays.asList("black", "white", "blue", "pink", "brown", "beige"));
+        rankedMatches.put("silver", Arrays.asList("black", "white", "gray", "blue", "pink", "navy"));
+        rankedMatches.put("navy", Arrays.asList("white", "gray", "beige", "gold", "red", "silver"));
+        rankedMatches.put("violet", Arrays.asList("gray", "white", "black", "pink", "silver", "blue"));
+        rankedMatches.put("orange", Arrays.asList("white", "beige", "brown", "blue", "olive", "gray"));
+        rankedMatches.put("olive", Arrays.asList("white", "beige", "brown", "orange", "black", "gray"));
 
         // Build the colorScores matrix with 7-point system
         for (String base : COLORS) {
