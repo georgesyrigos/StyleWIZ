@@ -157,6 +157,11 @@ public class NewOutfitFragment extends Fragment {
                     imgAccessory2.setVisibility(View.VISIBLE);  // Show image if checked
                 } else {
                     imgAccessory2.setVisibility(View.INVISIBLE);  // Hide image if unchecked
+
+                    // Clears the option if unchecked
+                    selectedItemUrls.put(R.id.imgAccessory2, "none");
+                    imgAccessory2.setImageResource(R.drawable.round_add_24);
+                    imgAccessory2.setColorFilter(ContextCompat.getColor(requireContext(), R.color.gray), PorterDuff.Mode.SRC_IN);
                 }
             }
         });
@@ -169,6 +174,11 @@ public class NewOutfitFragment extends Fragment {
                     imgTop2.setVisibility(View.VISIBLE);  // Show image if checked
                 } else {
                     imgTop2.setVisibility(View.INVISIBLE);  // Hide image if unchecked
+
+                    // Clears the option if unchecked
+                    selectedItemUrls.put(R.id.imgTop2, "none");
+                    imgTop2.setImageResource(R.drawable.round_add_24);
+                    imgTop2.setColorFilter(ContextCompat.getColor(requireContext(), R.color.gray), PorterDuff.Mode.SRC_IN);
                 }
             }
         });
@@ -206,6 +216,11 @@ public class NewOutfitFragment extends Fragment {
                     } else {
                         imgLayerOnePiece.setVisibility(View.INVISIBLE);
                         imgLayerOnePiece.setOnClickListener(null);
+
+                        // Clears the option if unchecked
+                        selectedItemUrls.put(R.id.imgLayerOnePiece, "none");
+                        imgLayerOnePiece.setImageResource(R.drawable.round_add_24);
+                        imgLayerOnePiece.setColorFilter(ContextCompat.getColor(requireContext(), R.color.gray), PorterDuff.Mode.SRC_IN);
                     }
                 }
             }
@@ -470,13 +485,44 @@ public class NewOutfitFragment extends Fragment {
 
         // Button click removes the selected image
         btnRemoveImage.setOnClickListener(v -> {
-            if (targetImageView != null) {
+            boolean canRemove = true;
+
+            if (imageViewId == R.id.imgAccessory1 && chkAccessory.isChecked()) {
+                String accessory2 = selectedItemUrls.getOrDefault(R.id.imgAccessory2, "none");
+                if (!accessory2.equals("none")) {
+                    canRemove = false;
+                    Toast.makeText(requireContext(), "First remove the second Accessory", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            if (imageViewId == R.id.imgTop1 && chkTop.isChecked()) {
+                String top2 = selectedItemUrls.getOrDefault(R.id.imgTop2, "none");
+                if (!top2.equals("none")) {
+                    canRemove = false;
+                    Toast.makeText(requireContext(), "First remove the second Top", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            if (imageViewId == R.id.imgOnePiece && chkLayerOnePiece.isChecked()) {
+                String layerOnePiece = selectedItemUrls.getOrDefault(R.id.imgLayerOnePiece, "none");
+                if (!layerOnePiece.equals("none")) {
+                    canRemove = false;
+                    Toast.makeText(requireContext(), "First remove the One-Piece layer", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            if (canRemove && targetImageView != null) {
                 targetImageView.setImageResource(R.drawable.round_add_24); // Reset to default
                 targetImageView.setColorFilter(ContextCompat.getColor(requireContext(), R.color.gray), PorterDuff.Mode.SRC_IN);
                 selectedItemUrls.put(imageViewId, "none"); // Remove from selected list
-                btnRemoveImage.setEnabled(false); // Disable button since no image is selected
+                btnRemoveImage.setEnabled(false);
+                alertDialog.dismiss();
             }
-            alertDialog.dismiss();
+
+            if (canRemove) {
+                alertDialog.dismiss();
+            }
+
         });
 
         // Show the dialog after setting up everything
@@ -591,6 +637,24 @@ public class NewOutfitFragment extends Fragment {
             outfitData.put("outerwear", selectedItemUrls.getOrDefault(R.id.imgOuterwear, "none"));
             outfitData.put("shoes", selectedItemUrls.getOrDefault(R.id.imgShoes, "none"));
             outfitData.put("createdAt", com.google.firebase.Timestamp.now()); // Firestore timestamp
+
+            // Prevent saving if Top1 == Top2 or Accessory1 == Accessory2
+            String top1 = (String) outfitData.get("top1");
+            String top2 = (String) outfitData.get("top2");
+            String accessory1 = (String) outfitData.get("accessory1");
+            String accessory2 = (String) outfitData.get("accessory2");
+
+            if (top1 != null && top2 != null && !top1.equals("none") && top1.equals(top2)) {
+                Toast.makeText(requireContext(), "Top 1 and Top 2 cannot be the same!", Toast.LENGTH_SHORT).show();
+                progressDialogHelper.dismissProgressDialog();
+                return;
+            }
+
+            if (accessory1 != null && accessory2 != null && !accessory1.equals("none") && accessory1.equals(accessory2)) {
+                Toast.makeText(requireContext(), "Accessory 1 and Accessory 2 cannot be the same!", Toast.LENGTH_SHORT).show();
+                progressDialogHelper.dismissProgressDialog();
+                return;
+            }
 
 
             // Check if the outfit is complete before saving
