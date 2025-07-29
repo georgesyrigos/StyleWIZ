@@ -108,7 +108,8 @@ public class SuggestionsFragment extends Fragment {
                 List<OutfitSuggestion> baseSuggestions = new ArrayList<>(Collections.nCopies(outfits.size(), null));
 
 
-                String outerwearText = selectedOuterwearTag.equals("no") ? "without outerwear" : "with outerwear";
+                boolean hasOuterwear = !selectedOuterwearTag.equals("no");
+                boolean hasAccessory = !selectedAccessoriesTag.equals("no");
 
                 db = FirebaseFirestore.getInstance();
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -147,12 +148,24 @@ public class SuggestionsFragment extends Fragment {
                                             title = "Outfit " + (outfitIndex + 1);
                                         }
 
-                                        String desc = String.format(
-                                                "%s %s outfit %s",
-                                                capitalize(selectedStyleTag),
-                                                capitalize(selectedSeasonTag),
-                                                outerwearText
-                                        );
+                                        String desc;
+                                        if (hasOuterwear && hasAccessory) {
+                                            desc = String.format("%s %s outfit with outerwear and accessory",
+                                                    capitalize(selectedStyleTag),
+                                                    capitalize(selectedSeasonTag));
+                                        } else if (hasOuterwear) {
+                                            desc = String.format("%s %s outfit with outerwear",
+                                                    capitalize(selectedStyleTag),
+                                                    capitalize(selectedSeasonTag));
+                                        } else if (hasAccessory) {
+                                            desc = String.format("%s %s outfit with accessory",
+                                                    capitalize(selectedStyleTag),
+                                                    capitalize(selectedSeasonTag));
+                                        } else {
+                                            desc = String.format("%s %s outfit",
+                                                    capitalize(selectedStyleTag),
+                                                    capitalize(selectedSeasonTag));
+                                        }
 
                                         baseSuggestions.set(outfitIndex, new OutfitSuggestion(title, desc, imageItems));
 

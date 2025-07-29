@@ -289,6 +289,11 @@ public class OutfitGenerator {
         if (color.contains("beige")) return "beige";
         if (color.contains("pink")) return "pink";
         if (color.contains("gold")) return "gold";
+        if (color.contains("silver")) return "silver";
+        if (color.contains("navy")) return "navy";
+        if (color.contains("violet")) return "violet";
+        if (color.contains("orange")) return "orange";
+        if (color.contains("olive")) return "olive";
         return "gray"; // Default fallback
     }
 
