@@ -122,18 +122,16 @@ public class OutfitGenerator {
                 }
             }
 
-            /*
-            // Filter by season
-            tops = filterBySeason(tops, season);
-            bottoms = filterBySeason(bottoms, season);
-            shoes = filterBySeason(shoes, season);
-            onePieces = filterBySeason(onePieces, season);
 
+            // Filter by season and style
 
-            // Optional: filter accessories and outerwear separately
+            tops = filterByPreferences(tops, season, style);
+            bottoms = filterByPreferences(bottoms, season, style);
+            shoes = filterByPreferences(shoes, season, style);
+            onePieces = filterByPreferences(onePieces, season, style);
 
-            List<Map<String, Object>> filteredAccessories = filterBySeason(accessories, season);
-            List<Map<String, Object>> filteredOuterwear = filterBySeason(outerwear, season);
+            List<Map<String, Object>> filteredAccessories = filterByPreferences(accessories, season, style);
+            List<Map<String, Object>> filteredOuterwear = filterByPreferences(outerwear, season, style);
 
             // Check if we have enough to create outfits
             boolean hasEnough =
@@ -141,10 +139,10 @@ public class OutfitGenerator {
                 (!outfitType.equals("one_piece") && !tops.isEmpty() && !bottoms.isEmpty() && !shoes.isEmpty());
 
             if (!hasEnough) {
-                callback.onResult(Collections.singletonList(Collections.singletonList("NO_MATCH")));
+                Log.d("OutfitGenerator", "No matching outfits — not sending any outfits to adapter.");
+                callback.onResult(Collections.emptyList());
                 return;
             }
-             */
 
             List<OutfitScore> scoredOutfits = new ArrayList<>();
 
@@ -156,31 +154,28 @@ public class OutfitGenerator {
                             outfit.add(shoe);
 
                             // Optional: Add best outerwear based on color match
-                            if (outfitOuterwear.equals("yes") && !outerwear.isEmpty()) {
-                                Map<String, Object> bestOuterwear = findBestAccessoryOrOuterwear(outerwear, outfit, season, style);
-                                if (bestOuterwear != null) outfit.add(bestOuterwear);
-                            }
-
-                            /*
-                            if (outfitOuterwear.equals("yes") && !filteredOuterwear.isEmpty()) {
+                            if (outfitOuterwear.equals("yes")) {
+                                if (filteredOuterwear.isEmpty()) {
+                                    continue; // Skip this outfit - Outerwear required but not available
+                                }
                                 Map<String, Object> bestOuterwear = findBestAccessoryOrOuterwear(filteredOuterwear, outfit, season, style);
-                                if (bestOuterwear != null) outfit.add(bestOuterwear);
+                                if (bestOuterwear == null) {
+                                    continue;
+                                }
+                                outfit.add(bestOuterwear);
                             }
-                            */
-
 
                             // Optional: Add best accessory based on color match
-                            if (outfitAccessories.equals("yes") && !accessories.isEmpty()) {
-                                Map<String, Object> bestAccessory = findBestAccessoryOrOuterwear(accessories, outfit, season, style);
-                                if (bestAccessory != null) outfit.add(bestAccessory);
-                            }
-
-                            /*
-                            if (outfitAccessories.equals("yes") && !filteredAccessories.isEmpty()) {
+                            if (outfitAccessories.equals("yes")) {
+                                if (filteredAccessories.isEmpty()) {
+                                    continue; // Skip this outfit — accessory required but none available
+                                }
                                 Map<String, Object> bestAccessory = findBestAccessoryOrOuterwear(filteredAccessories, outfit, season, style);
-                                if (bestAccessory != null) outfit.add(bestAccessory);
+                                if (bestAccessory == null) {
+                                    continue;
+                                }
+                                outfit.add(bestAccessory);
                             }
-                             */
 
                             int score = calculateScore(outfit, season, style);
                             scoredOutfits.add(new OutfitScore(outfit, score));
@@ -195,31 +190,30 @@ public class OutfitGenerator {
                                 outfit.add(top);
                                 outfit.add(bottom);
                                 outfit.add(shoe);
-                                // Optional: Add best outerwear based on color match
-                                if (outfitOuterwear.equals("yes") && !outerwear.isEmpty()) {
-                                    Map<String, Object> bestOuterwear = findBestAccessoryOrOuterwear(outerwear, outfit, season, style);
-                                    if (bestOuterwear != null) outfit.add(bestOuterwear);
-                                }
 
-                                /*
-                                if (outfitOuterwear.equals("yes") && !filteredOuterwear.isEmpty()) {
+                                // Optional: Add best outerwear based on color match
+                                if (outfitOuterwear.equals("yes")) {
+                                    if (filteredOuterwear.isEmpty()) {
+                                        continue; // Outerwear required but not available
+                                    }
                                     Map<String, Object> bestOuterwear = findBestAccessoryOrOuterwear(filteredOuterwear, outfit, season, style);
-                                    if (bestOuterwear != null) outfit.add(bestOuterwear);
+                                    if (bestOuterwear == null) {
+                                        continue;
+                                    }
+                                    outfit.add(bestOuterwear);
                                 }
-                                */
 
                                 // Optional: Add best accessory based on color match
-                                if (outfitAccessories.equals("yes") && !accessories.isEmpty()) {
-                                    Map<String, Object> bestAccessory = findBestAccessoryOrOuterwear(accessories, outfit, season, style);
-                                    if (bestAccessory != null) outfit.add(bestAccessory);
-                                }
-
-                                /*
-                                if (outfitAccessories.equals("yes") && !filteredAccessories.isEmpty()) {
+                                if (outfitAccessories.equals("yes")) {
+                                    if (filteredAccessories.isEmpty()) {
+                                        continue; // Skip this outfit — accessory required but none available
+                                    }
                                     Map<String, Object> bestAccessory = findBestAccessoryOrOuterwear(filteredAccessories, outfit, season, style);
-                                    if (bestAccessory != null) outfit.add(bestAccessory);
+                                    if (bestAccessory == null) {
+                                        continue; // No good accessory found — skip outfit
+                                    }
+                                    outfit.add(bestAccessory);
                                 }
-                                 */
 
                                 int score = calculateScore(outfit, season, style);
                                     scoredOutfits.add(new OutfitScore(outfit, score));
@@ -343,17 +337,17 @@ public class OutfitGenerator {
         return bestItem;
     }
 
-    /*
-    private static List<Map<String, Object>> filterBySeason(List<Map<String, Object>> items, String userSeason) {
+
+    private static List<Map<String, Object>> filterByPreferences(List<Map<String, Object>> items, String userSeason, String userStyle) {
         List<Map<String, Object>> filtered = new ArrayList<>();
         for (Map<String, Object> item : items) {
-            if (isSeasonMatch(userSeason, (String) item.get("season"))) {
+            if (isSeasonMatch(userSeason, (String) item.get("season")) &&
+                    userStyle.equalsIgnoreCase((String) item.get("styleTag"))) {
                 filtered.add(item);
             }
         }
         return filtered;
     }
-     */
 
 
 
