@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:text="This is the description!"
             android:textSize="16sp"
-            android:padding="5dp"/>
+            android:padding="6dp"/>
 
         <LinearLayout
             android:id="@+id/favoriteImagesContainer"
