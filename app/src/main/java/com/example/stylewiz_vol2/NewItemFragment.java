@@ -247,7 +247,7 @@ public class NewItemFragment extends Fragment {
                 String sea = item_Seasonality;
                 boolean liked = false;
 
-                if (cat == null || cat.isEmpty() || tag == null || tag.isEmpty() || des.isEmpty() || col.isEmpty() || sea == null || sea.isEmpty()) {
+                if (cat == null || cat.isEmpty() || tag == null || tag.isEmpty() || des.isEmpty() || col == null || col.isEmpty() || sea == null || sea.isEmpty()) {
                     Toast.makeText(getActivity(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
                 } else if (ImageUri == null) {
                     Toast.makeText(getActivity(), "Please select an image", Toast.LENGTH_SHORT).show();
